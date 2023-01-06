@@ -5,12 +5,12 @@ import {Command} from "../types/command.js"
 import {parseValue} from "./parse-value.js"
 import {Paramspec} from "../types/paramspec.js"
 
-export function parsingStateMachine<A extends Argspec, P extends Paramspec>(
+export function parsingMachine<A extends Argspec, P extends Paramspec>(
 		spec: Spec<A, P>
 	) {
 
 	let paramIndex = 0
-	let assignNextValueToField: undefined | keyof P = undefined // TODO rename param
+	let scheduledParamAssignment: undefined | keyof P = undefined
 
 	const getArgType = (name: keyof A) => spec.args[name]
 	const getParamType = (name: keyof P) => spec.params[name]
@@ -23,16 +23,16 @@ export function parsingStateMachine<A extends Argspec, P extends Paramspec>(
 		params,
 
 		isScheduledAsParamValue: () => {
-			return !!assignNextValueToField
+			return !!scheduledParamAssignment
 		},
 
 		scheduleNextItemAsParamValue: (item: string) => {
-			assignNextValueToField = item
+			scheduledParamAssignment = item
 		},
 
 		saveParam: (item: string) => {
-			const name = assignNextValueToField!
-			assignNextValueToField = undefined
+			const name = scheduledParamAssignment!
+			scheduledParamAssignment = undefined
 			params[name] = parseValue(getParamType(name), item)
 		},
 

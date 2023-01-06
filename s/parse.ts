@@ -3,7 +3,7 @@ import {Spec} from "./types/spec.js"
 import {Command} from "./types/command.js"
 import {Argspec} from "./types/argspec.js"
 import {Paramspec} from "./types/paramspec.js"
-import {parsingStateMachine} from "./internals/machine.js"
+import {parsingMachine} from "./internals/machine.js"
 
 export function parse<A extends Argspec, P extends Paramspec>(
 		spec: Spec<A, P>
@@ -21,7 +21,7 @@ export function parse<A extends Argspec, P extends Paramspec>(
 		saveArg,
 		saveParam,
 		scheduleNextItemAsParamValue,
-	} = parsingStateMachine(spec)
+	} = parsingMachine(spec)
 
 	for (const item of items) {
 
