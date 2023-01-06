@@ -4,6 +4,7 @@
 🤖 for making node cli programs  
 🕵️‍♂️ designed for proper typescript typings  
 🏗️ experimental design, breaking changes likely  
+🧼 zero dependencies  
 💖 made free and open source, just for you  
 
 <br/>
