@@ -1,11 +1,11 @@
 
 import {Type} from "../types/type.js"
-import {Primitive} from "../types/primitive.js"
+import {TypeToValue} from "../types/type-to-value.js"
 
 export function parseValue<T extends Type>(
 		type: T,
 		arg: string,
-	): Primitive<T> {
+	): TypeToValue<T> {
 
 	switch (type) {
 

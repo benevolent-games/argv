@@ -1,22 +1,32 @@
 
-import {Spec} from "../types/spec.js"
-import {Argspec} from "../types/argspec.js"
-import {Command} from "../types/command.js"
+import {Spec5} from "../types/spec.js"
+import {ZField} from "../types/field.js"
+import {Values} from "../types/values.js"
 import {parseValue} from "./parse-value.js"
-import {Paramspec} from "../types/paramspec.js"
+import {ZFieldsToResults} from "../types/fields-to-results.js"
 
-export function parsingMachine<A extends Argspec, P extends Paramspec>(
-		spec: Spec<A, P>
-	) {
+export function parsingMachine<
+		FA extends ZField.Group<Values>,
+		FP extends ZField.Group<Values>
+	>(spec: Spec5<FA, FP>) {
 
 	let paramIndex = 0
-	let scheduledParamAssignment: undefined | keyof P = undefined
+	let scheduledParamAssignment: undefined | keyof FP = undefined
 
-	const getArgType = (name: keyof A) => spec.args[name]
-	const getParamType = (name: keyof P) => spec.params[name]
+	function getArgType(name: keyof FA) {
+		return name in spec.args
+			? spec.args[name]["type"]
+			: String
+	}
 
-	const args: Command<A, P>["args"] = {}
-	const params: Command<A, P>["params"] = {}
+	function getParamType(name: keyof FP) {
+		return name in spec.params
+			? spec.params[name]["type"]
+			: String
+	}
+
+	const args = <ZFieldsToResults<FA>>{}
+	const params = <ZFieldsToResults<FP>>{}
 
 	return {
 		args,
@@ -33,13 +43,23 @@ export function parsingMachine<A extends Argspec, P extends Paramspec>(
 		saveParam: (item: string) => {
 			const name = scheduledParamAssignment!
 			scheduledParamAssignment = undefined
-			params[name] = parseValue(getParamType(name), item)
+			params[name] = <any>parseValue(getParamType(name), item)
 		},
 
 		saveArg: (item: string) => {
 			const index = paramIndex++
 			const name = spec.argorder[index]!
-			args[name] = parseValue(getArgType(name), item)
+			args[name] = <any>parseValue(getArgType(name), item)
+		},
+
+		saveEqualSignedParam(item: string) {
+			const [name, value] = item.split("=")
+			params[<keyof FP>name] = <any>parseValue(getParamType(name), value)
+		},
+
+		saveEnabledBooleanParam(item: string) {
+			const name = item.slice(1)
+			params[<keyof FP>name] = <any>true
 		},
 	}
 }

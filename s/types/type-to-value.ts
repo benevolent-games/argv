@@ -1,7 +1,7 @@
 
 import {Type} from "./type.js"
 
-export type Primitive<T extends Type> = (
+export type TypeToValue<T extends Type> = (
 
 	T extends StringConstructor
 		? string
