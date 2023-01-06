@@ -1,7 +1,7 @@
 
 # 🎛️ `@benev/argv` *command line argument parser*
 
-🤖 for making node cli utilities  
+🤖 for making node cli programs  
 🕵️‍♂️ designed for proper typescript typings  
 🏗️ experimental design, breaking changes likely  
 💖 made free and open source, just for you  

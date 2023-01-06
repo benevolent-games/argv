@@ -1,69 +1,40 @@
 
 import {Spec} from "./types/spec.js"
-import {Type} from "./types/type.js"
 import {Command} from "./types/command.js"
 import {Argspec} from "./types/argspec.js"
-import {Primitive} from "./types/primitive.js"
 import {Paramspec} from "./types/paramspec.js"
+import {parsingStateMachine} from "./internals/machine.js"
 
-export function parse<A extends Argspec, P extends Paramspec>({
-		argv,
-		argorder,
-		args,
-		params,
-	}: Spec<A, P>) {
+export function parse<A extends Argspec, P extends Paramspec>(
+		spec: Spec<A, P>
+	): Command<A, P> {
 
-	if (argorder.length !== Object.keys(args).length)
+	if (spec.argorder.length !== Object.keys(spec.args).length)
 		throw new Error("mismatch between 'params' and 'ordering'")
 
-	const getFieldType = (name: keyof P) => params[name]
-	const getParamType = (name: keyof A) => args[name]
+	const [executable, module, ...items] = spec.argv
 
-	function parseValue<T extends Type>(type: T, arg: string): Primitive<T> {
-		switch (type) {
+	const {
+		args,
+		params,
+		isScheduledAsParamValue,
+		saveArg,
+		saveParam,
+		scheduleNextItemAsParamValue,
+	} = parsingStateMachine(spec)
 
-			case String:
-				return <any>arg
+	for (const item of items) {
 
-			case Number:
-				return <any>Number(arg)
+		if (isScheduledAsParamValue())
+			saveParam(item)
 
-			case Boolean:
-				return <any>(arg === "true")
-
-			default:
-				throw new Error("unknown type")
-		}
-	}
-
-	let paramIndex = 0
-	let assignNextValueToField: undefined | keyof P = undefined
-	const [executable, module, ...rawArgs] = argv
-
-	const result = <Command<A, P>>{
-		executable,
-		module,
-		args: {},
-		params: {},
-	}
-
-	for (const arg of rawArgs) {
-		if (assignNextValueToField) {
-			const name = assignNextValueToField
-			assignNextValueToField = undefined
-			result.params[name] = parseValue(getFieldType(name), arg)
-		}
 		else {
-			if (arg.startsWith("--")) {
-				assignNextValueToField = arg
-			}
-			else {
-				const index = paramIndex++
-				const name = argorder[index]
-				result.args[name] = parseValue(getParamType(name), arg)
-			}
+			if (item.startsWith("--"))
+				scheduleNextItemAsParamValue(item)
+			else
+				saveArg(item)
 		}
 	}
 
-	return result
+	return {executable, module, args, params}
 }
