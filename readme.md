@@ -1,5 +1,7 @@
 
-# 🎛️ `@benev/argv` *command line argument parser*
+# 🎛️ `@benev/argv`
+
+***command line argument parser***
 
 🤖 for making node cli programs  
 🕵️‍♂️ designed for proper typescript typings  
