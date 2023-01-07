@@ -1,10 +1,10 @@
 
-import {helper} from "./help.js"
 import {Spec5} from "./types/spec.js"
+import {color} from "./tools/colors.js"
 import {ZField} from "./types/field.js"
 import {Values} from "./types/values.js"
 import {PResult} from "./types/result.js"
-import {color} from "./internals/text/colors.js"
+import {helper} from "./internals/help/helper.js"
 import {ArgvError} from "./errors/argv-error.js"
 import {parsingMachine} from "./internals/machine.js"
 import {validateArgOrdering} from "./internals/validate-arg-ordering.js"

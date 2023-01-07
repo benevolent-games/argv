@@ -20,6 +20,9 @@ export const color = <{[key in keyof Codes]: (s: string) => string}>(
 	)
 )
 
-export function strip(s: string) {
-	return s.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, "")
+export function uncolor(s: string) {
+	return s.replace(
+		/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
+		"",
+	)
 }
