@@ -1,5 +1,6 @@
 
 import {Type} from "../../types/type.js"
+import {affirmatives} from "../constants.js"
 import {TypeToValue} from "../../types/type-to-value.js"
 
 export function parseValue<T extends Type>(
@@ -16,12 +17,7 @@ export function parseValue<T extends Type>(
 			return <any>Number(arg)
 
 		case Boolean:
-			return <any>(
-				arg === "true" ||
-				arg === "yes" ||
-				arg === "on" ||
-				arg === "enabled"
-			)
+			return <any>affirmatives.includes(arg.toLowerCase())
 
 		default:
 			throw new Error("unknown type")

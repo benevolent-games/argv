@@ -13,4 +13,5 @@ export interface Spec<
 	readme?: string
 	help?: string
 	columns?: number
+	tips?: boolean
 }

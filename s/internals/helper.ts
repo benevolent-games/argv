@@ -12,14 +12,13 @@ export function *helper<FA extends Field.Group, FP extends Field.Group>({
 		spec,
 		args = {},
 		params = {},
-		tips = true,
 	}: {
 		spec: Spec<FA, FP>,
 		args?: Values
 		params?: Values
-		tips?: boolean,
 	}) {
 
+	const tips = spec.tips ?? true
 	const columns = (spec.columns ?? stdcolumns) - 4
 	const argorder = <string[]>spec.argorder
 

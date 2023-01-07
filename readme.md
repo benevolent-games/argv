@@ -17,42 +17,94 @@
     ```sh
     npm install @benev/argv
     ```
-2. import the cli function
-    ```js
-    import {parse} from "@benev/argv"
+1. import the cli function
+    ```ts
+    import {cli} from "@benev/argv"
     ```
-3. specify your params and options fields for parsing
-    ```js
-    const {args, params} = parse({
+1. formalize types for your arguments and parameters
+    ```ts
+    export type Args = {
+      environment: string
+      suite: string
+    }
+
+    export type Params = {
+      "--label": string
+      "--verbose": boolean
+      "--port": number
+    }
+    ```
+1. specify your cli, and perform the parsing
+    ```ts
+    const {args, params} = cli<Args, Params>()({
+
+      // your program's name
+      bin: "myprogram",
 
       // process.argv is a nodejs builtin
       argv: process.argv,
 
-      // positional arguments your program will accept
-      argorder: ["mode", "amount"],
+      // terminal width, used for text-wrapping
+      columns: process.stdout.columns,
 
-      // define which type of parsing to use for each argument
+      // link to your readme, for +help
+      readme: "https://github.com/@benev/argv",
+
+      // explainer for your menu, for +help
+      help: "my first command line program!",
+
+      // positional arguments your program will accept
+      argorder: ["currency", "amount"],
+
+      // arguments your program will accept
       args: {
-        mode: String,
-        amount: Number,
+        currency: {
+          type: String,
+          mode: "requirement",
+          help: "currency, like 'usd' or 'cad'",
+        },
+        amount: {
+          type: Number,
+          mode: "default",
+          default: 123,
+          help: "amount of money",
+        },
       },
 
-      // options your program will accept
+      // parameters your program will accept
       params: {
-        "--label": String,
-        "--port": Number,
-        "--importmap": String,
-        "--verbose": Boolean,
+        "--label": {
+          type: String,
+          mode: "option",
+          help: "a cool title",
+        },
+        "--verbose": {
+          type: Boolean,
+          mode: "option",
+          help: "display additional information",
+        },
+        "--port": {
+          type: Number,
+          mode: "default",
+          default: 8021,
+          help: "tcp port server will listen on",
+        },
       },
     })
     ```
-4. now you can access your args and params
+1. now you can access your args and params
     ```js
     // example command:
-    //   main.js coolmode --verbose true --port 8021
+    //   main.js usd +verbose --port 8021
 
-    args.mode
-      // "coolmode"
+    args.currency
+      // "usd"
+
+    args.amount
+      // 123
+
+    params["--label"]
+      // undefined
 
     params["--verbose"]
       // true
@@ -65,8 +117,18 @@
 
 ## notes
 
-- argv is very simple. it just parses the args and params.
-- it uses exact names like `--verbose`, so the typescript typings work.
-- it treats everything like it's optional.
-- it doesn't provide a `--help` guide.
-- maybe one day i'll add that stuff, but you can do that stuff in your own second pass.
+- argv uses exact names, like `--param`, so the typescript typings work.
+- typings work best if you declare `Args` and `Params` types, but it can infer some of it if you omit them.
+- these are equivalent ways to pass a param:
+  - `--param true`
+  - `--param "true"`
+  - `--param=true`
+  - `--param="true"`
+  - `+param` *(sets to boolean true)*
+- boolean parsing regards these as `true` (case-insensitive):
+  - `"true"`
+  - `"yes"`
+  - `"y"`
+  - `"on"`
+  - `"ok"`
+  - `"enabled"`

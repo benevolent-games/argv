@@ -16,13 +16,14 @@ type Params = {
 }
 
 const {args, params} = cli<Args, Params>()({
-	argv: process.argv,
-	columns: process.stdout.columns ?? stdcolumns,
-
 	bin: "cynic",
-	argorder: ["environment", "suite"],
+	argv: process.argv,
+	columns: process.stdout.columns,
+
 	readme: "https://github.com/@benev/argv",
 	help: "run a cynic test suite module",
+
+	argorder: ["environment", "suite"],
 
 	args: {
 		environment: {
@@ -32,7 +33,8 @@ const {args, params} = cli<Args, Params>()({
 		},
 		suite: {
 			type: String,
-			mode: "requirement",
+			mode: "default",
+			default: "dist/suite.test.js",
 			help: "path to the test suite module (eg, 'dist/suite.test.js')",
 		},
 	},

@@ -7,10 +7,9 @@ import {parse} from "./internals/parse.js"
 import {helper} from "./internals/helper.js"
 import {errorReport} from "./internals/error-report.js"
 import {validateRequirements} from "./internals/parsing/validate-requirements.js"
+import {applyDefaults} from "./internals/parsing/apply-defaults.js"
 
-export function cli<A extends Values, P extends Values>(details: {
-		tips?: boolean
-	} = {}) {
+export function cli<A extends Values, P extends Values>() {
 	return function<
 			FA extends Field.GroupFromValues<A>,
 			FP extends Field.GroupFromValues<P>
@@ -20,7 +19,7 @@ export function cli<A extends Values, P extends Values>(details: {
 			const command = parse(spec)
 
 			if ("--help" in command.params && command.params["--help"]) {
-				for (const report of helper({...command, ...details}))
+				for (const report of helper(command))
 					console.log(report)
 
 				process.exit(0)
@@ -28,6 +27,9 @@ export function cli<A extends Values, P extends Values>(details: {
 
 			validateRequirements(command.spec.args, command.args)
 			validateRequirements(command.spec.params, command.params)
+
+			applyDefaults(command.spec.args, command.args)
+			applyDefaults(command.spec.params, command.params)
 
 			return command
 		}
@@ -37,7 +39,7 @@ export function cli<A extends Values, P extends Values>(details: {
 			printError()
 			console.error("")
 
-			for (const report of helper({...details, spec}))
+			for (const report of helper({spec}))
 				console.error(report)
 
 			console.error("")
