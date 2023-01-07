@@ -32,8 +32,8 @@ export function parsingMachine<
 		args,
 		params,
 
-		isScheduledAsParamValue: () => {
-			return !!scheduledParamAssignment
+		scheduledParamAssignment: () => {
+			return <string | undefined>scheduledParamAssignment
 		},
 
 		scheduleNextItemAsParamValue: (item: string) => {
@@ -58,7 +58,7 @@ export function parsingMachine<
 		},
 
 		saveEnabledBooleanParam(item: string) {
-			const name = item.slice(1)
+			const name = "--" + item.slice(1)
 			params[<keyof FP>name] = <any>true
 		},
 	}

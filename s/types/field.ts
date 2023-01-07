@@ -1,13 +1,13 @@
 
 import {Type} from "./type.js"
+import {Values} from "./values.js"
 import {ZOption} from "../internals/option.js"
 import {TypeToValue} from "./type-to-value.js"
-import {ZRequirement} from "../internals/requirement.js"
-import {Values} from "./values.js"
 import {ValueToType} from "./value-to-type.js"
+import {ZRequirement} from "../internals/requirement.js"
 
 export namespace ZField {
-	export type Mode = "required" | "optional" | "defaulting"
+	export type Mode = "requirement" | "option" | "default"
 
 	export type Base<T extends Type> = {
 		mode: Mode
@@ -15,10 +15,10 @@ export namespace ZField {
 		help?: string
 	}
 
-	export type Requirement<T extends Type> = Base<T> & {mode: "required"}
-	export type Option<T extends Type> = Base<T> & {mode: "optional"}
+	export type Requirement<T extends Type> = Base<T> & {mode: "requirement"}
+	export type Option<T extends Type> = Base<T> & {mode: "option"}
 	export type Default<T extends Type> = Base<T> & {
-		mode: "defaulting"
+		mode: "default"
 		default: TypeToValue<T>
 	}
 

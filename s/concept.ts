@@ -1,4 +1,5 @@
 
+import {help} from "./help.js"
 import {parse4} from "./parse2.js"
 
 type Args = {
@@ -10,45 +11,48 @@ type Params = {
 	"--label": string,
 	"--host": string,
 	"--port": number,
+	"--verbose": boolean,
 }
 
-const {args, params} = parse4<Args, Params>()({
-	readme: "https://github.com/@benev/argv",
+const {args, params, spec} = parse4<Args, Params>()({
+	bin: "cynic",
 	argv: process.argv,
+	readme: "https://github.com/@benev/argv",
+	columns: process.stdout.columns ?? 72,
 	argorder: ["environment", "suite"],
 	args: {
 		environment: {
 			type: String,
-			mode: "required",
+			mode: "requirement",
 			help: "runtime to run the tests (can be 'node', 'browser', or 'puppeteer')",
 		},
 		suite: {
 			type: String,
-			mode: "required",
+			mode: "requirement",
 			help: "path to the test suite module (eg, 'dist/suite.test.js')",
 		},
 	},
 	params: {
 		"--label": {
 			type: String,
-			mode: "optional",
+			mode: "option",
 			help: "title string displayed in the suite report",
 		},
 		"--host": {
 			type: String,
-			mode: "defaulting",
+			mode: "default",
 			default: "http://localhost",
 			help: "url hostname, to connect to the http server (for browser or puppeteer)",
 		},
 		"--port": {
 			type: Number,
-			mode: "defaulting",
+			mode: "default",
 			default: 8021,
 			help: "port the http server should use",
 		},
 		"--verbose": {
 			type: Boolean,
-			mode: "optional",
+			mode: "option",
 			help: "show more data",
 		},
 	},
@@ -56,3 +60,7 @@ const {args, params} = parse4<Args, Params>()({
 
 console.log("args", args)
 console.log("params", params)
+console.log("")
+
+if (help({spec, params}))
+	process.exit(0)

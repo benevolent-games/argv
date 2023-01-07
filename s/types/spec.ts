@@ -9,12 +9,13 @@ export interface Spec5<
 		FA extends ZField.Group<Values>,
 		FP extends ZField.Group<Values>
 	> {
+	bin: string
 	argv: string[]
 	argorder: (keyof FA)[]
 	args: FA
 	params: FP
 	readme?: string
-	help?: boolean
+	columns?: number
 }
 
 export interface Spec4<FA extends Fields2<Values>, FP extends Fields2<Values>> {
