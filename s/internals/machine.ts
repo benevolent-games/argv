@@ -3,7 +3,6 @@ import {Spec5} from "../types/spec.js"
 import {ZField} from "../types/field.js"
 import {Values} from "../types/values.js"
 import {parseValue} from "./parse-value.js"
-import {ZFieldsToResults} from "../types/fields-to-results.js"
 
 export function parsingMachine<
 		FA extends ZField.GroupFromValues<Values>,
@@ -25,8 +24,8 @@ export function parsingMachine<
 			: String
 	}
 
-	const args = <ZFieldsToResults<FA>>{}
-	const params = <ZFieldsToResults<FP>>{}
+	const args = <ZField.ValuesFromGroup<FA>>{}
+	const params = <ZField.ValuesFromGroup<FP>>{}
 
 	return {
 		args,
