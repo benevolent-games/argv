@@ -6,8 +6,8 @@ import {Command} from "./types/command.js"
 import {parse} from "./internals/parse.js"
 import {helper} from "./internals/helper.js"
 import {errorReport} from "./internals/error-report.js"
-import {validateRequirements} from "./internals/parsing/validate-requirements.js"
 import {applyDefaults} from "./internals/parsing/apply-defaults.js"
+import {validateRequirements} from "./internals/parsing/validate-requirements.js"
 
 export function cli<A extends Values, P extends Values>() {
 	return function<

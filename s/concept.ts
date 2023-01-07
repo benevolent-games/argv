@@ -1,6 +1,5 @@
 
 import {cli} from "./cli.js"
-import {stdcolumns} from "./internals/constants.js"
 
 type Args = {
 	environment: string
