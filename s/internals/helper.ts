@@ -63,9 +63,12 @@ export function *helper<FA extends Field.Group, FP extends Field.Group>({
 		yield textblock({
 			columns,
 			indent: [2, " "],
-			text: `
-				${palette.tip("~")} "${palette.param("+param")}" is short for "${palette.param("--param=true")}"
-			`,
+			text:
+				[
+					`"${palette.param("+param")}" is short for "${palette.param("--param=true")}"`,
+				]
+				.map(s => palette.tip("~ ") + s)
+				.join("\n"),
 		})
 	}
 }

@@ -6,24 +6,30 @@ import {Command} from "./types/command.js"
 import {parse} from "./internals/parse.js"
 import {helper} from "./internals/helper.js"
 import {errorReport} from "./internals/error-report.js"
+import {validateRequirements} from "./internals/parsing/validate-requirements.js"
 
-export function cli<A extends Values, P extends Values>() {
+export function cli<A extends Values, P extends Values>(details: {
+		tips?: boolean
+	} = {}) {
 	return function<
 			FA extends Field.GroupFromValues<A>,
 			FP extends Field.GroupFromValues<P>
 		>(spec: Spec<FA, FP>): Command<FA, FP> {
 
 		try {
-			const result = parse(spec)
+			const command = parse(spec)
 
-			if ("--help" in result.params && result.params["--help"]) {
-				for (const report of helper(result))
+			if ("--help" in command.params && command.params["--help"]) {
+				for (const report of helper({...command, ...details}))
 					console.log(report)
 
 				process.exit(0)
 			}
 
-			return result
+			validateRequirements(command.spec.args, command.args)
+			validateRequirements(command.spec.params, command.params)
+
+			return command
 		}
 		catch (err: any) {
 			const errortext = errorReport(err)
@@ -31,7 +37,7 @@ export function cli<A extends Values, P extends Values>() {
 			printError()
 			console.error("")
 
-			for (const report of helper({spec}))
+			for (const report of helper({...details, spec}))
 				console.error(report)
 
 			console.error("")
