@@ -1,7 +1,6 @@
 
+import {mincolumns} from "../constants.js"
 import {uncolor} from "../../tools/colors.js"
-
-const mincolumns = 10
 
 export function wrappist(columns: number, text: string) {
 	columns = columns < mincolumns

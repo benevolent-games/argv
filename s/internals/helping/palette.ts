@@ -2,7 +2,7 @@
 import {color} from "../../tools/colors.js"
 
 export const palette = {
-	bin: color.blue,
+	binary: color.blue,
 	arg: color.green,
 	param: color.yellow,
 	mode: color.blue,

@@ -4,7 +4,7 @@ import {Values} from "./values.js"
 import {TypeToValue} from "./type-to-value.js"
 import {ValueToType} from "./value-to-type.js"
 
-export namespace ZField {
+export namespace Field {
 	export type Mode = "requirement" | "option" | "default"
 
 	export type Base<T extends Type> = {

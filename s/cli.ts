@@ -1,22 +1,22 @@
 
-import {Spec5} from "./types/spec.js"
-import {ZField} from "./types/field.js"
+import {Spec} from "./types/spec.js"
+import {Field} from "./types/field.js"
 import {Values} from "./types/values.js"
-import {PResult} from "./types/result.js"
+import {Command} from "./types/command.js"
 import {parse} from "./internals/parse.js"
 import {helper} from "./internals/helper.js"
 import {errorReport} from "./internals/error-report.js"
 
 export function cli<A extends Values, P extends Values>() {
 	return function<
-			FA extends ZField.GroupFromValues<A>,
-			FP extends ZField.GroupFromValues<P>
-		>(spec: Spec5<FA, FP>): PResult<FA, FP> {
+			FA extends Field.GroupFromValues<A>,
+			FP extends Field.GroupFromValues<P>
+		>(spec: Spec<FA, FP>): Command<FA, FP> {
 
 		try {
 			const result = parse(spec)
 
-			if ("--help" in result.params) {
+			if ("--help" in result.params && result.params["--help"]) {
 				for (const report of helper(result))
 					console.log(report)
 

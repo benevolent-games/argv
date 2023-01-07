@@ -1,13 +1,13 @@
 
-import {Spec5} from "../../types/spec.js"
-import {ZField} from "../../types/field.js"
+import {Spec} from "../../types/spec.js"
+import {Field} from "../../types/field.js"
 import {Values} from "../../types/values.js"
 import {parseValue} from "./parse-value.js"
 
 export function parsingMachine<
-		FA extends ZField.GroupFromValues<Values>,
-		FP extends ZField.GroupFromValues<Values>
-	>(spec: Spec5<FA, FP>) {
+		FA extends Field.GroupFromValues<Values>,
+		FP extends Field.GroupFromValues<Values>
+	>(spec: Spec<FA, FP>) {
 
 	let paramIndex = 0
 	let scheduledParamAssignment: undefined | keyof FP = undefined
@@ -24,8 +24,8 @@ export function parsingMachine<
 			: String
 	}
 
-	const args = <ZField.ValuesFromGroup<FA>>{}
-	const params = <ZField.ValuesFromGroup<FP>>{}
+	const args = <Field.ValuesFromGroup<FA>>{}
+	const params = <Field.ValuesFromGroup<FP>>{}
 
 	return {
 		args,

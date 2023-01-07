@@ -1,8 +1,8 @@
 
 import {palette} from "./palette.js"
-import {ZField} from "../../types/field.js"
+import {Field} from "../../types/field.js"
 
-export function mode(mode: ZField.Mode) {
+export function mode(mode: Field.Mode) {
 	switch (mode) {
 
 		case "requirement":

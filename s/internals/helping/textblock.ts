@@ -4,7 +4,7 @@ import {indent} from "./indent.js"
 import {wrappist} from "./wrappist.js"
 import {trimLinefeeds} from "./trim-line-feeds.js"
 
-export function wblock({
+export function textblock({
 		text,
 		columns,
 		indent: [indents, indenter],

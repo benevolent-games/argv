@@ -1,28 +1,29 @@
 
-import {Spec5} from "../types/spec.js"
-import {ZField} from "../types/field.js"
+import {Spec} from "../types/spec.js"
+import {Field} from "../types/field.js"
+import {stdcolumns} from "./constants.js"
 import {Values} from "../types/values.js"
-import {wblock} from "./helping/wblock.js"
 import {palette} from "./helping/palette.js"
+import {textblock} from "./helping/textblock.js"
 import {fieldReport} from "./helping/field-report.js"
 import {retrieveValue} from "./helping/retrieve-value.js"
 
-export function *helper<FA extends ZField.Group, FP extends ZField.Group>({
+export function *helper<FA extends Field.Group, FP extends Field.Group>({
 		spec,
 		args = {},
 		params = {},
 		tips = true,
 	}: {
-		spec: Spec5<FA, FP>,
+		spec: Spec<FA, FP>,
 		args?: Values
 		params?: Values
 		tips?: boolean,
 	}) {
 
-	const columns = (spec.columns ?? 72) - 4
+	const columns = (spec.columns ?? stdcolumns) - 4
 	const argorder = <string[]>spec.argorder
 
-	yield palette.bin(spec.bin) + " " + (
+	yield palette.binary(spec.bin) + " " + (
 		argorder
 			.map(a => palette.arg(`<${a}>`))
 			.join(" ")
@@ -32,7 +33,7 @@ export function *helper<FA extends ZField.Group, FP extends ZField.Group>({
 		yield palette.readme("  readme ") + palette.link(spec.readme)
 	
 	if (spec.help)
-		yield wblock({
+		yield textblock({
 			columns,
 			indent: [2, " "],
 			text: spec.help,
@@ -44,7 +45,7 @@ export function *helper<FA extends ZField.Group, FP extends ZField.Group>({
 			columns,
 			field: spec.args[name],
 			value: retrieveValue(args, name),
-			col: palette.arg,
+			color: palette.arg,
 		})
 
 	for (const [name, field] of Object.entries(spec.params))
@@ -53,13 +54,13 @@ export function *helper<FA extends ZField.Group, FP extends ZField.Group>({
 			columns,
 			field,
 			value: retrieveValue(params, name),
-			col: palette.param,
+			color: palette.param,
 		})
 
 	if (tips) {
 		yield ""
 		yield palette.tip("tips")
-		yield wblock({
+		yield textblock({
 			columns,
 			indent: [2, " "],
 			text: `

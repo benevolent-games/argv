@@ -1,5 +1,6 @@
 
 import {cli} from "./cli.js"
+import {stdcolumns} from "./internals/constants.js"
 
 type Args = {
 	environment: string
@@ -16,7 +17,7 @@ type Params = {
 
 const {args, params} = cli<Args, Params>()({
 	argv: process.argv,
-	columns: process.stdout.columns ?? 72,
+	columns: process.stdout.columns ?? stdcolumns,
 
 	bin: "cynic",
 	argorder: ["environment", "suite"],
@@ -66,3 +67,5 @@ const {args, params} = cli<Args, Params>()({
 		},
 	},
 })
+
+console.log({args, params})

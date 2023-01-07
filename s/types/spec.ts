@@ -1,9 +1,9 @@
 
-import {ZField} from "./field.js"
+import {Field} from "./field.js"
 
-export interface Spec5<
-		FA extends ZField.Group = ZField.Group,
-		FP extends ZField.Group = ZField.Group
+export interface Spec<
+		FA extends Field.Group = Field.Group,
+		FP extends Field.Group = Field.Group
 	> {
 	bin: string
 	argv: string[]

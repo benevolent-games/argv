@@ -1,15 +1,15 @@
 
-import {Spec5} from "../types/spec.js"
-import {ZField} from "../types/field.js"
-import {PResult} from "../types/result.js"
+import {Spec} from "../types/spec.js"
+import {Field} from "../types/field.js"
+import {Command} from "../types/command.js"
 import {parsingMachine} from "./parsing/machine.js"
 import {validateArgOrdering} from "./parsing/validate-arg-ordering.js"
 import {validateParamAssignmentsAreCompleted} from "./parsing/validate-param-assignments-are-completed.js"
 
 export function parse<
-		FA extends ZField.Group,
-		FP extends ZField.Group
-	>(spec: Spec5<FA, FP>): PResult<FA, FP> {
+		FA extends Field.Group,
+		FP extends Field.Group
+	>(spec: Spec<FA, FP>): Command<FA, FP> {
 
 	validateArgOrdering(spec)
 	const [executable, module, ...items] = spec.argv
