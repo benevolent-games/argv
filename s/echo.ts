@@ -1,22 +1,20 @@
+#!/usr/bin/env node
 
-import {parse} from "./parse.js"
+import {color} from "./tools/colors.js"
+import {parse} from "./internals/parse.js"
+import {stdcolumns} from "./internals/constants.js"
+import {palette} from "./internals/helping/palette.js"
 
-const {executable, module, args, params} = parse({
+const command = parse({
+	bin: "argv-echo",
 	argv: process.argv,
-	argorder: ["environment", "suite"],
-	args: {
-		environment: String,
-		suite: String,
-	},
-	params: {
-		"--label": String,
-		"--port": Number,
-		"--importmap": String,
-		"--verbose": Boolean,
-	},
+	columns: process.stdout.columns ?? stdcolumns,
+	argorder: [],
+	args: {},
+	params: {},
 })
 
-console.log("executable", executable)
-console.log("module", module)
-console.log("args", args)
-console.log("params", params)
+console.log(color.blue("executable"), command.executable)
+console.log(color.blue("module"), command.module)
+console.log(palette.arg("args"), command.args)
+console.log(palette.param("params"), command.params)

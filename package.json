@@ -10,6 +10,9 @@
 		"x",
 		"s"
 	],
+	"bin": {
+		"argv-echo": "x/echo.js"
+	},
 	"scripts": {
 		"build": "run-s clean compile",
 		"clean": "rm -rf x && mkdir x",
@@ -24,6 +27,7 @@
 		"typescript": "^4.9.3"
 	},
 	"keywords": [
+		"argv",
 		"cli",
 		"command-line",
 		"parser",

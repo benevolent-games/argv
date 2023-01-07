@@ -1,11 +1,15 @@
 
-import {Argspec} from "./argspec.js"
-import {Paramspec} from "./paramspec.js"
-import {Primitive} from "./primitive.js"
+import {Spec} from "./spec.js"
+import {Field} from "./field.js"
+import {Values} from "./values.js"
 
-export interface Command<A extends Argspec, P extends Paramspec> {
+export type Command<
+		FA extends Field.GroupFromValues<Values>,
+		FP extends Field.GroupFromValues<Values>
+	> = {
+	spec: Spec<FA, FP>
+	args: Field.ValuesFromGroup<FA>
+	params: Field.ValuesFromGroup<FP>
 	executable: string
 	module: string
-	args: {[X in keyof A]?: Primitive<A[X]>}
-	params: {[X in keyof P]?: Primitive<P[X]>}
 }

@@ -1,10 +1,17 @@
 
-import {Argspec} from "./argspec.js"
-import {Paramspec} from "./paramspec.js"
+import {Field} from "./field.js"
 
-export interface Spec<A extends Argspec, P extends Paramspec> {
+export interface Spec<
+		FA extends Field.Group = Field.Group,
+		FP extends Field.Group = Field.Group
+	> {
+	bin: string
 	argv: string[]
-	argorder: (keyof A)[]
-	args: A
-	params: P
+	argorder: (keyof FA)[]
+	args: FA
+	params: FP
+	readme?: string
+	help?: string
+	columns?: number
+	tips?: boolean
 }

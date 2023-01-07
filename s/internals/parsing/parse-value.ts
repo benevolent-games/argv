@@ -1,11 +1,12 @@
 
-import {Type} from "../types/type.js"
-import {Primitive} from "../types/primitive.js"
+import {Type} from "../../types/type.js"
+import {affirmatives} from "../constants.js"
+import {TypeToValue} from "../../types/type-to-value.js"
 
 export function parseValue<T extends Type>(
 		type: T,
 		arg: string,
-	): Primitive<T> {
+	): TypeToValue<T> {
 
 	switch (type) {
 
@@ -16,7 +17,7 @@ export function parseValue<T extends Type>(
 			return <any>Number(arg)
 
 		case Boolean:
-			return <any>(arg === "true")
+			return <any>affirmatives.includes(arg.toLowerCase())
 
 		default:
 			throw new Error("unknown type")
