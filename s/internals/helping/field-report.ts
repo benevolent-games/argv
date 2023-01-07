@@ -4,8 +4,8 @@ import {mode} from "./mode.js"
 import {stype} from "./stype.js"
 import {wblock} from "./wblock.js"
 import {palette} from "./palette.js"
-import {Type} from "../../../types/type.js"
-import {ZField} from "../../../types/field.js"
+import {Type} from "../../types/type.js"
+import {ZField} from "../../types/field.js"
 import {defaultValue} from "./default-value.js"
 
 export function fieldReport({

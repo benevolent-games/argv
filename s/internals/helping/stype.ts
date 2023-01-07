@@ -1,6 +1,6 @@
 
 import {palette} from "./palette.js"
-import {Type} from "../../../types/type.js"
+import {Type} from "../../types/type.js"
 
 export function stype(type: Type) {
 	switch (type) {

@@ -1,5 +1,5 @@
 
-import {color} from "../../../tools/colors.js"
+import {color} from "../../tools/colors.js"
 
 export const palette = {
 	bin: color.blue,

@@ -1,11 +1,11 @@
 
-import {wblock} from "./parts/wblock.js"
-import {Spec5} from "../../types/spec.js"
-import {palette} from "./parts/palette.js"
-import {ZField} from "../../types/field.js"
-import {Values} from "../../types/values.js"
-import {fieldReport} from "./parts/field-report.js"
-import {retrieveValue} from "./parts/retrieve-value.js"
+import {Spec5} from "../types/spec.js"
+import {ZField} from "../types/field.js"
+import {Values} from "../types/values.js"
+import {wblock} from "./helping/wblock.js"
+import {palette} from "./helping/palette.js"
+import {fieldReport} from "./helping/field-report.js"
+import {retrieveValue} from "./helping/retrieve-value.js"
 
 export function *helper<FA extends ZField.Group, FP extends ZField.Group>({
 		spec,

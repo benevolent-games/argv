@@ -1,6 +1,6 @@
 
 import {palette} from "./palette.js"
-import {ZField} from "../../../types/field.js"
+import {ZField} from "../../types/field.js"
 
 export function mode(mode: ZField.Mode) {
 	switch (mode) {

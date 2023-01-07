@@ -1,6 +1,6 @@
 
-import {Type} from "../types/type.js"
-import {TypeToValue} from "../types/type-to-value.js"
+import {Type} from "../../types/type.js"
+import {TypeToValue} from "../../types/type-to-value.js"
 
 export function parseValue<T extends Type>(
 		type: T,

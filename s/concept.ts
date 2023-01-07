@@ -1,5 +1,5 @@
 
-import {cli} from "./parse.js"
+import {cli} from "./cli.js"
 
 type Args = {
 	environment: string

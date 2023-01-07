@@ -1,5 +1,5 @@
 
-import {ArgvError} from "../errors/argv-error.js"
+import {ArgvError} from "../../errors/argv-error.js"
 
 export function validateParamAssignmentsAreCompleted(param: string | undefined) {
 	if (param)

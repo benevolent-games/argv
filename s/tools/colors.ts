@@ -16,7 +16,10 @@ export type Codes = typeof codes
 export const color = <{[key in keyof Codes]: (s: string) => string}>(
 	Object.fromEntries(
 		Object.entries(codes)
-			.map(([key, code]) => [key, (s: string) => `${code}${s}${codes.reset}`])
+			.map(([key, code]) => [
+				key, 
+				(s: string) => `${code}${s}${codes.reset}`,
+			])
 	)
 )
 

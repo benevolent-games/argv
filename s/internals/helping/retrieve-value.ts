@@ -1,5 +1,5 @@
 
-import {Values} from "../../../types/values.js"
+import {Values} from "../../types/values.js"
 
 export function retrieveValue(values: Values, name: string) {
 	return name in values

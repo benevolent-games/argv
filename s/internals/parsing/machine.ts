@@ -1,7 +1,7 @@
 
-import {Spec5} from "../types/spec.js"
-import {ZField} from "../types/field.js"
-import {Values} from "../types/values.js"
+import {Spec5} from "../../types/spec.js"
+import {ZField} from "../../types/field.js"
+import {Values} from "../../types/values.js"
 import {parseValue} from "./parse-value.js"
 
 export function parsingMachine<

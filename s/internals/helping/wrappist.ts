@@ -1,5 +1,5 @@
 
-import {uncolor} from "../../../tools/colors.js"
+import {uncolor} from "../../tools/colors.js"
 
 const mincolumns = 10
 
