@@ -21,20 +21,19 @@ const c = {
 
 export function *helper<FA extends ZField.Group, FP extends ZField.Group>({
 		spec,
-		args,
-		params,
+		args = {},
+		params = {},
 		tips = true,
 	}: {
 		spec: Spec5<FA, FP>,
-		args: Values
-		params: Values
+		args?: Values
+		params?: Values
 		tips?: boolean,
 	}) {
 
 	const columns = (spec.columns ?? 72) - 4
 	const argorder = <string[]>spec.argorder
 
-	yield ""
 	yield c.bin(spec.bin) + " " + (
 		argorder
 			.map(a => c.arg(`<${a}>`))
@@ -69,9 +68,8 @@ export function *helper<FA extends ZField.Group, FP extends ZField.Group>({
 			col: c.param,
 		})
 
-	yield ""
-
 	if (tips) {
+		yield ""
 		yield c.tip("tips")
 		yield wblock({
 			columns,
@@ -80,7 +78,6 @@ export function *helper<FA extends ZField.Group, FP extends ZField.Group>({
 				${c.tip("~")} "${c.param("+param")}" is short for "${c.param("--param=true")}"
 			`,
 		})
-		yield ""
 	}
 }
 
@@ -231,7 +228,7 @@ function indent(indenter: string, n: number, text: string) {
 		.join("\n")
 }
 
-function wblock({
+export function wblock({
 		text,
 		columns,
 		indent: [indents, indenter],
