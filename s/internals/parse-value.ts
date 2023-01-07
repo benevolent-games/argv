@@ -16,7 +16,12 @@ export function parseValue<T extends Type>(
 			return <any>Number(arg)
 
 		case Boolean:
-			return <any>(arg === "true")
+			return <any>(
+				arg === "true" ||
+				arg === "yes" ||
+				arg === "on" ||
+				arg === "enabled"
+			)
 
 		default:
 			throw new Error("unknown type")

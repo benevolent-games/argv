@@ -6,7 +6,7 @@ import {Fields2} from "./fields.js"
 import {TypeToValue} from "./type-to-value.js"
 import {ZRequirement} from "../internals/requirement.js"
 
-export type ZFieldsToResults<F extends ZField.Group<Values>> = {
+export type ZFieldsToResults<F extends ZField.GroupFromValues<Values>> = {
 	[key in keyof F]: F[key] extends ZField.Option<F[key]["type"]>
 		? TypeToValue<F[key]["type"]> | void
 		: TypeToValue<F[key]["type"]>

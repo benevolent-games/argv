@@ -6,8 +6,8 @@ import {Argspec} from "./argspec.js"
 import {Paramspec} from "./paramspec.js"
 
 export interface Spec5<
-		FA extends ZField.Group<Values>,
-		FP extends ZField.Group<Values>
+		FA extends ZField.Group = ZField.Group,
+		FP extends ZField.Group = ZField.Group
 	> {
 	bin: string
 	argv: string[]
@@ -15,6 +15,7 @@ export interface Spec5<
 	args: FA
 	params: FP
 	readme?: string
+	help?: string
 	columns?: number
 }
 

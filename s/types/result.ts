@@ -5,10 +5,10 @@ import {Values} from "./values.js"
 import {Fields2} from "./fields.js"
 import {FieldsToResults, ZFieldsToResults} from "./fields-to-results.js"
 
-export interface ZResult<
-		FA extends ZField.Group<Values>,
-		FP extends ZField.Group<Values>
-	> {
+export type ZResult<
+		FA extends ZField.GroupFromValues<Values>,
+		FP extends ZField.GroupFromValues<Values>
+	> = {
 	spec: Spec5<FA, FP>
 	executable: string
 	module: string

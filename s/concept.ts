@@ -1,6 +1,9 @@
 
-import {help} from "./help.js"
+import {helper} from "./help.js"
 import {parse4} from "./parse2.js"
+import {ZField} from "./types/field.js"
+import {Spec5} from "./types/spec.js"
+import {Type} from "./types/type.js"
 
 type Args = {
 	environment: string
@@ -8,6 +11,7 @@ type Args = {
 }
 
 type Params = {
+	"--help": string,
 	"--label": string,
 	"--host": string,
 	"--port": number,
@@ -15,11 +19,14 @@ type Params = {
 }
 
 const {args, params, spec} = parse4<Args, Params>()({
-	bin: "cynic",
 	argv: process.argv,
-	readme: "https://github.com/@benev/argv",
 	columns: process.stdout.columns ?? 72,
+
+	bin: "cynic",
 	argorder: ["environment", "suite"],
+	readme: "https://github.com/@benev/argv",
+	help: "run a cynic test suite module",
+	
 	args: {
 		environment: {
 			type: String,
@@ -32,7 +39,13 @@ const {args, params, spec} = parse4<Args, Params>()({
 			help: "path to the test suite module (eg, 'dist/suite.test.js')",
 		},
 	},
+
 	params: {
+		"--help": {
+			type: String,
+			mode: "option",
+			help: "trigger the help prompt"
+		},
 		"--label": {
 			type: String,
 			mode: "option",
@@ -58,9 +71,9 @@ const {args, params, spec} = parse4<Args, Params>()({
 	},
 })
 
-console.log("args", args)
-console.log("params", params)
-console.log("")
+// console.log("args", args)
+// console.log("params", params)
 
-if (help({spec, params}))
-	process.exit(0)
+if ("--help" in params)
+	for (const report of helper({spec, args, params}))
+		console.log(report)

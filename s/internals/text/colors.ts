@@ -19,3 +19,7 @@ export const color = <{[key in keyof Codes]: (s: string) => string}>(
 			.map(([key, code]) => [key, (s: string) => `${code}${s}${codes.reset}`])
 	)
 )
+
+export function strip(s: string) {
+	return s.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, "")
+}

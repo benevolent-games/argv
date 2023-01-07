@@ -28,7 +28,11 @@ export namespace ZField {
 		| Default<T>
 	)
 
-	export type Group<X extends Values> = {
+	export type Group = {
+		[key: string]: Any<Type>
+	}
+
+	export type GroupFromValues<X extends Values> = {
 		[key in keyof X]: Any<ValueToType<X[key]>>
 	}
 }

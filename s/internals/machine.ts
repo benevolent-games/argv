@@ -6,8 +6,8 @@ import {parseValue} from "./parse-value.js"
 import {ZFieldsToResults} from "../types/fields-to-results.js"
 
 export function parsingMachine<
-		FA extends ZField.Group<Values>,
-		FP extends ZField.Group<Values>
+		FA extends ZField.GroupFromValues<Values>,
+		FP extends ZField.GroupFromValues<Values>
 	>(spec: Spec5<FA, FP>) {
 
 	let paramIndex = 0

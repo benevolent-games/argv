@@ -8,9 +8,10 @@ import {validateArgOrdering} from "./internals/validate-arg-ordering.js"
 import {validateParamAssignmentsAreCompleted} from "./internals/validate-param-assignments-are-completed.js"
 
 export function parse4<A extends Values, P extends Values>() {
-	return function<FA extends ZField.Group<A>, FP extends ZField.Group<P>>(
-			spec: Spec5<FA, FP>
-		): ZResult<FA, FP> {
+	return function<
+			FA extends ZField.GroupFromValues<A>,
+			FP extends ZField.GroupFromValues<P>
+		>(spec: Spec5<FA, FP>): ZResult<FA, FP> {
 
 		validateArgOrdering(spec)
 
