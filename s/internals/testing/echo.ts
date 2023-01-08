@@ -3,7 +3,7 @@
 import {parse} from "../parse.js"
 import {stdcolumns} from "../constants.js"
 import {color} from "../../tools/colors.js"
-import {palette} from "../helping/palette.js"
+import {stdtheme} from "../../theme.js"
 
 const command = parse({
 	program: "argv-echo",
@@ -35,5 +35,5 @@ const command = parse({
 
 console.log(color.blue("executable"), command.executable)
 console.log(color.blue("module"), command.module)
-console.log(palette.arg("args"), command.args)
-console.log(palette.param("params"), command.params)
+console.log(stdtheme.arg("args"), command.args)
+console.log(stdtheme.param("params"), command.params)

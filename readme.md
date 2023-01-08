@@ -4,16 +4,26 @@
 ***command line argument parser***
 
 🤖 for making node cli programs  
+💁 help page auto-generated  
 🕵️‍♂️ designed for proper typescript typings  
-🏗️ experimental design, breaking changes likely  
 🧼 zero dependencies  
 💖 made free and open source, just for you  
 
 <br/>
 
-## argv instructions
+## example generated help page
 
-1. install via npm
+```sh
+$ icecream waffle-cone --flavor cookie-dough --scoops 5
+```
+
+![example help output](assets/help.png)
+
+<br/>
+
+## instructions
+
+1. install `@benev/argv` via npm
     ```sh
     npm install @benev/argv
     ```
@@ -37,57 +47,39 @@
 1. specify your cli, and perform the parsing
     ```ts
     const {args, params} = cli<Args, Params>()({
-
-      // your program's name
-      program: "myprogram",
-
-      // process.argv is a nodejs builtin
+      program: "icecream",
       argv: process.argv,
-
-      // terminal width, used for text-wrapping
-      columns: process.stdout.columns,
-
-      // link to your readme, for +help
-      readme: "https://github.com/@benev/argv",
-
-      // explainer for your menu, for +help
-      help: "my first command line program!",
+      columns: process.stdout.columns ?? 72,
 
       // positional arguments your program will accept
-      argorder: ["currency", "amount"],
+      argorder: ["vessel"],
 
       // arguments your program will accept
       args: {
-        currency: {
+        vessel: {
           type: String,
           mode: "requirement",
-          help: "currency, like 'usd' or 'cad'",
-        },
-        amount: {
-          type: Number,
-          mode: "default",
-          default: 123,
-          help: "amount of money",
+          help: 'can be "cone", "bowl", or "waffle-cone"',
         },
       },
 
       // parameters your program will accept
       params: {
-        "--label": {
+        "--flavor": {
           type: String,
-          mode: "option",
-          help: "a cool title",
-        },
-        "--verbose": {
-          type: Boolean,
-          mode: "option",
-          help: "display additional information",
-        },
-        "--port": {
-          type: Number,
           mode: "default",
-          default: 8021,
-          help: "tcp port server will listen on",
+          default: "vanilla",
+          help: "your favorite icecream flavor",
+        },
+        "--scoops": {
+          type: Number,
+          mode: "requirement",
+          help: "number of icecream scoops",
+        },
+        "--help": {
+          mode: "option",
+          type: Boolean,
+          help: "trigger the help page",
         },
       },
     })
@@ -95,22 +87,16 @@
 1. now you can access your args and params
     ```js
     // example command:
-    //   main.js usd +verbose --port 8021
+    //  $ icecream waffle-cone --flavor cookie-dough --scoops 5
 
-    args.currency
-      // "usd"
+    args.vessel
+      // "waffle-cone"
 
-    args.amount
-      // 123
+    params["--flavor"]
+      // "cookie-dough"
 
-    params["--label"]
-      // undefined
-
-    params["--verbose"]
-      // true
-
-    params["--port"]
-      // 8021
+    params["--scoops"]
+      // 5
     ```
 
 <br/>

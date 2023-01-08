@@ -2,69 +2,49 @@
 import {cli} from "../../cli.js"
 
 type Args = {
-	environment: string
-	suite: string
+	vessel: string
 }
 
 type Params = {
 	"--help": boolean,
-	"--label": string,
-	"--host": string,
-	"--port": number,
-	"--verbose": boolean,
+	"--flavor": string,
+	"--scoops": number,
 }
 
 const {args, params} = cli<Args, Params>()({
-	program: "cynic",
+	program: "icecream",
 	argv: process.argv,
-	columns: process.stdout.columns,
+	columns: process.stdout.columns ?? 80,
 
 	readme: "https://github.com/@benev/argv",
-	help: "run a cynic test suite module",
+	help: `example cli program for demonstration purposes`,
 
-	argorder: ["environment", "suite"],
+	argorder: ["vessel"],
 
 	args: {
-		environment: {
+		vessel: {
 			type: String,
 			mode: "requirement",
-			help: "runtime to run the tests (can be 'node', 'browser', or 'puppeteer')",
-		},
-		suite: {
-			type: String,
-			mode: "default",
-			default: "dist/suite.test.js",
-			help: "path to the test suite module (eg, 'dist/suite.test.js')",
+			help: `can be "cone", "bowl", or "waffle-cone"`,
 		},
 	},
 
 	params: {
+		"--flavor": {
+			type: String,
+			mode: "default",
+			default: "vanilla",
+			help: `your favorite icecream flavor`,
+		},
+		"--scoops": {
+			type: Number,
+			mode: "requirement",
+			help: `number of icecream scoops`,
+		},
 		"--help": {
 			type: Boolean,
 			mode: "option",
-			help: "trigger the help prompt"
-		},
-		"--label": {
-			type: String,
-			mode: "requirement",
-			help: "title string displayed in the suite report",
-		},
-		"--host": {
-			type: String,
-			mode: "default",
-			default: "http://localhost",
-			help: "url hostname, to connect to the http server (for browser or puppeteer)",
-		},
-		"--port": {
-			type: Number,
-			mode: "default",
-			default: 8021,
-			help: "port the http server should use",
-		},
-		"--verbose": {
-			type: Boolean,
-			mode: "option",
-			help: "show more data",
+			help: `trigger the help page`,
 		},
 	},
 })

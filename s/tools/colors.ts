@@ -17,7 +17,7 @@ export const color = <{[key in keyof Codes]: (s: string) => string}>(
 	Object.fromEntries(
 		Object.entries(codes)
 			.map(([key, code]) => [
-				key, 
+				key,
 				(s: string) => `${code}${s}${codes.reset}`,
 			])
 	)

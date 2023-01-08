@@ -1,17 +1,19 @@
 
-import {palette} from "./palette.js"
 import {Type} from "../../types/type.js"
 
 export function stype(type: Type) {
 	switch (type) {
 
 		case String:
-			return palette.type("string")
+			return "string"
 
 		case Number:
-			return palette.type("number")
+			return "number"
 
 		case Boolean:
-			return palette.type("boolean")
+			return "boolean"
+
+		default:
+			return "unknown"
 	}
 }

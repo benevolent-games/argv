@@ -2,7 +2,7 @@
 import {val} from "./val.js"
 import {mode} from "./mode.js"
 import {stype} from "./stype.js"
-import {palette} from "./palette.js"
+import {Theme} from "../../theme.js"
 import {textblock} from "./textblock.js"
 import {Type} from "../../types/type.js"
 import {Field} from "../../types/field.js"
@@ -13,10 +13,12 @@ export function fieldReport({
 		columns,
 		field,
 		value,
+		theme,
 		color,
 	}: {
 		name: string
 		columns: number
+		theme: Theme
 		field: Field.Any<Type>
 		value: undefined | {v: any}
 		color: (s: string) => string
@@ -29,11 +31,11 @@ export function fieldReport({
 		columns,
 		indent: [1, " "],
 		text: `${color(name)}`
-			+ ` ${mode(field.mode)}`
-			+ ` ${stype(field.type)}`
-			+ `${defaultValue(<any>field)}`
+			+ ` ${mode(theme, field.mode)}`
+			+ ` ${theme.type(stype(field.type))}`
+			+ `${defaultValue(theme, <any>field)}`
 			+ (value
-				? " " + palette.detected("got ") + palette.value(val(value.v))
+				? " " + theme.detected("got ") + theme.value(val(value.v))
 				: "")
 			,
 	})

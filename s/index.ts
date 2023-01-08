@@ -1,5 +1,6 @@
 
 export * from "./cli.js"
+export * from "./theme.js"
 
 export * from "./errors/argv-error.js"
 
