@@ -126,3 +126,9 @@ $ icecream waffle-cone --flavor cookie-dough --scoops 5
   - however people will panic if `--help` doesn't give the expected result, thus the magic handling here
   - use `+param` as a shorthand for enabling a boolean
   - `+help` also works
+- you can disable the ansi colors by passing `theme: notheme` after `import {notheme} from "@benev/argv"`
+- you can disable the "tips" section by passing `tips: false`
+- you can also pass
+  - `columns` current terminal width, used for text-wrapping
+  - `help` description and usage instructions for your program
+  - `readme` url to your program's readme
