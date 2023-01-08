@@ -18,24 +18,28 @@ export function parse<
 		args,
 		params,
 		saveArg,
-		saveParam,
+		saveParamTrue,
+		saveScheduledParam,
 		saveEqualSignedParam,
-		saveEnabledBooleanParam,
+		saveShorthandBoolean,
 		scheduledParamAssignment,
 		scheduleNextItemAsParamValue,
 	} = parsingMachine(spec)
 
 	for (const item of items) {
 		if (scheduledParamAssignment())
-			saveParam(item)
+			saveScheduledParam(item)
 		else {
 			if (item.startsWith("--"))
 				if (item.includes("="))
 					saveEqualSignedParam(item)
 				else
-					scheduleNextItemAsParamValue(item)
+					if (item === "--help")
+						saveParamTrue(item)
+					else
+						scheduleNextItemAsParamValue(item)
 			else if (item.startsWith("+"))
-				saveEnabledBooleanParam(item)
+				saveShorthandBoolean(item)
 			else
 				saveArg(item)
 		}

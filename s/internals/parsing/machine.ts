@@ -39,7 +39,11 @@ export function parsingMachine<
 			scheduledParamAssignment = item
 		},
 
-		saveParam: (item: string) => {
+		saveParamTrue: (item: string) => {
+			params[<keyof FP>item] = <any>true
+		},
+
+		saveScheduledParam: (item: string) => {
 			const name = scheduledParamAssignment!
 			scheduledParamAssignment = undefined
 			params[name] = <any>parseValue(getParamType(name), item)
@@ -56,7 +60,7 @@ export function parsingMachine<
 			params[<keyof FP>name] = <any>parseValue(getParamType(name), value)
 		},
 
-		saveEnabledBooleanParam(item: string) {
+		saveShorthandBoolean(item: string) {
 			const name = "--" + item.slice(1)
 			params[<keyof FP>name] = <any>true
 		},
