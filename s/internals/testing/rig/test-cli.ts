@@ -1,8 +1,9 @@
 
 import {cli} from "../../../cli.js"
-import {MemoryLogger} from "./logger.js"
 import {Field} from "../../../types/field.js"
 import {Values} from "../../../types/values.js"
+import {MemoryLogger} from "../utils/logger.js"
+import {CliTestRig} from "./types/cli-test-rig.js"
 
 export function testCli<
 		A extends Values,
@@ -16,13 +17,9 @@ export function testCli<
 			argorder: (keyof FA)[]
 			args: FA
 			params: FP
-		}) {
+		}): CliTestRig<FA, FP> {
 
-		return function(
-				argv: string[],
-				{columns = 80}: {columns?: number} = {},
-			) {
-
+		return function(argv, {columns = 80} = {}) {
 			let lastExitCode: undefined | number
 			const exit = (code: number) => { lastExitCode = code }
 

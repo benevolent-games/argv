@@ -1,7 +1,7 @@
 
-import {AssertionError} from "./assertion-error.js"
+import {FailedAssertion} from "./failed-assertion.js"
 
 export function assert(message: string, x: boolean) {
 	if (!x)
-		throw new AssertionError(message)
+		throw new FailedAssertion(message)
 }

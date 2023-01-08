@@ -30,9 +30,9 @@ export async function runTests<
 		for (const [testLabel, error] of failures) {
 			console.error([
 				color.magenta(error.name),
-				color.yellow(`"${testLabel}"`),
+				color.yellow(testLabel),
 				color.red("fails"),
-				color.magenta(`"${error.message}"`),
+				color.magenta(error.message),
 			].join(" "))
 		}
 		console.error(color.red(`${nfail} ${failure_s}.`))

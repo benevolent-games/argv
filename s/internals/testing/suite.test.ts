@@ -1,136 +1,142 @@
 
-import {assert} from "./utils/assert.js"
-import {stdargv} from "./utils/stdargv.js"
-import {testCli} from "./utils/test-cli.js"
+import {tools} from "./rig/tools.js"
+import {expect} from "./utils/expect.js"
+import {testCli} from "./rig/test-cli.js"
 import {runTests} from "./utils/run-tests.js"
 
 runTests({
 
 	async "empty program takes no inputs"() {
-		const {args, params} = testCli()({
+		const {args, params} = tools(testCli()({
 			argorder: [],
 			args: {},
 			params: {},
-		})(stdargv()).command
-		assert("should see no args", Object.keys(args).length === 0)
-		assert("should see no params", Object.keys(params).length === 0)
+		}))
+
+		expect("should see no args")
+			.that(Object.keys(args).length)
+			.is(0)
+
+		expect("should see no params")
+			.that(Object.keys(params).length)
+			.is(0)
 	},
 
-	async "arguments (optional)"() {
-		const cli = testCli()({
-			argorder: ["alpha", "bravo", "charlie"],
-			params: {},
-			args: {
-				alpha: {mode: "option", type: String},
-				bravo: {mode: "option", type: Number},
-				charlie: {mode: "option", type: Boolean},
-			},
-		})
-
-		{
-			const {args} = cli(stdargv()).command
-			assert("should see no args", Object.keys(args).length === 0)
-		}
-
-		{
-			const {args} = cli(stdargv("hello", "123", "true")).command
-			assert("alpha should be 'hello'", args.alpha === "hello")
-			assert("bravo should be 123", args.bravo === 123)
-			assert("charlie should be true", args.charlie === true)
-		}
-
-		{
-			const {args} = cli(stdargv("hello")).command
-			assert("alpha should be 'hello'", args.alpha === "hello")
-			assert("bravo should be undefined", args.bravo === undefined)
-			assert("charlie should be undefined", args.charlie === undefined)
-		}
-	},
-
-	async "arguments (required)"() {
-		const cli = testCli()({
+	async "arguments"() {
+		const {args, exitCode} = tools(testCli()({
 			argorder: ["alpha", "bravo", "charlie"],
 			params: {},
 			args: {
 				alpha: {mode: "requirement", type: String},
-				bravo: {mode: "requirement", type: Number},
-				charlie: {mode: "requirement", type: Boolean},
-			},
-		})
-		const run = (...args: string[]) => cli(stdargv(...args))
-		assert("should fail without args", run().exitCode === 1)
-		assert("should fail missing one arg", run("hello", "123").exitCode === 1)
-		{
-			const {exitCode, command: {args}} = run("hello", "123", "true")
-			assert("exit code should be undefined", exitCode === undefined)
-			assert("alpha should be 'hello'", args.alpha === "hello")
-			assert("bravo should be 123", args.bravo === 123)
-			assert("charlie should be true", args.charlie === true)
-		}
-	},
-
-	async "arguments (default)"() {
-		const cli = testCli()({
-			argorder: ["alpha", "bravo", "charlie"],
-			params: {},
-			args: {
-				alpha: {mode: "default", type: String, default: "hello"},
-				bravo: {mode: "default", type: Number, default: 123},
+				bravo: {mode: "option", type: Number},
 				charlie: {mode: "default", type: Boolean, default: true},
 			},
-		})
-		const run = (...args: string[]) => cli(stdargv(...args))
-		assert("should not fail", run().exitCode === undefined)
-		{
-			const {command: {args}} = run("world")
-			assert("alpha should overwrite to 'hello'", args.alpha === "world")
-			assert("bravo should fallback to 123", args.bravo === 123)
-			assert("charlie should fallback to true", args.charlie === true)
-		}
+		}))
+
+		expect("should fail without required param")
+			.that(exitCode())
+			.is(1)
+
+		expect("should succeed with required param")
+			.that(exitCode("hello"))
+			.is(undefined)
+
+		expect("should accept alpha")
+			.that(args("hello").alpha)
+			.is("hello")
+
+		expect("should keep bravo undefined")
+			.that(args("hello").bravo)
+			.is(undefined)
+
+		expect("should keep charlie true")
+			.that(args("hello").charlie)
+			.is(true)
+
+		expect("should accept bravo")
+			.that(args("hello", "123", "false").bravo)
+			.is(123)
+
+		expect("should accept charlie")
+			.that(args("hello", "123", "false").charlie)
+			.is(false)
 	},
 
 	async "parameters"() {
-		const cli = testCli()({
+		const {params, exitCode} = tools(testCli()({
+			args: {},
 			argorder: [],
 			params: {
 				"--alpha": {mode: "requirement", type: String},
 				"--bravo": {mode: "option", type: Number},
 				"--charlie": {mode: "default", type: Boolean, default: true},
 			},
-			args: {},
-		})
-		const run = (...args: string[]) => cli(stdargv(...args))
+		}))
 
-		assert("should fail without required param", run().exitCode === 1)
-		assert("should succeed with required param", run().exitCode === 0)
+		expect("should fail without required param")
+			.that(exitCode())
+			.is(1)
 
-		assert(
-			"should accept alpha param",
-			run("hello").command.params["--alpha"] === "hello",
-		)
+		expect("should succeed with required param")
+			.that(exitCode("--alpha", "hello"))
+			.is(undefined)
 
-		assert(
-			"should keep bravo undefined",
-			run("hello").command.params["--bravo"] === undefined,
-		)
+		expect("should accept alpha param")
+			.that(params("--alpha", "hello")["--alpha"])
+			.is("hello")
 
-		assert(
-			"should fallback charlie to true",
-			run("hello").command.params["--charlie"] === true,
-		)
+		expect("should keep bravo undefined")
+			.that(params("--alpha", "hello")["--bravo"])
+			.is(undefined)
 
-		assert(
-			"should accept bravo",
-			run("hello", "123", "false").command.params["--bravo"] === 123,
-		)
+		expect("should fallback charlie to true")
+			.that(params("--alpha", "hello")["--charlie"])
+			.is(true)
 
-		assert(
-			"should accept charlie",
-			run("hello", "123", "false").command.params["--charlie"] === false,
-		)
+		expect("should accept bravo")
+			.that(params("--alpha", "hello", "--bravo", "123")["--bravo"])
+			.is(123)
+
+		expect("should accept charlie")
+			.that(params("--alpha", "hello", "--charlie", "false")["--charlie"])
+			.is(false)
 	},
 
-	async "parameters (required)"() {},
+	async "parameter assignment syntax"() {
+		const {params} = tools(testCli()({
+			args: {},
+			argorder: [],
+			params: {"--alpha": {mode: "requirement", type: String}},
+		}))
+		const param = (...args: string[]) => params(...args)["--alpha"]
 
-	async "parameters (default)"() {},
+		expect("ordinary syntax should parse")
+			.that(param("--alpha", "hello"))
+			.is("hello")
+
+		expect("equal-signed syntax should parse")
+			.that(param("--alpha=hello world"))
+			.is("hello world")
+	},
+
+	async "boolean param assignment"() {
+		const {params} = tools(testCli()({
+			args: {},
+			argorder: [],
+			params: {"--alpha": {mode: "option", type: Boolean}},
+		}))
+		const param = (...args: string[]) => params(...args)["--alpha"]
+
+		expect("unset option should be undefined")
+			.that(param())
+			.is(undefined)
+
+		expect("plus syntax should enable boolean")
+			.that(param("+alpha"))
+			.is(true)
+
+		expect("'yes' should be a synonym for 'true'")
+			.that(param("--alpha", "yes"))
+			.is(true)
+	},
 })
