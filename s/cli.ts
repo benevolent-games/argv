@@ -7,9 +7,17 @@ import {parse} from "./internals/parse.js"
 import {helper} from "./internals/helper.js"
 import {errorReport} from "./internals/error-report.js"
 import {applyDefaults} from "./internals/parsing/apply-defaults.js"
+import {ConsoleLogger, Logger} from "./internals/testing/utils/logger.js"
 import {validateRequirements} from "./internals/parsing/validate-requirements.js"
 
-export function cli<A extends Values, P extends Values>() {
+export function cli<A extends Values, P extends Values>({
+		logger = new ConsoleLogger(),
+		exit = code => process.exit(code),
+	}: {
+		logger?: Logger
+		exit?: (code: number) => void
+	} = {}) {
+
 	return function<
 			FA extends Field.GroupFromValues<A>,
 			FP extends Field.GroupFromValues<P>
@@ -20,9 +28,9 @@ export function cli<A extends Values, P extends Values>() {
 
 			if ("--help" in command.params && command.params["--help"]) {
 				for (const report of helper(command))
-					console.log(report)
+					logger.log(report)
 
-				process.exit(0)
+				return <any>exit(0)
 			}
 
 			validateRequirements(command.spec.args, command.args)
@@ -35,16 +43,16 @@ export function cli<A extends Values, P extends Values>() {
 		}
 		catch (err: any) {
 			const errortext = errorReport(err)
-			const printError = () => console.error(...errortext)
+			const printError = () => logger.error(errortext.join(" "))
 			printError()
-			console.error("")
+			logger.error("")
 
 			for (const report of helper({spec}))
-				console.error(report)
+				logger.error(report)
 
-			console.error("")
+			logger.error("")
 			printError()
-			process.exit(1)
+			return <any>exit(1)
 		}
 	}
 }

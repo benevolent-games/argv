@@ -39,7 +39,7 @@
     const {args, params} = cli<Args, Params>()({
 
       // your program's name
-      bin: "myprogram",
+      program: "myprogram",
 
       // process.argv is a nodejs builtin
       argv: process.argv,

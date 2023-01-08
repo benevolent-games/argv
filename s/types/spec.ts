@@ -5,7 +5,7 @@ export interface Spec<
 		FA extends Field.Group = Field.Group,
 		FP extends Field.Group = Field.Group
 	> {
-	bin: string
+	program: string
 	argv: string[]
 	argorder: (keyof FA)[]
 	args: FA

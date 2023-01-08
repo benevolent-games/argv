@@ -22,7 +22,7 @@ export function *helper<FA extends Field.Group, FP extends Field.Group>({
 	const columns = (spec.columns ?? stdcolumns) - 4
 	const argorder = <string[]>spec.argorder
 
-	yield palette.binary(spec.bin) + " " + (
+	yield palette.binary(spec.program) + " " + (
 		argorder
 			.map(a => palette.arg(`<${a}>`))
 			.join(" ")

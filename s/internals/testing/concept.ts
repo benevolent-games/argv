@@ -1,5 +1,5 @@
 
-import {cli} from "./cli.js"
+import {cli} from "../../cli.js"
 
 type Args = {
 	environment: string
@@ -15,7 +15,7 @@ type Params = {
 }
 
 const {args, params} = cli<Args, Params>()({
-	bin: "cynic",
+	program: "cynic",
 	argv: process.argv,
 	columns: process.stdout.columns,
 
@@ -46,7 +46,7 @@ const {args, params} = cli<Args, Params>()({
 		},
 		"--label": {
 			type: String,
-			mode: "option",
+			mode: "requirement",
 			help: "title string displayed in the suite report",
 		},
 		"--host": {

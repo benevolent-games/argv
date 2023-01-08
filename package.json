@@ -10,16 +10,13 @@
 		"x",
 		"s"
 	],
-	"bin": {
-		"argv-echo": "x/echo.js"
-	},
 	"scripts": {
 		"build": "run-s clean compile",
 		"clean": "rm -rf x && mkdir x",
 		"compile": "tsc",
 		"start": "run-p watch",
 		"watch": "tsc -w",
-		"test": "exit 0"
+		"test": "node x/internals/testing/suite.test.js"
 	},
 	"devDependencies": {
 		"@types/node": "^18.11.18",
