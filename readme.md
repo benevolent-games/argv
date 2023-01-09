@@ -14,7 +14,7 @@
 ## example generated help page
 
 ```sh
-$ icecream waffle-cone --flavor cookie-dough --scoops 5
+$ icecream waffle-cone --flavor="cookie-dough" --scoops="5" +help
 ```
 
 ![example help output](assets/help.png)
@@ -38,9 +38,9 @@ $ icecream waffle-cone --flavor cookie-dough --scoops 5
     }
 
     export type Params = {
-      "--flavor": string
-      "--scoops": number
-      "--help": boolean
+      flavor: string
+      scoops: number
+      help: boolean
     }
     ```
 1. specify your cli, and perform the parsing
@@ -64,18 +64,18 @@ $ icecream waffle-cone --flavor cookie-dough --scoops 5
 
       // parameters your program will accept
       params: {
-        "--flavor": {
+        flavor: {
           type: String,
           mode: "default",
           default: "vanilla",
           help: "your favorite icecream flavor",
         },
-        "--scoops": {
+        scoops: {
           type: Number,
           mode: "requirement",
           help: "number of icecream scoops",
         },
-        "--help": {
+        help: {
           type: Boolean,
           mode: "option",
           help: "trigger the help page",
@@ -91,10 +91,10 @@ $ icecream waffle-cone --flavor cookie-dough --scoops 5
     args.vessel
       // "waffle-cone"
 
-    params["--flavor"]
+    params.flavor
       // "cookie-dough"
 
-    params["--scoops"]
+    params.scoops
       // 5
     ```
 
@@ -102,7 +102,6 @@ $ icecream waffle-cone --flavor cookie-dough --scoops 5
 
 ## notes
 
-- argv uses exact names, like `--param`, so the typescript typings work.
 - typings work best if you declare `Args` and `Params` types, but it can infer some of it if you omit them.
 - these are equivalent ways to pass a param:
   - `--param true`

@@ -6,9 +6,9 @@ type Args = {
 }
 
 type Params = {
-	"--help": boolean,
-	"--flavor": string,
-	"--scoops": number,
+	help: boolean
+	flavor: string
+	scoops: number
 }
 
 const {args, params} = cli<Args, Params>()({
@@ -33,20 +33,20 @@ const {args, params} = cli<Args, Params>()({
 
 	params: {
 
-		"--flavor": {
+		flavor: {
 			type: String,
 			mode: "default",
 			default: "vanilla",
 			help: `your favorite icecream flavor`,
 		},
 
-		"--scoops": {
+		scoops: {
 			type: Number,
 			mode: "requirement",
 			help: `number of icecream scoops`,
 		},
 
-		"--help": {
+		help: {
 			type: Boolean,
 			mode: "option",
 			help: `trigger the help page`,

@@ -1,8 +1,9 @@
 
 import {Spec} from "../../types/spec.js"
 import {Field} from "../../types/field.js"
-import {Values} from "../../types/values.js"
 import {parseValue} from "./parse-value.js"
+import {Values} from "../../types/values.js"
+import {undash} from "./undash.js"
 
 export function parsingMachine<
 		FA extends Field.GroupFromValues<Values>,
@@ -36,11 +37,11 @@ export function parsingMachine<
 		},
 
 		scheduleNextItemAsParamValue: (item: string) => {
-			scheduledParamAssignment = item
+			scheduledParamAssignment = undash(item)
 		},
 
 		saveParamTrue: (item: string) => {
-			params[<keyof FP>item] = <any>true
+			params[<keyof FP>undash(item)] = <any>true
 		},
 
 		saveScheduledParam: (item: string) => {
@@ -56,12 +57,12 @@ export function parsingMachine<
 		},
 
 		saveEqualSignedParam(item: string) {
-			const [name, value] = item.split("=")
+			const [name, value] = undash(item).split("=")
 			params[<keyof FP>name] = <any>parseValue(getParamType(name), value)
 		},
 
 		saveShorthandBoolean(item: string) {
-			const name = "--" + item.slice(1)
+			const name = item.slice(1)
 			params[<keyof FP>name] = <any>true
 		},
 	}

@@ -67,9 +67,9 @@ runTests({
 			args: {},
 			argorder: [],
 			params: {
-				"--alpha": {mode: "requirement", type: String},
-				"--bravo": {mode: "option", type: Number},
-				"--charlie": {mode: "default", type: Boolean, default: true},
+				alpha: {mode: "requirement", type: String},
+				bravo: {mode: "option", type: Number},
+				charlie: {mode: "default", type: Boolean, default: true},
 			},
 		}))
 
@@ -82,23 +82,23 @@ runTests({
 			.is(undefined)
 
 		expect("should accept alpha param")
-			.that(params("--alpha", "hello")["--alpha"])
+			.that(params("--alpha", "hello").alpha)
 			.is("hello")
 
 		expect("should keep bravo undefined")
-			.that(params("--alpha", "hello")["--bravo"])
+			.that(params("--alpha", "hello").bravo)
 			.is(undefined)
 
 		expect("should fallback charlie to true")
-			.that(params("--alpha", "hello")["--charlie"])
+			.that(params("--alpha", "hello").charlie)
 			.is(true)
 
 		expect("should accept bravo")
-			.that(params("--alpha", "hello", "--bravo", "123")["--bravo"])
+			.that(params("--alpha", "hello", "--bravo", "123").bravo)
 			.is(123)
 
 		expect("should accept charlie")
-			.that(params("--alpha", "hello", "--charlie", "false")["--charlie"])
+			.that(params("--alpha", "hello", "--charlie", "false").charlie)
 			.is(false)
 	},
 
@@ -106,9 +106,9 @@ runTests({
 		const {params} = tools(testCli()({
 			args: {},
 			argorder: [],
-			params: {"--alpha": {mode: "requirement", type: String}},
+			params: {alpha: {mode: "requirement", type: String}},
 		}))
-		const param = (...args: string[]) => params(...args)["--alpha"]
+		const param = (...args: string[]) => params(...args).alpha
 
 		expect("ordinary syntax should parse")
 			.that(param("--alpha", "hello"))
@@ -123,9 +123,9 @@ runTests({
 		const {params} = tools(testCli()({
 			args: {},
 			argorder: [],
-			params: {"--alpha": {mode: "option", type: Boolean}},
+			params: {alpha: {mode: "option", type: Boolean}},
 		}))
-		const param = (...args: string[]) => params(...args)["--alpha"]
+		const param = (...args: string[]) => params(...args).alpha
 
 		expect("unset option should be undefined")
 			.that(param())

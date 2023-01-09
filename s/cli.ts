@@ -26,7 +26,7 @@ export function cli<A extends Values, P extends Values>({
 		try {
 			const command = parse(spec)
 
-			if ("--help" in command.params) {
+			if ("help" in command.params) {
 				for (const report of helper(command))
 					logger.log(report)
 

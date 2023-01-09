@@ -59,7 +59,7 @@ export function *helper<FA extends Field.Group, FP extends Field.Group>({
 
 	for (const [name, field] of Object.entries(spec.params))
 		yield fieldReport({
-			name,
+			name: "--" + name,
 			field,
 			columns,
 			theme,
