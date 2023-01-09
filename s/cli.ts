@@ -6,12 +6,12 @@ import {Command} from "./types/command.js"
 import {parse} from "./internals/parse.js"
 import {helper} from "./internals/helper.js"
 import {errorReport} from "./internals/error-report.js"
+import {Logger} from "./internals/testing/utils/logger.js"
 import {applyDefaults} from "./internals/parsing/apply-defaults.js"
-import {ConsoleLogger, Logger} from "./internals/testing/utils/logger.js"
 import {validateRequirements} from "./internals/parsing/validate-requirements.js"
 
 export function cli<A extends Values, P extends Values>({
-		logger = new ConsoleLogger(),
+		logger = console,
 		exit = code => process.exit(code),
 	}: {
 		logger?: Logger
