@@ -5,18 +5,13 @@
 			"type": "node",
 			"request": "launch",
 			"name": "debug",
-			"program": "${workspaceFolder}/x/echo.js",
+			"program": "${workspaceFolder}/x/internals/testing/icecream.js",
 			"args": [
-				"hello",
-				"world",
-				"--label",
-				"rofl",
-				"--port",
-				"8021",
-				"--verbose",
-				"true",
-				"--importmap",
-				"a b c"
+				"waffle-cone",
+				"--flavor",
+				"waffle-cone",
+				"--scoops=5",
+				"+help"
 			],
 			"stopOnEntry": false
 		}

@@ -141,11 +141,12 @@ runTests({
 	},
 
 	async "--help magically works"() {
-		const {run, exitCode} = tools(testCli()({
+		const {exitCode} = tools(testCli()({
 			args: {},
 			argorder: [],
 			params: {},
 		}))
+
 		expect("should exit with code 0")
 			.that(exitCode("--help"))
 			.is(0)
