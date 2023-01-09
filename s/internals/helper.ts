@@ -23,12 +23,19 @@ export function *helper<FA extends Field.Group, FP extends Field.Group>({
 	const tips = spec.tips ?? true
 	const columns = (spec.columns ?? stdcolumns) - 4
 	const argorder = <string[]>spec.argorder
+	const argnum = argorder.length
 
-	yield theme.binary(spec.program) + " " + (
-		argorder
-			.map(a => theme.arg(`<${a}>`))
-			.join(" ")
-	) + theme.param(" {parameters}")
+	yield (
+		theme.binary(spec.program)
+		+ " "
+		+ (
+			argorder
+				.map(a => theme.arg(`<${a}>`))
+				.join(" ")
+		)
+		+ (argnum === 0 ?"" : " ")
+		+ theme.param("{parameters}")
+	)
 
 	if (spec.readme)
 		yield theme.readme("  readme ") + theme.link(spec.readme)
