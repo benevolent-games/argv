@@ -36,7 +36,7 @@ export namespace Field {
 
 	export type ValuesFromGroup<F extends Group> = {
 		[key in keyof F]: F[key] extends Option<F[key]["type"]>
-			? TypeToValue<F[key]["type"]> | void
+			? TypeToValue<F[key]["type"]> | undefined
 			: TypeToValue<F[key]["type"]>
 	}
 }
