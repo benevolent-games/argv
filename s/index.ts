@@ -5,6 +5,7 @@ export * from "./theme.js"
 export * from "./errors/argv-error.js"
 
 export * from "./tools/colors.js"
+export * from "./tools/death-with-dignity.js"
 
 export * from "./types/command.js"
 export * from "./types/field.js"
