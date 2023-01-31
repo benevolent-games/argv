@@ -2,18 +2,26 @@
 import {Field} from "./types/field.js"
 import {Values} from "./types/values.js"
 import {obtain} from "./tools/obtain.js"
+import {stdtheme, Theme} from "./theme.js"
 import {parse2} from "./internals/parse2.js"
-import {Logger} from "./internals/testing/utils/logger.js"
-import {validateRequirements} from "./internals/parsing/validate-requirements.js"
-import {applyDefaults} from "./internals/parsing/apply-defaults.js"
-import {helper} from "./internals/helper.js"
-import {Theme} from "./theme.js"
+import {helper3} from "./internals/helper.js"
 import {errorReport} from "./internals/error-report.js"
+import {Logger} from "./internals/testing/utils/logger.js"
+import {applyDefaults} from "./internals/parsing/apply-defaults.js"
+import {validateRequirements} from "./internals/parsing/validate-requirements.js"
 
 export interface Command<A extends Values = Values, P extends Values = Values> {
+
+	/** description and usage instructions for this command */
 	help: string
+
+	/** positional arguments this command will accept, in order */
 	argorder: (keyof A)[]
+
+	/** arguments specification */
 	args: Field.GroupFromValues<A>
+
+	/** parameters specification */
 	params: Field.GroupFromValues<P>
 }
 
@@ -47,16 +55,35 @@ export function assertCommand(commands: Commands) {
 }
 
 export interface NuSpec<C extends Commands = Commands> {
-	name: string
-	argv: string[]
-	columns?: number
 
+	/** the name of your program's executable */
+	name: string
+
+	/** url to your program's readme */
 	readme: string
+
+	/** description and usage instructions for your program */
 	help: string
 
-	commands: (c: typeof asCommand) => C
+	/** command line arguments (in node, use process.argv) */
+	argv?: string[]
 
+	/** current terminal width, used for text-wrapping */
+	columns?: number
+
+	/** specify a logger that will be used to write outputs */
 	logger?: Logger
+
+	/** display "tips" section at end of +help page */
+	tips?: boolean
+
+	/** color palette to use in the +help page */
+	theme?: Theme
+
+	/** describe the commands your program can accept */
+	commands: CommandSetup<C>
+
+	/** function that is called to exit the process early */
 	exit?: (code: number) => void
 }
 
@@ -96,28 +123,25 @@ export function getArgsFollowingCommandTuple(tuple: string[], args: string[]) {
 		: args
 }
 
+// export type Result<C extends Commands> = {
+// 	[P in keyof C]: C[P] extends Command
+// 		? {
+// 			args: Field.ValuesFromGroup<C["args"]>,
+// 			params: Field.ValuesFromGroup<C["params"]>,
+// 		}
+// }
+
 export function program<A extends Values, P extends Values>() {
-	return function<C extends Commands>(spec: {
-			name: string
-			readme: string
-			help: string
+	return function<C extends Commands>(spec: NuSpec<C>) {
 
-			argv: string[]
-			columns?: number
+		spec.argv ??= process.argv
+		spec.columns ??= process.stdout.columns ?? 72
+		spec.logger ??= console
+		spec.exit ??= code => process.exit(code)
+		spec.tips ??= true
+		spec.theme ??= stdtheme
 
-			commands: CommandSetup<C>
-
-			logger?: Logger
-			exit?: (code: number) => void
-
-			/** display "tips" section at end of +help page */
-			tips?: boolean
-
-			/** color palette to use in the +help page */
-			theme?: Theme
-		}) {
-
-		const {logger = console} = spec
+		const {logger} = spec
 
 		const tree = spec.commands(asCommand)
 		const tuples = parseTuples(tree)
@@ -132,13 +156,14 @@ export function program<A extends Values, P extends Values>() {
 		const items = getArgsFollowingCommandTuple(matchingTuple, parts)
 
 		const {args, params} = parse2(command, items)
+		const validCommand = {command, args, params, tuple: matchingTuple}
 
 		try {
 			if ("help" in command.params) {
-				for (const report of helper(command))
+				for (const report of helper3({spec, validCommand}))
 					logger.log(report)
 
-				return <any>exit(0)
+				return <any>spec.exit(0)
 			}
 
 			validateRequirements(command.args, args)
@@ -153,12 +178,12 @@ export function program<A extends Values, P extends Values>() {
 			printError()
 			logger.error("")
 
-			for (const report of helper({spec}))
+			for (const report of helper3({spec, validCommand}))
 				logger.error(report)
 
 			logger.error("")
 			printError()
-			return <any>exit(1)
+			return <any>spec.exit(1)
 		}
 
 		return {
