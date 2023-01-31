@@ -1,6 +1,6 @@
 
 import {Field} from "../types/field.js"
-import {CommandSpec} from "../program2.js"
+import {CommandSpec, ParseResult} from "../program2.js"
 import {Command, getArgsFollowingCommandTuple} from "../program.js"
 import {parsingMachine2, parsingMachine3} from "./parsing/machine.js"
 import {validateArgOrdering2, validateArgOrdering3} from "./parsing/validate-arg-ordering.js"
@@ -13,7 +13,7 @@ export function parse3<
 		spec: CommandSpec<FA, FP>,
 		cmd: string,
 		argv: string[],
-	) {
+	): ParseResult<FA, FP> {
 
 	const [executable, module, ...parts] = argv
 	const tuple = cmd.toLowerCase().split(" ")
@@ -55,6 +55,7 @@ export function parse3<
 	validateParamAssignmentsAreCompleted(scheduledParamAssignment())
 
 	return {
+		cmd,
 		args: args as Field.ValuesFromGroup<FA>,
 		params: params as Field.ValuesFromGroup<FP>,
 		executable,

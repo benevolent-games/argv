@@ -18,6 +18,17 @@ export interface Settings {
 	theme: Theme
 }
 
+export interface ParseResult<
+		FA extends Field.Group = Field.Group,
+		FP extends Field.Group = Field.Group
+	> {
+	args: Field.ValuesFromGroup<FA>
+	params: Field.ValuesFromGroup<FP>
+	executable: string
+	module: string
+	cmd: string
+}
+
 export interface CommandSpec<
 		FA extends Field.Group = Field.Group,
 		FP extends Field.Group = Field.Group
@@ -26,12 +37,7 @@ export interface CommandSpec<
 	argorder: (keyof FA)[],
 	args: FA,
 	params: FP,
-	execute: ({}: {
-		args: Field.ValuesFromGroup<FA>
-		params: Field.ValuesFromGroup<FP>
-		executable: string
-		module: string
-	}) => Promise<void>
+	execute: ({}: ParseResult<FA, FP>) => Promise<void>
 }
 
 export function inputMatchesCommand(cmd: string, argv: string[]) {
@@ -46,8 +52,11 @@ export function inputMatchesCommand(cmd: string, argv: string[]) {
 
 export function inputMatchesCommand2(cmd: string, argv: string[]) {
 	const [,,...parts] = argv
+	const cmd2 = cmd.toLowerCase()
 	const input = parts.join(" ").toLowerCase()
-	return input.startsWith(cmd.toLowerCase())
+	return cmd2
+		? input.startsWith(cmd2)
+		: true
 }
 
 export const program2 = (name: string) => ({
@@ -67,23 +76,26 @@ export const program2 = (name: string) => ({
 			}
 
 			function dummy() {
-				return {command: dummy, wait}
+				return dummyChain
 			}
+
+			const chain = {command, wait}
+			const dummyChain = {command: dummy, wait}
 
 			function command<FA extends Field.Group, FP extends Field.Group>(
 					cmd: string,
 					spec: CommandSpec<FA, FP>,
 				) {
 
-				if (inputMatchesCommand(cmd, environment.argv)) {
+				if (inputMatchesCommand2(cmd, environment.argv))
 					executed = {
 						cmd,
 						promise: spec.execute(parse3(spec, cmd, environment.argv)),
 					}
-					return {command: dummy, wait}
-				}
-				else
-					return {command, wait}
+
+				return executed
+					? dummyChain
+					: chain
 			}
 
 			return {command, wait}

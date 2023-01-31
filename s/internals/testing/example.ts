@@ -18,7 +18,7 @@ await program2("pack")
 	theme: stdtheme,
 })
 
-.command("check", {
+.command("", {
 	help: `get information about a pack`,
 	argorder: ["packname", "version"],
 	args: {
@@ -42,8 +42,8 @@ await program2("pack")
 			help: ``,
 		},
 	},
-	async execute({args, params}) {
-		console.log("check", args, params)
+	async execute({args, params, cmd}) {
+		console.log(cmd, args, params)
 	},
 })
 
