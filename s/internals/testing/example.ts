@@ -1,24 +1,23 @@
 
 import {stdtheme} from "../../theme.js"
-import {program2} from "../../program2.js"
+import {program5} from "../../program2.js"
 
-await program2("pack")
+await program5({
+	name: "pack",
 
-.environment({
 	logger: console,
 	argv: process.argv,
 	columns: process.stdout.columns ?? 72,
 	exit: code => process.exit(code),
-})
 
-.settings({
 	help: ``,
 	readme: "",
 	tips: true,
 	theme: stdtheme,
 })
 
-.command("", {
+.command({
+	cmd: "check",
 	help: `get information about a pack`,
 	argorder: ["packname", "version"],
 	args: {
@@ -47,4 +46,4 @@ await program2("pack")
 	},
 })
 
-.wait()
+.exit()
