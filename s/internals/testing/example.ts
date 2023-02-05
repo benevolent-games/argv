@@ -1,14 +1,13 @@
 
 import {stdtheme} from "../../theme.js"
-import {program7, program8} from "../../program2.js"
+import {program7} from "../../program2.js"
 
-await program8()({
+await program7({
 	name: "pack",
 
 	logger: console,
 	argv: process.argv,
 	columns: process.stdout.columns ?? 72,
-	// exit: code => process.exit(code),
 	exit: false,
 
 	help: ``,
@@ -19,59 +18,25 @@ await program8()({
 	commands: command => ({
 		check: command({
 			help: ``,
-			// argorder: ["packname", "version"],
-			argorder: ["lol"],
+			argorder: ["packname", "version"],
 			args: {
-				lol: {
+				packname: {
 					type: String,
-					mode: "requirement",
-					help: "",
+					mode: "default",
+					default: ".",
+					help: ``,
 				},
-				// packname: {
-				// 	type: String,
-				// 	mode: "default",
-				// 	default: ".",
-				// 	help: ``,
-				// },
-				// version: {
-				// 	type: String,
-				// 	mode: "default",
-				// 	default: "*",
-				// 	help: `semver specifier for which version you want`,
-				// }
+				version: {
+					type: String,
+					mode: "default",
+					default: "*",
+					help: `semver specifier for which version you want`,
+				}
 			},
 			params: {},
 			async execute({args, params}) {
 				console.log("hello")
 			},
 		})
-		// check: command({
-		// 	help: `get information about a pack`,
-		// 	argorder: ["packname", "version"],
-		// 	args: {
-		// 		packname: {
-		// 			type: String,
-		// 			mode: "default",
-		// 			default: ".",
-		// 			help: `query the cloud for info about a pack`,
-		// 		},
-		// 		version: {
-		// 			type: String,
-		// 			mode: "default",
-		// 			default: "*",
-		// 			help: `semver specifier for which version you want`,
-		// 		},
-		// 	},
-		// 	params: {
-		// 		lol: {
-		// 			type: Number,
-		// 			mode: "option",
-		// 			help: ``,
-		// 		},
-		// 	},
-		// 	async execute({args, params, cmd}) {
-		// 		console.log(cmd, args, params)
-		// 	},
-		// }),
 	}),
 })
