@@ -1,16 +1,6 @@
+
 import {Theme} from "../theme.js"
-
-export const stdcolumns = 72
-export const mincolumns = 10
-
-export const affirmatives = [
-	"true",
-	"yes",
-	"y",
-	"on",
-	"ok",
-	"enabled",
-]
+import {affirmatives} from "../parsing/program/affirmatives.js"
 
 export function makeTips(theme: Theme) {
 

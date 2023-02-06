@@ -1,5 +1,5 @@
 
-import {Logger} from "../internals/testing/utils/logger.js"
+import {Logger} from "./logger.js"
 
 export function deathWithDignity(
 		logger: Logger = console,
