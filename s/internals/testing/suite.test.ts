@@ -45,7 +45,7 @@ await runTests({
 				args: {
 					alpha: {
 						type: String,
-						mode: "option",
+						mode: "requirement",
 					},
 				},
 				params: {},
