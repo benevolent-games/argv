@@ -11,6 +11,24 @@ export type Config<C extends Commands> = Environment & Settings & {
 	commands: CommandSetup<C>
 }
 
+// TODO experimenting with types
+
+export function setup<C extends Commands>(commands: CommandSetup<C>) {}
+
+setup(command => command({
+		argorder: ["alpha"],
+		args: {
+			alpha: {
+				type: String,
+				mode: "requirement",
+			},
+		},
+		params: {},
+		async execute({args}) {
+			args.alpha
+		},
+}))
+
 export function asConfig<xConfig extends Config<Commands>>(c: xConfig) {
 	return c
 }
