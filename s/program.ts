@@ -27,7 +27,7 @@ export async function program<
 	let result: Output
 
 	if (tuple) {
-		const command = obtain(tree, tuple) as Command
+		const command = obtain(tree, tuple) as Command<any, any>
 		const parsed = parseCommand(
 			tuple,
 			command,

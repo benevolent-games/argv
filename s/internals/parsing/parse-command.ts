@@ -17,8 +17,8 @@ export function parseCommand<FA extends Group, FP extends Group>(
 	const [executable, module, ...parts] = argv
 	const items = getArgsFollowingCommandTuple(tuple, parts)
 
-	validateArgOrdering(command as Command)
-	const m = parsingMachine3(command as Command)
+	validateArgOrdering(command as Command<any, any>)
+	const m = parsingMachine3(command as Command<any, any>)
 
 	for (const item of items) {
 		if (m.scheduledParamAssignment())

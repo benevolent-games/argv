@@ -2,4 +2,4 @@
 import {Command} from "./command.js"
 import {CommandTree} from "./command-tree.js"
 
-export type Commands = Command | CommandTree
+export type Commands = Command<any, any> | CommandTree

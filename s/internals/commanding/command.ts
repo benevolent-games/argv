@@ -3,8 +3,8 @@ import {Group} from "../fielding/group.js"
 import {ParseResult} from "./parse-result.js"
 
 export interface Command<
-		FA extends Group = Group,
-		FP extends Group = Group
+		FA extends Group,
+		FP extends Group,
 	> {
 	argorder: (keyof FA)[]
 	args: FA

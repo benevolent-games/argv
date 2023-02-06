@@ -4,6 +4,9 @@ import {Environment} from "./environment.js"
 import {Commands} from "../commanding/commands.js"
 import {CommandSetup} from "../commanding/command-setup.js"
 
+import {DisabledLogger} from "../tooling/logger.js"
+import {asCommand} from "../commanding/as-command.js"
+
 export type Config<C extends Commands> = Environment & Settings & {
 	commands: CommandSetup<C>
 }
@@ -18,7 +21,7 @@ asConfig({
 	logger: new DisabledLogger(),
 	exit: false,
 	argv: ["bin", "script.js"],
-	commands: command => command({
+	commands: command => asCommand({
 		argorder: ["alpha"],
 		args: {
 			alpha: {
@@ -27,6 +30,45 @@ asConfig({
 			},
 		},
 		params: {},
-		async execute() {},
+		async execute({args}) {
+			args.alpha
+		},
+	}),
+})
+
+const lol = asCommand({
+	argorder: ["alpha"],
+	args: {
+		alpha: {
+			type: String,
+			mode: "requirement",
+		},
+	},
+	params: {},
+	async execute({args}) {
+		args.alpha
+	},
+})
+
+asConfig({
+	name: "example",
+	columns: 72,
+	logger: new DisabledLogger(),
+	exit: false,
+	argv: ["bin", "script.js"],
+	commands: command => ({
+		lol: command({
+			argorder: ["alpha"],
+			args: {
+				alpha: {
+					type: String,
+					mode: "requirement",
+				},
+			},
+			params: {},
+			async execute({args}) {
+				args.alpha
+			},
+		})
 	}),
 })

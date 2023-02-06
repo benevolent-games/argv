@@ -6,7 +6,7 @@ import {Values} from "../../fielding/values.js"
 import {Command} from "../../commanding/command.js"
 import {ValuesFromGroup} from "../../fielding/values-from-group.js"
 
-export function parsingMachine3(command: Command) {
+export function parsingMachine3(command: Command<any, any>) {
 	let paramIndex = 0
 	let scheduledParamAssignment: undefined | string = undefined
 
@@ -65,7 +65,7 @@ export function parsingMachine3(command: Command) {
 	}
 }
 
-export function parsingMachine2(command: Command) {
+export function parsingMachine2(command: Command<any, any>) {
 
 	let paramIndex = 0
 	let scheduledParamAssignment: undefined | string = undefined
