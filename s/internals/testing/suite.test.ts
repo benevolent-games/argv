@@ -36,26 +36,26 @@ await runTests({
 			.is(undefined)
 	},
 
-	// async "arguments are parsed"() {
-	// 	const {code, error} = await program({
-	// 		...exampleConfig(),
-	// 		argv: argv("hello"),
-	// 		commands: command => command({
-	// 			argorder: ["alpha"],
-	// 			args: {
-	// 				alpha: {
-	// 					type: String,
-	// 					mode: "option",
-	// 				},
-	// 			},
-	// 			params: {},
-	// 			async execute({args}) {
-	// 				expect("alpha is 'hello'")
-	// 					.that(args.alpha)
-	// 					.is("hello")
-	// 			},
-	// 		}),
-	// 	})
-	// },
+	async "arguments are parsed"() {
+		const {code, error} = await program({
+			...exampleConfig(),
+			argv: argv("hello"),
+			commands: command => command({
+				argorder: ["alpha"],
+				args: {
+					alpha: {
+						type: String,
+						mode: "option",
+					},
+				},
+				params: {},
+				async execute({args}) {
+					expect("alpha is 'hello'")
+						.that(args.alpha)
+						.is("hello")
+				},
+			}),
+		})
+	},
 
 })

@@ -4,22 +4,24 @@ import {Environment} from "./environment.js"
 import {Commands} from "../commanding/commands.js"
 import {CommandSetup} from "../commanding/command-setup.js"
 
+import {Group} from "../fielding/group.js"
 import {Command} from "../commanding/command.js"
 import {asCommand} from "../commanding/as-command.js"
-import {Group} from "../fielding/group.js"
 
-export type Config<C extends Commands> = Environment & Settings & {
-	commands: CommandSetup<C>
+export type Config<C> = Environment & Settings & {
+	commands: (c: typeof asCommand) => C
+	// commands: CommandSetup<C>
 }
 
-// TODO experimenting with types
+// // TODO experimenting with types
 
 function lol1<C extends Command<any, any>>(c: C) {}
 function lol2<C>(c: C) {}
 function lol3<C extends Command<Group, Group>>(c: C) {}
 function lol4<FA extends Group, FP extends Group>(c: Command<FA, FP>) {}
+function lol5<C extends Command>(c: C) {}
 
-;lol3(asCommand({
+;lol5(asCommand({
 	argorder: ["alpha"],
 	args: {
 		alpha: {
