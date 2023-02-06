@@ -12,12 +12,11 @@ import {tupleFrom} from "./internals/parsing/program/tuple-from.js"
 import {ProgramResult} from "./internals/outputting/program-result.js"
 import {parseTuples} from "./internals/parsing/program/parse-tuples.js"
 
-export async function program7<
+export async function program<
 		xConfig extends Config<Commands>
 	>(config: xConfig): Promise<ProgramResult<xConfig>> {
 
 	const {logger, argv, commands} = config
-
 	const tree = commands(asCommand)
 	const tuples = parseTuples(tree)
 	const inputTuple = tupleFrom.argv(argv)
@@ -28,7 +27,7 @@ export async function program7<
 	let result: Output
 
 	if (tuple) {
-		const command = obtain(commands, tuple) as Command
+		const command = obtain(tree, tuple) as Command
 		const parsed = parseCommand(
 			tuple,
 			command,

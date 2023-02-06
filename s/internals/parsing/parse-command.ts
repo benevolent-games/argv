@@ -4,7 +4,7 @@ import {Command} from "../commanding/command.js"
 import {parsingMachine3} from "./command/machine.js"
 import {ParseResult} from "../commanding/parse-result.js"
 import {ValuesFromGroup} from "../fielding/values-from-group.js"
-import {validateArgOrdering3} from "./command/validate-arg-ordering.js"
+import {validateArgOrdering} from "./command/validate-arg-ordering.js"
 import {getArgsFollowingCommandTuple} from "./program/get-args-following-command-tuple.js"
 import {validateParamAssignmentsAreCompleted} from "./command/validate-param-assignments-are-completed.js"
 
@@ -17,7 +17,7 @@ export function parseCommand<FA extends Group, FP extends Group>(
 	const [executable, module, ...parts] = argv
 	const items = getArgsFollowingCommandTuple(tuple, parts)
 
-	validateArgOrdering3(command as Command)
+	validateArgOrdering(command as Command)
 	const m = parsingMachine3(command as Command)
 
 	for (const item of items) {
