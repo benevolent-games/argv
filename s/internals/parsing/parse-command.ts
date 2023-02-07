@@ -7,6 +7,8 @@ import {ValuesFromGroup} from "../fielding/values-from-group.js"
 import {validateArgOrdering} from "./command/validate-arg-ordering.js"
 import {getArgsFollowingCommandTuple} from "./program/get-args-following-command-tuple.js"
 import {validateParamAssignmentsAreCompleted} from "./command/validate-param-assignments-are-completed.js"
+import {validateRequirements} from "./command/validate-requirements.js"
+import {applyDefaults} from "./command/apply-defaults.js"
 
 export function parseCommand<FA extends Group, FP extends Group>(
 		tuple: string[],
@@ -40,6 +42,12 @@ export function parseCommand<FA extends Group, FP extends Group>(
 	}
 
 	validateParamAssignmentsAreCompleted(m.scheduledParamAssignment())
+
+	validateRequirements(command.args, m.args)
+	validateRequirements(command.params, m.params)
+
+	applyDefaults(command.args, m.args)
+	applyDefaults(command.params, m.params)
 
 	return {
 		module,

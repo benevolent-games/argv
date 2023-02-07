@@ -4,6 +4,7 @@ import {program} from "../../program.js"
 import {expect} from "./framework/expect.js"
 import {runTests} from "./framework/run-tests.js"
 import {exampleConfig} from "./helpers/example-config.js"
+import {commandTester} from "./helpers/command-tester.js"
 
 await runTests({
 
@@ -36,33 +37,44 @@ await runTests({
 			.is(undefined)
 	},
 
-	async "arguments are parsed"() {
-		let ran = false
-
-		const {code, error} = await program({
-			...exampleConfig(),
-			argv: argv("hello"),
-			commands: command => command({
-				argorder: ["alpha"],
-				args: {
-					alpha: {
-						type: String,
-						mode: "requirement",
-					},
-				},
-				params: {},
-				async execute({args}) {
-					ran = true
-					expect("alpha is 'hello'")
-						.that(args.alpha)
-						.is("hello")
-				},
-			}),
+	async "args are parsed"() {
+		const {input} = commandTester({
+			argorder: ["alpha", "bravo", "charlie"],
+			params: {},
+			args: {
+				alpha: {mode: "requirement", type: String},
+				bravo: {mode: "option", type: Number},
+				charlie: {mode: "default", type: Boolean, default: true},
+			},
 		})
 
-		expect("command ran")
-			.that(ran)
+		expect("should fail without required param")
+			.that((await input()).code)
+			.is(-1)
+
+		expect("should succeed with required param")
+			.that((await input("hello")).code)
+			.is(0)
+
+		expect("should accept alpha")
+			.that((await input("hello")).args.alpha)
+			.is("hello")
+
+		expect("should keep bravo undefined")
+			.that((await input("hello")).args.bravo)
+			.is(undefined)
+
+		expect("should keep charlie true")
+			.that((await input("hello")).args.charlie)
 			.is(true)
+
+		expect("should accept bravo")
+			.that((await input("hello", "123", "false")).args.bravo)
+			.is(123)
+
+		expect("should accept charlie")
+			.that((await input("hello", "123", "false")).args.charlie)
+			.is(false)
 	},
 
 })

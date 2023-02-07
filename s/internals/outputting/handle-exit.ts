@@ -11,14 +11,21 @@ export function handleExit<C extends Config<Commands>>(
 
 	const {code, error} = result
 
-	if (exit === false) {
-		return result as ProgramResult<C>
-	}
-	else {
-		if (error)
-			logger.error(`${error.name} ${error.message}`)
+	switch (exit) {
 
-		exit(code)
-		return undefined as ProgramResult<C>
+		case "throw_on_error":
+			if (error)
+				throw error
+			return result as ProgramResult<C>
+
+		case false:
+			return result as ProgramResult<C>
+
+		default:
+			if (error)
+				logger.error(`${error.name} ${error.message}`)
+
+			exit(code)
+			return undefined as ProgramResult<C>
 	}
 }

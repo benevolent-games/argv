@@ -8,6 +8,6 @@ export function exampleConfig() {
 		name: "example",
 		columns: 72,
 		logger: new DisabledLogger(),
-		exit: false,
+		exit: "throw_on_error",
 	} satisfies Omit<Config<Commands>, "argv" | "commands">
 }
