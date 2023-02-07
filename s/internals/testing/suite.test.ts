@@ -37,6 +37,8 @@ await runTests({
 	},
 
 	async "arguments are parsed"() {
+		let ran = false
+
 		const {code, error} = await program({
 			...exampleConfig(),
 			argv: argv("hello"),
@@ -50,12 +52,17 @@ await runTests({
 				},
 				params: {},
 				async execute({args}) {
+					ran = true
 					expect("alpha is 'hello'")
 						.that(args.alpha)
 						.is("hello")
 				},
 			}),
 		})
+
+		expect("command ran")
+			.that(ran)
+			.is(true)
 	},
 
 })

@@ -1,40 +1,26 @@
 
-import {obtain} from "./internals/tooling/obtain.js"
 import {Output} from "./internals/outputting/output.js"
 import {Config} from "./internals/configuring/config.js"
-import {Command} from "./internals/commanding/command.js"
-import {Commands} from "./internals/commanding/commands.js"
 import {asCommand} from "./internals/commanding/as-command.js"
 import {handleExit} from "./internals/outputting/handle-exit.js"
-import {parseCommand} from "./internals/parsing/parse-command.js"
-import {thisTuple} from "./internals/parsing/program/this-tuple.js"
-import {tupleFrom} from "./internals/parsing/program/tuple-from.js"
 import {ProgramResult} from "./internals/outputting/program-result.js"
-import {parseTuples} from "./internals/parsing/program/parse-tuples.js"
+import {findAndParseCommand} from "./internals/parsing/program/find-and-parse-command.js"
 
 export async function program<
-		xConfig extends Config<Commands>
+		xConfig extends Config
 	>(config: xConfig): Promise<ProgramResult<xConfig>> {
 
-	const {logger, argv, commands} = config
+	const {argv, commands} = config
 	const tree = commands(asCommand)
-	const tuples = parseTuples(tree)
-	const inputTuple = tupleFrom.argv(argv)
-	const tuple = tuples.find(
-		t => thisTuple(inputTuple).startsWith(t)
-	)
+	const parsed = findAndParseCommand(tree, argv)
 
 	let result: Output
 
-	if (tuple) {
-		const command = obtain(tree, tuple) as Command<any, any>
-		const parsed = parseCommand(
-			tuple,
-			command,
-			argv,
-		)
+	if (parsed) {
+		const {command, details} = parsed
+
 		try {
-			await command.execute(parsed)
+			await command.execute(details)
 			result = {code: 0}
 		}
 		catch (error) {
@@ -46,9 +32,8 @@ export async function program<
 			}
 		}
 	}
-	else {
+	else
 		result = {code: -1, error: new Error("unknown command")}
-	}
 
 	return handleExit(config, result)
 }
