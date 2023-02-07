@@ -23,11 +23,11 @@ export async function program<
 			result = {code: 0}
 		}
 		else
-			result = {code: -1, error: new Error("unknown command")}
+			result = {code: 1, error: new Error("unknown command")}
 	}
 	catch (error) {
 		result = {
-			code: -1,
+			code: 1,
 			error: error instanceof Error
 				? error
 				: new Error("unknown error"),
