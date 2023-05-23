@@ -1,5 +1,5 @@
 
-import {color} from "./tooling/colors.js"
+import {color} from "../tooling/colors.js"
 
 export type Theme = typeof stdtheme
 

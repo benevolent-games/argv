@@ -1,5 +1,5 @@
 
-import {Theme} from "../theme.js"
+import {Theme} from "./theme.js"
 import {affirmatives} from "../parsing/program/affirmatives.js"
 
 export function makeTips(theme: Theme) {

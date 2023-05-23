@@ -1,5 +1,5 @@
 
-import {Theme} from "../theme.js"
+import {Theme} from "../helping/theme.js"
 
 export interface Settings {
 	name: string
