@@ -5,6 +5,7 @@ import {expect} from "./framework/expect.js"
 import {runTests} from "./framework/run-tests.js"
 import {exampleConfig} from "./helpers/example-config.js"
 import {commandTester} from "./helpers/command-tester.js"
+import {thisTuple} from "../parsing/program/this-tuple.js"
 
 await runTests({
 
@@ -163,4 +164,35 @@ await runTests({
 			.is(true)
 	},
 
+	async "thisTuple startsWith"() {
+		expect("abc starts with a")
+			.that(thisTuple(["a", "b", "c"]).startsWith(["a"]))
+			.is(true)
+
+		expect("abc starts with ab")
+			.that(thisTuple(["a", "b", "c"]).startsWith(["a", "b"]))
+			.is(true)
+
+		expect("abc starts with abc")
+			.that(thisTuple(["a", "b", "c"]).startsWith(["a", "b", "c"]))
+			.is(true)
+
+		expect("abc does not start with abcd")
+			.that(thisTuple(["a", "b", "c"]).startsWith(["a", "b", "c", "d"]))
+			.is(true)
+
+		expect("abc does not start with z")
+			.that(thisTuple(["a", "b", "c"]).startsWith(["z"]))
+			.is(true)
+
+		expect("abc does not start with <empty>")
+			.that(thisTuple(["a", "b", "c"]).startsWith([]))
+			.is(true)
+
+		expect("<empty> does not start with a")
+			.that(thisTuple([]).startsWith(["a"]))
+			.is(true)
+	},
+
 })
+
