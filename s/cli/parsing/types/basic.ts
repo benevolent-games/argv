@@ -1,7 +1,7 @@
 
 import {Typify} from "./advanced.js"
 
-export enum Kind {
+export enum Mode {
 	Required,
 	Optional,
 	Default,
@@ -12,8 +12,8 @@ export type Primitive = typeof Boolean | typeof Number | typeof String
 export type CommandTree = Command<any, any> | Record<string, Command<any, any>>
 
 export class Command<
-		A extends Arg<boolean, string, Primitive>[],
-		P extends Record<string, Param<boolean, Primitive>>
+		A extends Arg<Mode, string, Primitive>[],
+		P extends Record<string, Param<Mode, Primitive>>
 	> {
 	constructor(
 		public help: string | undefined,
@@ -22,19 +22,19 @@ export class Command<
 	) {}
 }
 
-export class Arg<R extends boolean, N extends string, P extends Primitive> {
+export class Arg<M extends Mode, N extends string, P extends Primitive> {
 	constructor(
 		public name: N,
-		public required: R,
+		public mode: M,
 		public primitive: P,
 		public help: string,
 		public fallback: undefined | Typify<P>,
 	) {}
 }
 
-export class Param<R extends boolean, P extends Primitive> {
+export class Param<M extends Mode, P extends Primitive> {
 	constructor(
-		public required: R,
+		public mode: M,
 		public primitive: P,
 		public help: string,
 		public fallback: undefined | Typify<P>,

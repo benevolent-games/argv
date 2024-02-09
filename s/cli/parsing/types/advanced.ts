@@ -1,5 +1,5 @@
 
-import {Arg, Command, CommandTree, Param, Primitive} from "./basic.js"
+import {Arg, Command, CommandTree, Mode, Param, Primitive} from "./basic.js"
 
 export type Typify<P extends Primitive> = (
 	P extends typeof Boolean ? boolean
@@ -8,23 +8,23 @@ export type Typify<P extends Primitive> = (
 	: never
 )
 
-export type Argify<T extends Arg<boolean, string, Primitive>[]> = {
+export type Argify<T extends Arg<Mode, string, Primitive>[]> = {
 	[P in T[number]["name"]
-		as Extract<T[number], {name: P}> extends {required: true} ? P : never]:
+		as Extract<T[number], {name: P}> extends {mode: (Mode.Required | Mode.Default)} ? P : never]:
 			Typify<Extract<T[number], {name: P}>["primitive"]>
 } & {
 	[P in T[number]["name"]
-		as Extract<T[number], {name: P}> extends {required: false} ? P : never]?:
+		as Extract<T[number], {name: P}> extends {mode: Mode.Optional} ? P : never]?:
 			Typify<Extract<T[number], {name: P}>["primitive"]>
 }
 
-export type Paramify<T extends Record<string, Param<boolean, Primitive>>> = {
+export type Paramify<T extends Record<string, Param<Mode, Primitive>>> = {
 	[K in keyof T
-		as T[K]["required"] extends true ? K : never]:
+		as T[K]["mode"] extends (Mode.Required | Mode.Default) ? K : never]:
 			Typify<T[K]["primitive"]>;
 } & Partial<{
 	[K in keyof T
-		as T[K]["required"] extends false ? K : never]:
+		as T[K]["mode"] extends Mode.Optional ? K : never]:
 			Typify<T[K]["primitive"]>;
 }>
 
