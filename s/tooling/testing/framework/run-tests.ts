@@ -1,5 +1,5 @@
 
-import {color} from "../../tooling/colors.js"
+import {color} from "../../colors.js"
 import {TestFailure} from "./errors/test-failure.js"
 
 export async function runTests<

@@ -16,8 +16,8 @@
 		"compile": "tsc",
 		"start": "run-p watch",
 		"watch": "tsc -w",
-		"watchtest": "chokidar 'x/**/*.js' -c 'node x/internals/testing/suite.test.js'",
-		"test": "node x/internals/testing/suite.test.js"
+		"watchtest": "chokidar 'x/**/*.js' -c 'node x/cli/cli.test.js'",
+		"test": "node x/cli/cli.test.js"
 	},
 	"devDependencies": {
 		"@types/node": "^20.11.17",
