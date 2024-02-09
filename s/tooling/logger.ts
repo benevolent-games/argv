@@ -10,8 +10,8 @@ export class ConsoleLogger extends Logger {
 }
 
 export class DisabledLogger extends Logger {
-	log(...s: string[]) {}
-	error(...s: string[]) {}
+	log(..._s: string[]) {}
+	error(..._s: string[]) {}
 }
 
 export class MemoryLogger extends Logger {

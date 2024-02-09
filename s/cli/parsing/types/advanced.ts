@@ -28,7 +28,7 @@ export type Paramify<T extends Record<string, Param<boolean, Primitive>>> = {
 			Typify<T[K]["primitive"]>;
 }>
 
-export type CliResult<C extends CommandTree> = (
+export type ParseResult<C extends CommandTree> = (
 	C extends Command<any, any>
 		? {
 			help: string
@@ -36,7 +36,7 @@ export type CliResult<C extends CommandTree> = (
 			params: Paramify<C["params"]>
 		}
 		: C extends Record<string, Command<any, any>>
-			? {[K in keyof C]: CliResult<C[K]>}
+			? {[K in keyof C]: ParseResult<C[K]>}
 			: never
 )
 

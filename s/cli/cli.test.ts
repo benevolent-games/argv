@@ -1,9 +1,6 @@
 
-// import {argv} from "./helpers/argv.js"
-// import {expect} from "./framework/expect.js"
-// import {exampleConfig} from "./helpers/example-config.js"
-// import {commandTester} from "./helpers/command-tester.js"
-
+import {cli} from "./cli.js"
+import {argv} from "../tooling/testing/helpers/argv.js"
 import {runTests} from "../tooling/testing/framework/run-tests.js"
 
 await runTests({
