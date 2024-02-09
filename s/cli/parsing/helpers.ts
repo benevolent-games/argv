@@ -1,6 +1,6 @@
 
 import {Typify} from "./types/advanced.js"
-import {Arg, Command, Param, Primitive} from "./types/basic.js"
+import {Arg, Command, CommandTree, Param, Primitive} from "./types/basic.js"
 
 export const arg = {
 	required: <N extends string, P extends Primitive>(
@@ -54,5 +54,9 @@ export function command<
 		params: P,
 	): Command<A, P> {
 	return new Command(help, args, params)
+}
+
+export function commandTree<C extends CommandTree>(c: C) {
+	return c
 }
 

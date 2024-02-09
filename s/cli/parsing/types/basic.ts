@@ -1,6 +1,12 @@
 
 import {Typify} from "./advanced.js"
 
+export enum Kind {
+	Required,
+	Optional,
+	Default,
+}
+
 export type Primitive = typeof Boolean | typeof Number | typeof String
 
 export type CommandTree = Command<any, any> | Record<string, Command<any, any>>

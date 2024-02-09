@@ -1,40 +1,55 @@
 
-import {cli} from "./cli.js"
-import {runTests} from "../tooling/testing/framework/run-tests.js"
+import {expect} from "../../tooling/testing/framework/expect.js"
+import {parse} from "./parse.js"
+import {runTests} from "../../tooling/testing/framework/run-tests.js"
+import {argv} from "./testing/argv.js"
+import {args, command, params} from "./helpers.js"
 
 await runTests({
-	async "test suite works"() {
+
+	//
+	// basics
+	//
+
+	async "no inputs, no problem"() {
+		parse({argv: argv(), commands: command("", args(), params({}))})
+		parse({argv: argv("extra"), commands: command("", args(), params({}))})
+	},
+
+	//
+	// args
+	//
+
+	async "arg.required"() {
+		const result = parse({
+			argv: argv("pepperoni"),
+			commands: command("", args(), params({})),
+		})
+	},
+
+	async "arg.optional"() {
 		void 0
-	}
+	},
 
-	// async "empty program takes no inputs"() {
-	// 	let ran = false
+	async "arg.default"() {
+		void 0
+	},
 
-	// 	const {code, error} = await program({
-	// 		...exampleConfig(),
-	// 		argv: argv(),
-	// 		commands: command => command({
-	// 			argorder: [],
-	// 			args: {},
-	// 			params: {},
-	// 			async execute() {
-	// 				ran = true
-	// 			},
-	// 		}),
-	// 	})
+	//
+	// params
+	//
 
-	// 	expect("ran successfully")
-	// 		.that(ran)
-	// 		.is(true)
+	async "param.required"() {
+		void 0
+	},
 
-	// 	expect("exit code should be zero")
-	// 		.that(code)
-	// 		.is(0)
+	async "param.optional"() {
+		void 0
+	},
 
-	// 	expect("no error")
-	// 		.that(error)
-	// 		.is(undefined)
-	// },
+	async "param.default"() {
+		void 0
+	},
 
 	// async "args are parsed"() {
 	// 	const {input} = commandTester({
