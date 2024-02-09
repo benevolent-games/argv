@@ -3,9 +3,9 @@ import {cli} from "./cli/cli.js"
 import {arg, args, command, param, params} from "./cli/helpers.js"
 
 const argv = cli({
-	program: "icecream",
-	help: `make incredible iced cream.`,
-	commands: command("",
+	name: "icecream",
+	commands: command(
+		`make incredible iced cream.`,
 		args(
 			arg.required("vessel", String, `choose "cone" or "waffle-cone".`),
 		),

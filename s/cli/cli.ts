@@ -3,8 +3,8 @@ import {CommandTree} from "./types/basic.js"
 import {CliResult} from "./types/advanced.js"
 
 export type CliConfig<C extends CommandTree> = {
-	program: string
-	help: string
+	name: string
+	help?: string
 	commands: C
 }
 
