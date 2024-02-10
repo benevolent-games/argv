@@ -11,16 +11,16 @@ const argv = cli({
 	name: "icecream",
 	argv: process.argv,
 	commands: command(
-	`make incredible iced cream.`,
-	args(
-		arg.required("vessel", String, `"cone" or "waffle-cone".`),
+		`make incredible iced cream.`,
+		args(
+			arg.required("vessel", String, `"cone" or "waffle-cone".`),
+		),
+		params({
+			scoops: param.required(Number, `how many scoops?`),
+			flavor: param.default(String, "vanilla", `what flavor?`),
+			sprinkles: param.flag("s", `do you want sprinkles?`),
+		}),
 	),
-	params({
-		scoops: param.required(Number, `how many scoops?`),
-		flavor: param.default(String, "vanilla", `what flavor?`),
-		sprinkles: param.optional(Boolean, `do you want sprinkles?`),
-	}),
-),
 })
 
 argv.args.vessel

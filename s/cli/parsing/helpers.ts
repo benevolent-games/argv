@@ -27,18 +27,23 @@ export const param = {
 	required: <P extends Primitive>(
 		primitive: P,
 		help: string,
-	) => new Param<Mode.Required, P>(Mode.Required, primitive, help, undefined),
+	) => new Param<Mode.Required, P>(Mode.Required, primitive, help, undefined, undefined),
 
 	optional: <P extends Primitive>(
 		primitive: P,
 		help: string,
-	) => new Param<Mode.Optional, P>(Mode.Optional, primitive, help, undefined),
+	) => new Param<Mode.Optional, P>(Mode.Optional, primitive, help, undefined, undefined),
 
 	default: <P extends Primitive>(
 		primitive: P,
 		fallback: Typify<P>,
 		help: string,
-	) => new Param<Mode.Default, P>(Mode.Default, primitive, help, fallback),
+	) => new Param<Mode.Default, P>(Mode.Default, primitive, help, undefined, fallback),
+
+	flag: (
+		flag: string,
+		help: string,
+	) => new Param<Mode.Optional, BooleanConstructor>(Mode.Optional, Boolean, help, flag, undefined),
 }
 
 export function args<A extends Arg<Mode, string, Primitive>[]>(...a: A): A {

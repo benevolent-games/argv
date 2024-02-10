@@ -37,6 +37,7 @@ export class Param<M extends Mode, P extends Primitive> {
 		public mode: M,
 		public primitive: P,
 		public help: string,
+		public flag: undefined | string,
 		public fallback: undefined | Typify<P>,
 	) {}
 }
