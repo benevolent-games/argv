@@ -1,7 +1,7 @@
 
 import {FailedExpectation} from "./errors/failed-expectation.js"
 
-export const expect = (message: string) => ({
+export const expect = (message: string = "expectation") => ({
 	that: (subject: any) => ({
 
 		is: (expected: any) => {

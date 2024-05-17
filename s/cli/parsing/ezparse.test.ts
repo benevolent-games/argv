@@ -1,0 +1,95 @@
+
+import {ezparse} from "./ezparse.js"
+import {argv} from "./testing/argv.js"
+import {expect} from "../../tooling/testing/framework/expect.js"
+import {runTests} from "../../tooling/testing/framework/run-tests.js"
+
+await runTests({
+
+	//
+	// basics
+	//
+
+	async "no inputs, no problem"() {
+		const result = ezparse(argv())
+		expect("zero args")
+			.that(result.args.length)
+			.is(0)
+		expect("zero params")
+			.that(result.params.size)
+			.is(0)
+		expect("zero flags")
+			.that(result.flags.size)
+			.is(0)
+	},
+
+	async "args"() {
+		const result = ezparse(argv("alpha", "bravo"))
+		expect("two args")
+			.that(result.args.length)
+			.is(2)
+		expect("arg 0")
+			.that(result.args[0])
+			.is("alpha")
+		expect("arg 1")
+			.that(result.args[1])
+			.is("bravo")
+	},
+
+	async "params"() {
+		expect("multi-part")
+			.that(ezparse(argv("--alpha", "bravo")).params.get("alpha"))
+			.is("bravo")
+		expect("equal-sign")
+			.that(ezparse(argv("--alpha=bravo")).params.get("alpha"))
+			.is("bravo")
+		expect("equal-sign plus")
+			.that(ezparse(argv("--alpha=bravo=lol")).params.get("alpha"))
+			.is("bravo=lol")
+	},
+
+	async "flags"() {
+		{
+			const result = ezparse(argv("-a", "-b"))
+			expect().that(result.flags.has("a")).is(true)
+			expect().that(result.flags.has("b")).is(true)
+		}
+		{
+			const result = ezparse(argv("-abc", "-xyz"))
+			expect().that(result.flags.has("a")).is(true)
+			expect().that(result.flags.has("b")).is(true)
+			expect().that(result.flags.has("c")).is(true)
+			expect().that(result.flags.has("x")).is(true)
+			expect().that(result.flags.has("y")).is(true)
+			expect().that(result.flags.has("z")).is(true)
+		}
+	},
+
+	async "chaos"() {
+		const result = ezparse(argv(
+			"alpha",
+			"--bravo=charlie",
+			"delta",
+			"--echo",
+			"foxtrot",
+			"-gh",
+			"india",
+			"-j",
+		))
+
+		expect().that(result.args.length).is(3)
+		expect().that(result.args[0]).is("alpha")
+		expect().that(result.args[1]).is("delta")
+		expect().that(result.args[2]).is("india")
+
+		expect().that(result.params.size).is(2)
+		expect().that(result.params.get("bravo")).is("charlie")
+		expect().that(result.params.get("echo")).is("foxtrot")
+
+		expect().that(result.flags.size).is(3)
+		expect().that(result.flags.has("g")).is(true)
+		expect().that(result.flags.has("h")).is(true)
+		expect().that(result.flags.has("j")).is(true)
+	},
+})
+

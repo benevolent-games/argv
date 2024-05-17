@@ -1,9 +1,9 @@
 
-import {expect} from "../../tooling/testing/framework/expect.js"
 import {parse} from "./parse.js"
-import {runTests} from "../../tooling/testing/framework/run-tests.js"
 import {argv} from "./testing/argv.js"
 import {arg, args, command, params} from "./helpers.js"
+import {expect} from "../../tooling/testing/framework/expect.js"
+import {runTests} from "../../tooling/testing/framework/run-tests.js"
 
 await runTests({
 
