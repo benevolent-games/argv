@@ -1,5 +1,7 @@
 
-export function ezparse([bin, script, ...strings]: string[]) {
+import {Ezparse} from "./types/advanced.js"
+
+export function ezparse([bin, script, ...strings]: string[]): Ezparse {
 	const args: string[] = []
 	const params = new Map<string, string>()
 	const flags = new Set<string>()

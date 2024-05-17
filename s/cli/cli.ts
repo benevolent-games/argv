@@ -12,7 +12,7 @@ export type CliConfig<C extends CommandTree> = {
 } & ParseConfig<C>
 
 export function cli<C extends CommandTree>(config: CliConfig<C>): ParseTree<C> {
-	const {tree} = parse(config)
+	const {tree: tree} = parse(config)
 	return tree
 }
 

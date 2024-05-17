@@ -12,8 +12,8 @@ export type Primitive = typeof Boolean | typeof Number | typeof String
 export type CommandTree = Command<any, any> | Record<string, Command<any, any>>
 
 export class Command<
-		A extends Arg<Mode, string, Primitive>[],
-		P extends Record<string, Param<Mode, Primitive>>
+		A extends Arg<Mode, string, Primitive>[] = Arg<Mode, string, Primitive>[],
+		P extends Record<string, Param<Mode, Primitive>> = Record<string, Param<Mode, Primitive>>,
 	> {
 	constructor(
 		public help: string | undefined,

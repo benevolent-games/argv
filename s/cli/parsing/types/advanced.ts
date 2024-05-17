@@ -1,6 +1,14 @@
 
 import {Arg, Command, CommandTree, Mode, Param, Primitive} from "./basic.js"
 
+export type Ezparse = {
+	bin: string
+	script: string
+	args: string[]
+	flags: Set<string>
+	params: Map<string, string>
+}
+
 export type Typify<P extends Primitive> = (
 	P extends typeof Boolean ? boolean
 	: P extends typeof Number ? number
@@ -29,7 +37,8 @@ export type Paramify<T extends Record<string, Param<Mode, Primitive>>> = {
 }>
 
 export type ParseCommand<C extends Command<any, any>> = {
-	help: string
+	path: string[]
+	help: string | undefined
 	args: Argify<C["args"]>
 	params: Paramify<C["params"]>
 	extras: string[]
@@ -46,6 +55,6 @@ export type ParseTree<C extends CommandTree> = (
 export type ParseResult<C extends CommandTree> = {
 	help: boolean
 	tree: ParseTree<C>
-	command: undefined | Command<any, any>
+	command: ParseCommand<Command> | undefined
 }
 
