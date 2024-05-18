@@ -1,71 +1,86 @@
 
-import {Typify} from "./types/advanced.js"
-import {Arg, Command, CommandTree, Mode, Param, Primitive} from "./types/basic.js"
+import {Primitive, Typify} from "./types/primitives.js"
+import {Command, CommandOptions} from "./types/commands.js"
+import {Arg, ArgDefault, ArgOptional, ArgRequired} from "./types/args.js"
+import {Param, ParamDefault, ParamFlag, ParamOptional, ParamRequired} from "./types/params.js"
+
+export function command<
+		A extends Arg<string, Primitive>[],
+		P extends Record<string, Param<Primitive>>,
+	>(o: CommandOptions<A, P>): Command<A, P> {
+	return new Command<A, P>(o)
+}
 
 export const arg = {
 	required: <N extends string, P extends Primitive>(
-		name: N,
-		primitive: P,
-		help: string,
-	) => new Arg<Mode.Required, N, P>(name, Mode.Required, primitive, help, undefined),
+			name: N,
+			primitive: P,
+			o: {help: string},
+		): ArgRequired<N, P> => ({
+		...o,
+		mode: "required",
+		name,
+		primitive,
+	}),
 
 	optional: <N extends string, P extends Primitive>(
-		name: N,
-		primitive: P,
-		help: string,
-	) => new Arg<Mode.Optional, N, P>(name, Mode.Optional, primitive, help, undefined),
+			name: N,
+			primitive: P,
+			o: {help: string, fallback: Typify<P>},
+		): ArgOptional<N, P> => ({
+		...o,
+		mode: "optional",
+		name,
+		primitive,
+	}),
 
 	default: <N extends string, P extends Primitive>(
-		name: N,
-		primitive: P,
-		fallback: Typify<P>,
-		help: string,
-	) => new Arg<Mode.Default, N, P>(name, Mode.Default, primitive, help, fallback),
+			name: N,
+			primitive: P,
+			o: {help: string, fallback: Typify<P>},
+		): ArgDefault<N, P> => ({
+		...o,
+		mode: "default",
+		name,
+		primitive,
+	}),
 }
 
 export const param = {
 	required: <P extends Primitive>(
-		primitive: P,
-		help: string,
-	) => new Param<Mode.Required, P>(Mode.Required, primitive, help, undefined, undefined),
+			primitive: P,
+			o: {help: string},
+		): ParamRequired<P> => ({
+		...o,
+		mode: "required",
+		primitive,
+	}),
 
 	optional: <P extends Primitive>(
-		primitive: P,
-		help: string,
-	) => new Param<Mode.Optional, P>(Mode.Optional, primitive, help, undefined, undefined),
+			primitive: P,
+			o: {fallback: Typify<P>, help: string},
+		): ParamOptional<P> => ({
+		...o,
+		mode: "optional",
+		primitive,
+	}),
 
 	default: <P extends Primitive>(
-		primitive: P,
-		fallback: Typify<P>,
-		help: string,
-	) => new Param<Mode.Default, P>(Mode.Default, primitive, help, undefined, fallback),
+			primitive: P,
+			o: {fallback: Typify<P>, help: string},
+		): ParamDefault<P> => ({
+		...o,
+		mode: "default",
+		primitive,
+	}),
 
 	flag: (
-		flag: string,
-		help: string,
-	) => new Param<Mode.Optional, BooleanConstructor>(Mode.Optional, Boolean, help, flag, undefined),
-}
-
-export function args<A extends Arg<Mode, string, Primitive>[]>(...a: A): A {
-	return a
-}
-
-export function params<P extends Record<string, Param<Mode, Primitive>>>(p: P): P {
-	return p
-}
-
-export function command<
-			A extends Arg<Mode, string, Primitive>[],
-			P extends Record<string, Param<Mode, Primitive>>,
-		>(
-		help: string,
-		args: A,
-		params: P,
-	): Command<A, P> {
-	return new Command(help, args, params)
-}
-
-export function commandTree<C extends CommandTree>(c: C) {
-	return c
+			o: {flag: string, help: string},
+		): ParamFlag => ({
+		...o,
+		mode: "flag",
+		primitive: Boolean,
+		fallback: false,
+	}),
 }
 
