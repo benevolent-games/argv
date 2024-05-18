@@ -1,14 +1,15 @@
 
-import {ezparse} from "./ezparse.js"
+import {Parsed} from "../parsing/types.js"
+import {parse as ezparse} from "../parsing/parse.js"
 import {Command, CommandTree, Mode, Primitive} from "./types/basic.js"
-import {Ezparse, ParseCommand, ParseResult, ParseTree} from "./types/advanced.js"
+import {ParseCommand, ParseResult, ParseTree} from "./types/advanced.js"
 
-export type ParseConfig<C extends CommandTree> = {
+export type AnalysisConfig<C extends CommandTree> = {
 	argv: string[]
 	commands: C
 }
 
-export function parse<C extends CommandTree>(config: ParseConfig<C>) {
+export function analyze<C extends CommandTree>(config: AnalysisConfig<C>) {
 	const ez = ezparse(config.argv)
 	let command: ParseCommand<Command> | undefined
 
@@ -46,7 +47,7 @@ const truisms = ["true", "yes", "on"]
 function analyzeCommand(
 		path: string[],
 		command: Command,
-		ez: Ezparse,
+		ez: Parsed,
 	): ParseCommand<Command> {
 
 	const args = Object.fromEntries(command.args.map((argspec, index) => {

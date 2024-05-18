@@ -16,7 +16,7 @@
 		"compile": "tsc",
 		"start": "run-p watch",
 		"watch": "tsc -w",
-		"watchtest": "chokidar 'x/**/*.js' -c 'clear && node x/cli/parsing/ezparse.test.js'",
+		"watchtest": "chokidar 'x/**/*.js' -c 'clear && node x/tests.test.js'",
 		"test": "node x/cli/parsing/parse.test.js"
 	},
 	"devDependencies": {

@@ -1,11 +1,10 @@
 
-import {cli} from "./cli.js"
-import {runTests} from "../tooling/testing/framework/run-tests.js"
+import {testSuite} from "../testing/framework/test-suite.js"
 
-await runTests({
+export default testSuite({
 	async "test suite works"() {
 		void 0
-	}
+	},
 
 	// async "empty program takes no inputs"() {
 	// 	let ran = false
@@ -191,6 +190,5 @@ await runTests({
 	// 		.that(thisTuple([]).startsWith(["a"]))
 	// 		.is(true)
 	// },
-
 })
 

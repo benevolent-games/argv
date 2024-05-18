@@ -1,19 +1,19 @@
 
-import {parse} from "./parse.js"
-import {argv} from "./testing/argv.js"
+import {analyze} from "./analyze.js"
+import {argv} from "../testing/argv.js"
+import {expect} from "../testing/framework/expect.js"
 import {arg, args, command, params} from "./helpers.js"
-import {expect} from "../../tooling/testing/framework/expect.js"
-import {runTests} from "../../tooling/testing/framework/run-tests.js"
+import {testSuite} from "../testing/framework/test-suite.js"
 
-await runTests({
+export default testSuite({
 
 	//
 	// basics
 	//
 
 	async "no inputs, no problem"() {
-		parse({argv: argv(), commands: command("", args(), params({}))})
-		parse({argv: argv("extra"), commands: command("", args(), params({}))})
+		analyze({argv: argv(), commands: command("", args(), params({}))})
+		analyze({argv: argv("extra"), commands: command("", args(), params({}))})
 	},
 
 	//
@@ -23,7 +23,7 @@ await runTests({
 	async "arg.required"() {
 		expect("we can read the arg")
 			.that(
-				parse({
+				analyze({
 					argv: argv("pepperoni"),
 					commands: command("",
 						args(arg.required("topping", String, "")),
@@ -35,7 +35,7 @@ await runTests({
 			.is("pepperoni")
 		expect("error is thrown when requirement is not met")
 			.that(() =>
-				parse({
+				analyze({
 					argv: argv(),
 					commands: command("",
 						args(arg.required("topping", String, "")),

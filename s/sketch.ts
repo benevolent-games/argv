@@ -1,7 +1,7 @@
 
 import {cli} from "./cli/cli.js"
-import {parse} from "./cli/parsing/parse.js"
-import {arg, args, command, param, params} from "./cli/parsing/helpers.js"
+import {analyze} from "./analysis/analyze.js"
+import {arg, args, command, param, params} from "./analysis/helpers.js"
 
 //
 // cli
@@ -32,7 +32,7 @@ argv.params.sprinkles
 // cli
 //
 
-const result = parse({
+const result = analyze({
 	argv: process.argv,
 	commands: {
 		lol: command("", args(arg.required("hah", String, `hah`)), params({})),

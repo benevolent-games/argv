@@ -1,14 +1,6 @@
 
 import {Arg, Command, CommandTree, Mode, Param, Primitive} from "./basic.js"
 
-export type Ezparse = {
-	bin: string
-	script: string
-	args: string[]
-	flags: Set<string>
-	params: Map<string, string>
-}
-
 export type Typify<P extends Primitive> = (
 	P extends typeof Boolean ? boolean
 	: P extends typeof Number ? number

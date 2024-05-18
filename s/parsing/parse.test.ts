@@ -1,17 +1,17 @@
 
-import {ezparse} from "./ezparse.js"
-import {argv} from "./testing/argv.js"
-import {expect} from "../../tooling/testing/framework/expect.js"
-import {runTests} from "../../tooling/testing/framework/run-tests.js"
+import {parse} from "./parse.js"
+import {argv} from "../testing/argv.js"
+import {expect} from "../testing/framework/expect.js"
+import {testSuite} from "../testing/framework/test-suite.js"
 
-await runTests({
+export default testSuite({
 
 	//
 	// basics
 	//
 
 	async "no inputs, no problem"() {
-		const result = ezparse(argv())
+		const result = parse(argv())
 		expect("zero args")
 			.that(result.args.length)
 			.is(0)
@@ -24,7 +24,7 @@ await runTests({
 	},
 
 	async "args"() {
-		const result = ezparse(argv("alpha", "bravo"))
+		const result = parse(argv("alpha", "bravo"))
 		expect("two args")
 			.that(result.args.length)
 			.is(2)
@@ -38,24 +38,24 @@ await runTests({
 
 	async "params"() {
 		expect("multi-part")
-			.that(ezparse(argv("--alpha", "bravo")).params.get("alpha"))
+			.that(parse(argv("--alpha", "bravo")).params.get("alpha"))
 			.is("bravo")
 		expect("equal-sign")
-			.that(ezparse(argv("--alpha=bravo")).params.get("alpha"))
+			.that(parse(argv("--alpha=bravo")).params.get("alpha"))
 			.is("bravo")
 		expect("equal-sign plus")
-			.that(ezparse(argv("--alpha=bravo=lol")).params.get("alpha"))
+			.that(parse(argv("--alpha=bravo=lol")).params.get("alpha"))
 			.is("bravo=lol")
 	},
 
 	async "flags"() {
 		{
-			const result = ezparse(argv("-a", "-b"))
+			const result = parse(argv("-a", "-b"))
 			expect().that(result.flags.has("a")).is(true)
 			expect().that(result.flags.has("b")).is(true)
 		}
 		{
-			const result = ezparse(argv("-abc", "-xyz"))
+			const result = parse(argv("-abc", "-xyz"))
 			expect().that(result.flags.has("a")).is(true)
 			expect().that(result.flags.has("b")).is(true)
 			expect().that(result.flags.has("c")).is(true)
@@ -66,7 +66,7 @@ await runTests({
 	},
 
 	async "chaos"() {
-		const result = ezparse(argv(
+		const result = parse(argv(
 			"alpha",
 			"--bravo=charlie",
 			"delta",

@@ -1,18 +1,18 @@
 
 import {Logger} from "../tooling/logger.js"
-import {CommandTree} from "./parsing/types/basic.js"
-import {ParseTree} from "./parsing/types/advanced.js"
-import {ParseConfig, parse} from "./parsing/parse.js"
+import {CommandTree} from "../analysis/types/basic.js"
+import {ParseTree} from "../analysis/types/advanced.js"
+import {AnalysisConfig, analyze} from "../analysis/analyze.js"
 
 export type CliConfig<C extends CommandTree> = {
 	name: string
 	help?: string
 	logger?: Logger
 	columns?: number
-} & ParseConfig<C>
+} & AnalysisConfig<C>
 
 export function cli<C extends CommandTree>(config: CliConfig<C>): ParseTree<C> {
-	const {tree: tree} = parse(config)
+	const {tree} = analyze(config)
 	return tree
 }
 
