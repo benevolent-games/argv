@@ -3,7 +3,7 @@ import {Args} from "./args.js"
 import {Params} from "./params.js"
 import {CommandAnalysis} from "./analysis.js"
 
-export type CommandTree = Command | {[key: string]: CommandTree}
+export type CommandTree = Command<any, any> | {[key: string]: CommandTree}
 
 export type CommandOptions<A extends Args, P extends Params> = {
 	args: A
@@ -12,7 +12,7 @@ export type CommandOptions<A extends Args, P extends Params> = {
 	execute?: (analysis: CommandAnalysis<Command<A, P>>) => Promise<void>
 }
 
-export class Command<A extends Args = any, P extends Params = any> {
+export class Command<A extends Args = Args, P extends Params = Params> {
 	args: A
 	params: P
 	help: string

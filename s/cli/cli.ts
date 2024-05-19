@@ -1,18 +1,32 @@
 
-// import {Logger} from "../tooling/logger.js"
-// import {CommandTree} from "../analysis/types/basic.js"
-// import {ParseTree} from "../analysis/types/advanced.js"
-// import {AnalysisConfig, analyze} from "../analysis/analyze.js"
+import {Logger} from "../tooling/logger.js"
+import {analyze} from "../analysis/analyze.js"
+import {CommandTree} from "../analysis/types/commands.js"
 
-// export type CliConfig<C extends CommandTree> = {
-// 	name: string
-// 	help?: string
-// 	logger?: Logger
-// 	columns?: number
-// } & AnalysisConfig<C>
+export type CliOptions<C extends CommandTree> = {
+	argv: string[]
+	commands: C
+	name: string
+	help?: string
+	logger?: Logger
+	columns?: number
+}
 
-// export function cli<C extends CommandTree>(config: CliConfig<C>): ParseTree<C> {
-// 	const {tree} = analyze(config)
-// 	return tree
-// }
+export function cli<C extends CommandTree>(o: CliOptions<C>) {
+	const [bin, script, ...argw] = o.argv
+	const analysis = analyze(argw, o.commands)
+
+	if (!analysis)
+		return null
+
+	const execute = () => analysis.spec.execute(analysis.command)
+
+	return {
+		bin,
+		script,
+		execute,
+		tree: analysis.tree,
+		command: analysis.command,
+	}
+}
 

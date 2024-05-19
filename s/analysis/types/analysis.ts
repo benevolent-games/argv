@@ -4,11 +4,6 @@ import {Param} from "./params.js"
 import {Primitive, Typify} from "./primitives.js"
 import {Command, CommandTree} from "./commands.js"
 
-export type AnalysisConfig<C extends CommandTree> = {
-	argv: string[]
-	commands: C
-}
-
 export type ArgsAnalysis<A extends Arg<string, Primitive>[]> = {
 	[K in A[number]["name"]
 		as Extract<A[number], {name: K}> extends {mode: "required" | "default"} ? K : never]:
@@ -29,25 +24,17 @@ export type ParamAnalysis<Params extends Record<string, Param<Primitive>>> = {
 			Typify<Params[K]["primitive"]>;
 }>
 
-export type CommandAnalysis<C extends Command> = {
+export type CommandAnalysis<C extends Command<any, any>> = {
 	path: string[]
-	help: string | undefined
 	args: ArgsAnalysis<C["args"]>
 	params: ParamAnalysis<C["params"]>
-	extraArgs: string[]
-	execute: () => Promise<void> | undefined
 }
 
 export type TreeAnalysis<C extends CommandTree> = (
-	C extends Command
+	C extends Command<any, any>
 		? CommandAnalysis<C>
-		: C extends {[key: string]: Command | CommandTree}
+		: C extends {[key: string]: CommandTree}
 			? {[K in keyof C]?: TreeAnalysis<C[K]>}
 			: never
 )
-
-export type Analysis<C extends CommandTree> = {
-	tree: TreeAnalysis<C>
-	command: CommandAnalysis<Command> | undefined
-}
 
