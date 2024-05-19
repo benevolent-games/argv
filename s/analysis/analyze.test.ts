@@ -94,6 +94,9 @@ export default testSuite({
 			async "params, required"() {
 				expect().that(() => test(``)).throws()
 			},
+			async "unknown param throws error"() {
+				expect().that(() => test(`--delta=a --wut=123`)).throws()
+			},
 			async "params, flag"() {
 				expect()
 					.that(test(`--delta=a --golf=yes`).tree.params.golf)

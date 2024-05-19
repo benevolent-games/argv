@@ -23,6 +23,10 @@ export function analyze<C extends CommandTree>({
 		: []
 	const parsed = parse(argx, {booleanParams})
 	const commandAnalysis = analyzeCommand(path, command, parsed)
+	for (const paramName of parsed.params.keys()) {
+		if (!(paramName in commandAnalysis.params))
+			throw new Error(`unknown param "--${paramName}"`)
+	}
 	const tree = walker(commands, command, commandAnalysis)
 	return {
 		argx,
