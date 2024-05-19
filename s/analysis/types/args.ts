@@ -10,7 +10,7 @@ export type Arg<N extends string, P extends Primitive> = (
 export type ArgBase<N extends string, P extends Primitive> = {
 	name: N
 	primitive: P
-	help: string
+	help: string | undefined
 }
 
 export type ArgRequired<N extends string, P extends Primitive> = {

@@ -9,7 +9,7 @@ export type Param<P extends Primitive> = (
 
 export type ParamBase<P extends Primitive> = {
 	primitive: P
-	help: string
+	help: string | undefined
 }
 
 export type ParamRequired<P extends Primitive> = {
@@ -28,6 +28,6 @@ export type ParamDefault<P extends Primitive> = {
 export type ParamFlag = {
 	mode: "flag"
 	flag: string
-	fallback: false
+	primitive: typeof Boolean
 } & ParamBase<typeof Boolean>
 

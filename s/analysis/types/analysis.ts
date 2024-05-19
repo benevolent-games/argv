@@ -20,7 +20,7 @@ export type ParamAnalysis<Params extends Record<string, Param<Primitive>>> = {
 			Typify<Params[K]["primitive"]>;
 } & Partial<{
 	[K in keyof Params
-		as Params[K]["mode"] extends "optional" ? K : never]:
+		as Params[K]["mode"] extends ("optional" | "flag") ? K : never]:
 			Typify<Params[K]["primitive"]>;
 }>
 

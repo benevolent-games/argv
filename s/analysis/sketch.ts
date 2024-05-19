@@ -6,7 +6,6 @@ const lol = command({
 	help: `lol`,
 	args: [
 		arg.optional("lmao", String, {
-			fallback: "refl",
 			help: `asdasd`,
 		}),
 		arg.required("danger", String, {

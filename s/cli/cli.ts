@@ -14,7 +14,10 @@ export type CliOptions<C extends CommandTree> = {
 
 export function cli<C extends CommandTree>(o: CliOptions<C>) {
 	const [bin, script, ...argw] = o.argv
-	const analysis = analyze(argw, o.commands)
+	const analysis = analyze({
+		argw,
+		commands: o.commands,
+	})
 
 	if (!analysis)
 		return null

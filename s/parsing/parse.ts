@@ -2,7 +2,7 @@
 import {ParseOptions, Parsed} from "./types.js"
 
 export function parse(
-		[bin, script, ...strings]: string[],
+		argx: string[],
 		options?: ParseOptions,
 	): Parsed {
 
@@ -13,7 +13,7 @@ export function parse(
 	const booleanParams = options?.booleanParams ?? []
 	let openParam: string | null = null
 
-	for (const string of strings) {
+	for (const string of argx) {
 		if (openParam) {
 			params.set(openParam, string)
 			openParam = null
@@ -41,6 +41,6 @@ export function parse(
 		}
 	}
 
-	return {bin, script, args, flags, params}
+	return {args, flags, params}
 }
 

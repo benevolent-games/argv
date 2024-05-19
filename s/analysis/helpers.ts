@@ -15,72 +15,84 @@ export const arg = {
 	required: <N extends string, P extends Primitive>(
 			name: N,
 			primitive: P,
-			o: {help: string},
+			o: {help?: string} = {},
 		): ArgRequired<N, P> => ({
-		...o,
 		mode: "required",
 		name,
 		primitive,
+		help: o.help,
 	}),
 
 	optional: <N extends string, P extends Primitive>(
 			name: N,
 			primitive: P,
-			o: {help: string, fallback: Typify<P>},
+			o: {help?: string} = {},
 		): ArgOptional<N, P> => ({
-		...o,
 		mode: "optional",
 		name,
 		primitive,
+		help: o.help,
 	}),
 
 	default: <N extends string, P extends Primitive>(
 			name: N,
 			primitive: P,
-			o: {help: string, fallback: Typify<P>},
+			o: {fallback: Typify<P>, help?: string},
 		): ArgDefault<N, P> => ({
-		...o,
 		mode: "default",
 		name,
 		primitive,
+		help: o.help,
+		fallback: o.fallback,
 	}),
 }
 
 export const param = {
 	required: <P extends Primitive>(
 			primitive: P,
-			o: {help: string},
+			o: {help?: string} = {},
 		): ParamRequired<P> => ({
-		...o,
 		mode: "required",
 		primitive,
+		help: o.help,
 	}),
 
 	optional: <P extends Primitive>(
 			primitive: P,
-			o: {fallback: Typify<P>, help: string},
+			o: {help?: string} = {},
 		): ParamOptional<P> => ({
-		...o,
 		mode: "optional",
 		primitive,
+		help: o.help,
 	}),
 
 	default: <P extends Primitive>(
 			primitive: P,
-			o: {fallback: Typify<P>, help: string},
+			o: {fallback: Typify<P>, help?: string},
 		): ParamDefault<P> => ({
-		...o,
 		mode: "default",
 		primitive,
+		help: o.help,
+		fallback: o.fallback,
 	}),
 
 	flag: (
-			o: {flag: string, help: string},
+			flag: string,
+			o: {help?: string} = {},
 		): ParamFlag => ({
-		...o,
 		mode: "flag",
 		primitive: Boolean,
-		fallback: false,
+		help: o.help,
+		flag: processFlag(flag),
 	}),
+}
+
+function processFlag(flag: string) {
+	flag = flag.startsWith("-")
+		? flag.slice(1)
+		: flag
+	if (flag.length !== 1)
+		throw new Error(`flag must be 1 character "${flag}"`)
+	return flag
 }
 

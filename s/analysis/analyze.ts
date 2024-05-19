@@ -5,18 +5,27 @@ import {Primitive} from "./types/primitives.js"
 import {Command, CommandTree} from "./types/commands.js"
 import {CommandAnalysis, TreeAnalysis} from "./types/analysis.js"
 
-export function analyze<C extends CommandTree>(
+export function analyze<C extends CommandTree>({
+		argw,
+		commands,
+		shorthandBooleans = false,
+	}: {
 		argw: string[],
 		commands: C,
-	) {
+		shorthandBooleans?: boolean
+	}) {
 	const distinguished = distinguishCommand(argw, commands)
 	if (!distinguished)
 		return null
 	const {argx, command, path} = distinguished
-	const parsed = parse(argx, extractParseOptions(command))
+	const booleanParams = shorthandBooleans
+		? extractBooleanParams(command)
+		: []
+	const parsed = parse(argx, {booleanParams})
 	const commandAnalysis = analyzeCommand(path, command, parsed)
 	const tree = walker(commands, command, commandAnalysis)
 	return {
+		argx,
 		tree,
 		spec: command,
 		command: commandAnalysis,
@@ -42,12 +51,12 @@ function walker<C extends CommandTree>(
 	return recurse(commands, []) as TreeAnalysis<C>
 }
 
-function extractParseOptions(command: Command) {
+function extractBooleanParams(command: Command) {
 	const booleanParams: string[] = []
 	for (const [name, param] of Object.entries(command.params))
 		if (param.primitive === Boolean)
 			booleanParams.push(name)
-	return {booleanParams}
+	return booleanParams
 }
 
 type Distinguished = {
@@ -86,6 +95,7 @@ function analyzeCommand(
 	): CommandAnalysis<Command> {
 
 	const args = Object.fromEntries(command.args.map((argspec, index) => {
+		const {name} = argspec
 		const input = parsed.args.at(index)
 		switch (argspec.mode) {
 
@@ -94,14 +104,14 @@ function analyzeCommand(
 					throw new Error(`required argument "${argspec.name}"`)
 				return [
 					argspec.name,
-					convertPrimitive(argspec.primitive, input),
+					convertPrimitive(name, argspec.primitive, input),
 				]
 
 			case "optional":
 				return [
 					argspec.name,
 					input
-						? convertPrimitive(argspec.primitive, input)
+						? convertPrimitive(name, argspec.primitive, input)
 						: undefined,
 				]
 
@@ -109,7 +119,7 @@ function analyzeCommand(
 				return [
 					argspec.name,
 					input
-						? convertPrimitive(argspec.primitive, input)
+						? convertPrimitive(name, argspec.primitive, input)
 						: argspec.fallback,
 				]
 		}
@@ -125,22 +135,25 @@ function analyzeCommand(
 						throw new Error(`param required "--${key}"`)
 					return [
 						key,
-						convertPrimitive(paramspec.primitive, input),
+						convertPrimitive(key, paramspec.primitive, input),
 					]
 
 				case "flag":
+					const flaginput = parsed.flags.has(paramspec.flag)
 					return [
 						key,
-						input
-							? convertPrimitive(paramspec.primitive, input)
-							: false,
+						flaginput
+							? true
+							: input
+								? convertPrimitive(key, Boolean, input)
+								: false,
 					]
 
 				case "optional":
 					return [
 						key,
 						input
-							? convertPrimitive(paramspec.primitive, input)
+							? convertPrimitive(key, paramspec.primitive, input)
 							: undefined,
 					]
 
@@ -148,7 +161,7 @@ function analyzeCommand(
 					return [
 						key,
 						input
-							? convertPrimitive(paramspec.primitive, input)
+							? convertPrimitive(key, paramspec.primitive, input)
 							: paramspec.fallback,
 					]
 
@@ -161,7 +174,7 @@ function analyzeCommand(
 	return {path, args, params}
 }
 
-function convertPrimitive(primitive: Primitive, input: string) {
+function convertPrimitive(name: string, primitive: Primitive, input: string) {
 	switch (primitive) {
 
 		case String:
@@ -171,10 +184,12 @@ function convertPrimitive(primitive: Primitive, input: string) {
 			return truisms.some(s => s === input.toLowerCase())
 
 		case Number:
+			const n = Number(input)
+			if (isNaN(n)) throw new Error(`"${name}" is not a valid number`)
 			return Number(input)
 
 		default:
-			throw new Error(`unknown primitive`)
+			throw new Error(`"${name}" has an unknown primitive type`)
 	}
 }
 

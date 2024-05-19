@@ -1,6 +1,5 @@
 
 import {parse} from "./parse.js"
-import {argv} from "../testing/argv.js"
 import {expect} from "../testing/framework/expect.js"
 import {testSuite} from "../testing/framework/test-suite.js"
 
@@ -11,7 +10,7 @@ export default testSuite({
 	//
 
 	async "no inputs, no problem"() {
-		const result = parse(argv())
+		const result = parse([])
 		expect("zero args")
 			.that(result.args.length)
 			.is(0)
@@ -24,7 +23,7 @@ export default testSuite({
 	},
 
 	async "args"() {
-		const result = parse(argv("alpha", "bravo"))
+		const result = parse(["alpha", "bravo"])
 		expect("two args")
 			.that(result.args.length)
 			.is(2)
@@ -38,24 +37,24 @@ export default testSuite({
 
 	async "params"() {
 		expect("multi-part")
-			.that(parse(argv("--alpha", "bravo")).params.get("alpha"))
+			.that(parse(["--alpha", "bravo"]).params.get("alpha"))
 			.is("bravo")
 		expect("equal-sign")
-			.that(parse(argv("--alpha=bravo")).params.get("alpha"))
+			.that(parse(["--alpha=bravo"]).params.get("alpha"))
 			.is("bravo")
 		expect("equal-sign plus")
-			.that(parse(argv("--alpha=bravo=lol")).params.get("alpha"))
+			.that(parse(["--alpha=bravo=lol"]).params.get("alpha"))
 			.is("bravo=lol")
 	},
 
 	async "multiple params"() {
 		{
-			const result = parse(argv("--alpha=a", "--bravo=b"))
+			const result = parse(["--alpha=a", "--bravo=b"])
 			expect("1").that(result.params.get("alpha")).is("a")
 			expect("2").that(result.params.get("bravo")).is("b")
 		}
 		{
-			const result = parse(argv("--alpha", "a", "--bravo", "b"))
+			const result = parse(["--alpha", "a", "--bravo", "b"])
 			expect("3").that(result.params.get("alpha")).is("a")
 			expect("4").that(result.params.get("bravo")).is("b")
 		}
@@ -64,26 +63,39 @@ export default testSuite({
 	async "boolean params"() {
 		const options = {booleanParams: ["alpha"]}
 		{
-			const result = parse(argv("--alpha=a", "--bravo=b"), options)
+			const result = parse(["--alpha=a", "--bravo=b"], options)
 			expect("1").that(result.params.get("alpha")).is("a")
 			expect("2").that(result.params.get("bravo")).is("b")
 		}
 		{
-			const result = parse(argv("--alpha", "myArg", "--bravo=b"), options)
+			const result = parse(["--alpha", "myArg", "--bravo=b"], options)
 			expect("3").that(result.params.get("alpha")).is("true")
 			expect("4").that(result.params.get("bravo")).is("b")
 			expect("5").that(result.args[0]).is("myArg")
 		}
 	},
 
+	// async "args after double-dash"() {
+	// 	const result = parse(["alpha", "--", "--bravo"])
+	// 	expect("zero params")
+	// 		.that(result.params.size)
+	// 		.is(0)
+	// 	expect("two args")
+	// 		.that(result.args.length)
+	// 		.is(2)
+	// 	expect("bravo keeps its prefix")
+	// 		.that(result.args[1])
+	// 		.is("--bravo")
+	// },
+
 	async "flags"() {
 		{
-			const result = parse(argv("-a", "-b"))
+			const result = parse(["-a", "-b"])
 			expect().that(result.flags.has("a")).is(true)
 			expect().that(result.flags.has("b")).is(true)
 		}
 		{
-			const result = parse(argv("-abc", "-xyz"))
+			const result = parse(["-abc", "-xyz"])
 			expect().that(result.flags.has("a")).is(true)
 			expect().that(result.flags.has("b")).is(true)
 			expect().that(result.flags.has("c")).is(true)
@@ -94,7 +106,7 @@ export default testSuite({
 	},
 
 	async "chaos"() {
-		const result = parse(argv(
+		const result = parse([
 			"alpha",
 			"--bravo=charlie",
 			"delta",
@@ -103,7 +115,7 @@ export default testSuite({
 			"-gh",
 			"india",
 			"-j",
-		))
+		])
 
 		expect().that(result.args.length).is(3)
 		expect().that(result.args[0]).is("alpha")

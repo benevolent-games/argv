@@ -37,17 +37,19 @@ export async function runTests(suites: Record<string, TestSuite>) {
 				color.magenta(error.message),
 			].join(" "))
 
-			if (!(error instanceof TestFailure) && error.stack) {
-				console.error(
-					color.green(
-						error
-							.stack
-							.split("\n")
-							.slice(1)
-							.join("\n")
-					)
-				)
-			}
+			console.error("")
+
+			// if (!(error instanceof TestFailure) && error.stack) {
+			// 	console.error(
+			// 		color.green(
+			// 			error
+			// 				.stack
+			// 				.split("\n")
+			// 				.slice(1)
+			// 				.join("\n")
+			// 		)
+			// 	)
+			// }
 		}
 
 		console.error(color.red(`${nfail} ${failure_s}.`))
