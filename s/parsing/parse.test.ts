@@ -48,6 +48,34 @@ export default testSuite({
 			.is("bravo=lol")
 	},
 
+	async "multiple params"() {
+		{
+			const result = parse(argv("--alpha=a", "--bravo=b"))
+			expect("1").that(result.params.get("alpha")).is("a")
+			expect("2").that(result.params.get("bravo")).is("b")
+		}
+		{
+			const result = parse(argv("--alpha", "a", "--bravo", "b"))
+			expect("3").that(result.params.get("alpha")).is("a")
+			expect("4").that(result.params.get("bravo")).is("b")
+		}
+	},
+
+	async "boolean params"() {
+		const options = {booleanParams: ["alpha"]}
+		{
+			const result = parse(argv("--alpha=a", "--bravo=b"), options)
+			expect("1").that(result.params.get("alpha")).is("a")
+			expect("2").that(result.params.get("bravo")).is("b")
+		}
+		{
+			const result = parse(argv("--alpha", "myArg", "--bravo=b"), options)
+			expect("3").that(result.params.get("alpha")).is("true")
+			expect("4").that(result.params.get("bravo")).is("b")
+			expect("5").that(result.args[0]).is("myArg")
+		}
+	},
+
 	async "flags"() {
 		{
 			const result = parse(argv("-a", "-b"))

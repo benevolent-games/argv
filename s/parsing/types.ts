@@ -1,4 +1,8 @@
 
+export type ParseOptions = {
+	booleanParams: string[]
+}
+
 export type Parsed = {
 	bin: string
 	script: string

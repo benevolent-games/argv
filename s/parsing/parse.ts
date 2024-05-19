@@ -1,11 +1,16 @@
 
-import {Parsed} from "./types.js"
+import {ParseOptions, Parsed} from "./types.js"
 
-export function parse([bin, script, ...strings]: string[]): Parsed {
+export function parse(
+		[bin, script, ...strings]: string[],
+		options?: ParseOptions,
+	): Parsed {
+
 	const args: string[] = []
 	const params = new Map<string, string>()
 	const flags = new Set<string>()
 
+	const booleanParams = options?.booleanParams ?? []
 	let openParam: string | null = null
 
 	for (const string of strings) {
@@ -20,7 +25,10 @@ export function parse([bin, script, ...strings]: string[]): Parsed {
 				params.set(name, parts.join("="))
 			}
 			else {
-				openParam = cut
+				if (booleanParams.includes(cut))
+					params.set(cut, "true")
+				else
+					openParam = cut
 			}
 		}
 		else if (string.startsWith("-")) {

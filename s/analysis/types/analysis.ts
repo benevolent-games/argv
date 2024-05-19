@@ -9,7 +9,7 @@ export type AnalysisConfig<C extends CommandTree> = {
 	commands: C
 }
 
-export type Argify<A extends Arg<string, Primitive>[]> = {
+export type ArgsAnalysis<A extends Arg<string, Primitive>[]> = {
 	[K in A[number]["name"]
 		as Extract<A[number], {name: K}> extends {mode: "required" | "default"} ? K : never]:
 			Typify<Extract<A[number], {name: K}>["primitive"]>
@@ -19,7 +19,7 @@ export type Argify<A extends Arg<string, Primitive>[]> = {
 			Typify<Extract<A[number], {name: K}>["primitive"]>
 }
 
-export type Paramify<Params extends Record<string, Param<Primitive>>> = {
+export type ParamAnalysis<Params extends Record<string, Param<Primitive>>> = {
 	[K in keyof Params
 		as Params[K]["mode"] extends ("required" | "default") ? K : never]:
 			Typify<Params[K]["primitive"]>;
@@ -32,10 +32,10 @@ export type Paramify<Params extends Record<string, Param<Primitive>>> = {
 export type CommandAnalysis<C extends Command> = {
 	path: string[]
 	help: string | undefined
-	args: Argify<C["args"]>
-	params: Paramify<C["params"]>
+	args: ArgsAnalysis<C["args"]>
+	params: ParamAnalysis<C["params"]>
 	extraArgs: string[]
-	execute: () => Promise<void>
+	execute: () => Promise<void> | undefined
 }
 
 export type TreeAnalysis<C extends CommandTree> = (
