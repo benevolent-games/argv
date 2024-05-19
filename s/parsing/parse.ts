@@ -1,4 +1,5 @@
 
+import {cleave} from "./utils/cleave.js"
 import {ParseOptions, Parsed} from "./types.js"
 
 export function parse(
@@ -6,6 +7,7 @@ export function parse(
 		options?: ParseOptions,
 	): Parsed {
 
+	const {before, after} = cleave(argx, "--")
 	const args: string[] = []
 	const params = new Map<string, string>()
 	const flags = new Set<string>()
@@ -13,7 +15,7 @@ export function parse(
 	const booleanParams = options?.booleanParams ?? []
 	let openParam: string | null = null
 
-	for (const string of argx) {
+	for (const string of before) {
 		if (openParam) {
 			params.set(openParam, string)
 			openParam = null
@@ -40,6 +42,9 @@ export function parse(
 			args.push(string)
 		}
 	}
+
+	for (const string of after)
+		args.push(string)
 
 	return {args, flags, params}
 }

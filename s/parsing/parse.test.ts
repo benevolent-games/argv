@@ -75,18 +75,18 @@ export default testSuite({
 		}
 	},
 
-	// async "args after double-dash"() {
-	// 	const result = parse(["alpha", "--", "--bravo"])
-	// 	expect("zero params")
-	// 		.that(result.params.size)
-	// 		.is(0)
-	// 	expect("two args")
-	// 		.that(result.args.length)
-	// 		.is(2)
-	// 	expect("bravo keeps its prefix")
-	// 		.that(result.args[1])
-	// 		.is("--bravo")
-	// },
+	async "args after double-dash"() {
+		const result = parse(["alpha", "--", "--bravo"])
+		expect("zero params")
+			.that(result.params.size)
+			.is(0)
+		expect("two args")
+			.that(result.args.length)
+			.is(2)
+		expect("bravo keeps its prefix")
+			.that(result.args[1])
+			.is("--bravo")
+	},
 
 	async "flags"() {
 		{
