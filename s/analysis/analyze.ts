@@ -16,7 +16,7 @@ export function analyze<C extends CommandTree>({
 	}) {
 	const distinguished = distinguishCommand(argw, commands)
 	if (!distinguished)
-		return null
+		throw new Error(`invalid command`)
 	const {argx, command, path} = distinguished
 	const booleanParams = shorthandBooleans
 		? extractBooleanParams(command)

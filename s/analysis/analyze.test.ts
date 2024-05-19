@@ -76,7 +76,6 @@ export default testSuite({
 				golf: param.flag("g"),
 			},
 		}))
-
 		return {
 			async "params, all modes"() {
 				const a = test(`--delta=a --echo=1 --foxtrot=22 --golf=yes`)
@@ -111,6 +110,32 @@ export default testSuite({
 				expect()
 					.that(test(`--delta=a -agb`).tree.params.golf)
 					.is(true)
+			},
+		}
+	}()),
+
+	...(function multiple_commands() {
+		const test = testing({
+			alpha: command({args: [arg.required("a", String)], params: {}}),
+			bravo: {
+				charlie: command({args: [arg.required("a", String)], params: {}}),
+				delta: command({args: [arg.required("a", String)], params: {}}),
+			},
+		})
+		return {
+			async "multiple commands"() {
+				expect()
+					.that(() => test(``))
+					.throws()
+				expect()
+					.that(test(`alpha a`).tree.alpha?.args.a)
+					.is("a")
+				expect()
+					.that(test(`bravo charlie a`).tree.bravo.charlie?.args.a)
+					.is("a")
+				expect()
+					.that(test(`bravo delta a`).tree.bravo.delta?.args.a)
+					.is("a")
 			},
 		}
 	}()),

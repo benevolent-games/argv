@@ -30,11 +30,23 @@ export type CommandAnalysis<C extends Command<any, any>> = {
 	params: ParamAnalysis<C["params"]>
 }
 
-export type TreeAnalysis<C extends CommandTree> = (
+export type TreeAnalysisWeak<C extends CommandTree> = (
 	C extends Command<any, any>
-		? CommandAnalysis<C>
+		? CommandAnalysis<C> | undefined
 		: C extends {[key: string]: CommandTree}
-			? {[K in keyof C]?: TreeAnalysis<C[K]>}
+			? {[K in keyof C]: TreeAnalysisWeak<C[K]>}
 			: never
 )
+
+export type TreeAnalysis<C extends CommandTree> = (
+	NonNullable<TreeAnalysisWeak<C>>
+)
+
+// export type TreeAnalysis<C extends CommandTree> = (
+// 	C extends Command<any, any>
+// 		? CommandAnalysis<C>
+// 		: C extends {[key: string]: CommandTree}
+// 			? {[K in keyof C]: TreeAnalysisWeak<C[K]>}
+// 			: never
+// )
 
