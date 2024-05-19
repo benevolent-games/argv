@@ -47,6 +47,15 @@ export default testSuite({
 			.is("bravo=lol")
 	},
 
+	async "param errors"() {
+		expect("open-ended")
+			.that(() => parse(["--alpha"]))
+			.throws()
+		expect("double or nothing")
+			.that(() => parse(["--alpha --bravo rofl"]))
+			.throws()
+	},
+
 	async "multiple params"() {
 		{
 			const result = parse(["--alpha=a", "--bravo=b"])

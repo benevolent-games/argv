@@ -46,6 +46,9 @@ export function parse(
 	for (const string of after)
 		args.push(string)
 
+	if (openParam !== null)
+		throw new Error(`missing value for parameter "--${openParam}"`)
+
 	return {args, flags, params}
 }
 
