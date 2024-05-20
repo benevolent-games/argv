@@ -6,6 +6,7 @@ import {arg, command, param} from "../analysis/helpers.js"
 const input = cli(process.argv, {
 	name: "cafe",
 	columns: process.stdout.columns,
+	readme: "https://github.com/benevolent-games/argv",
 	help: `
 		a vibrant italian café that tantalizes taste buds with its perfect combination of artisanal pizzas and creamy, homemade gelato.
 	`,

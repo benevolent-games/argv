@@ -17,6 +17,7 @@ export function printHelp({
 		columns,
 		commands,
 		selectedCommand,
+		readme,
 		name: programName,
 		help: programHelp,
 		theme = themes.standard,
@@ -112,6 +113,9 @@ export function printHelp({
 				? " " + p.command("<command>")
 				: ""
 		),
+		readme
+			? brick(1, p.property("readme ") + p.link(readme))
+			: null,
 		programHelp
 			? brick(1, programHelp)
 			: null,

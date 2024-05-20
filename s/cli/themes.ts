@@ -14,6 +14,8 @@ export type ArgvTheme = typeof standard
 const standard = {
 	program: [color.brightCyan, color.bold],
 	command: [color.cyan, color.bold],
+	property: [color.magenta],
+	link: [color.brightBlue, color.underline],
 	arg: [color.brightGreen, color.bold],
 	param: [color.brightYellow, color.bold],
 	flag: [color.yellow],
@@ -34,8 +36,9 @@ export const themes = {
 	noColor: Object.fromEntries(
 		Object.entries(standard)
 			.map(([key]) => [key, [(s: string) => s]])
-	) as any,
+	) as ArgvTheme,
 
+	// todo
 	dracula: {
 		...standard,
 		program: [colorHex("#80f"), color.bold],
