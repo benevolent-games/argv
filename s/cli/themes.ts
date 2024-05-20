@@ -20,8 +20,8 @@ const standard = {
 	param: [color.brightYellow, color.bold],
 	flag: [color.yellow],
 	required: [color.red],
-	mode: [color.brightBlue],
-	type: [color.blue],
+	mode: [color.blue],
+	type: [color.magenta],
 	value: [color.blue],
 }
 
