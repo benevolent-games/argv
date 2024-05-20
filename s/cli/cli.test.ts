@@ -1,9 +1,80 @@
 
+import {cli} from "./cli.js"
+import {argv} from "../testing/argv.js"
+import {arg, command, param} from "../analysis/helpers.js"
+import {expect} from "../testing/framework/expect.js"
 import {testSuite} from "../testing/framework/test-suite.js"
+import { cliConfig } from "./types/cli-config.js"
 
 export default testSuite({
-	async "test suite works"() {
-		void 0
+
+	async "no inputs, no problem"() {
+		const result = cli(argv(), {
+			name: "example",
+			commands: command({
+				args: [],
+				params: {},
+			}),
+		})
+		expect().that(typeof result.execute).is("function")
+		expect().that(typeof result.command).is("object")
+		expect().that(typeof result.tree).is("object")
+	},
+
+	async "command execution"() {
+		const result = cli(argv("aaa --bravo bbb"), {
+			name: "example",
+			commands: command({
+				args: [arg.required("alpha", String)],
+				params: {bravo: param.required(String)},
+				execute: async({args, params}) => {
+					expect().that(args.alpha).is("aaa")
+					expect().that(params.bravo).is("bbb")
+				},
+			}),
+		})
+		await result.execute()
+	},
+
+	async "command execution, alternating"() {
+		let calledHyrax = false
+		let calledCapybara = false
+		const config = cliConfig({
+			name: "example",
+			commands: {
+				hyrax: command({
+					args: [arg.required("alpha", String)],
+					params: {bravo: param.required(String)},
+					execute: async({args, params}) => {
+						expect().that(args.alpha).is("aaa")
+						expect().that(params.bravo).is("bbb")
+						calledHyrax = true
+					},
+				}),
+				capybara: command({
+					args: [arg.required("charlie", String)],
+					params: {delta: param.required(String)},
+					execute: async({args, params}) => {
+						expect().that(args.charlie).is("ccc")
+						expect().that(params.delta).is("ddd")
+						calledCapybara = true
+					},
+				}),
+			},
+		})
+
+		const result1 = cli(argv("hyrax aaa --bravo bbb"), config)
+		const result2 = cli(argv("capybara ccc --delta ddd"), config)
+		expect().that(calledHyrax).is(false)
+		expect().that(calledCapybara).is(false)
+
+		await result1.execute()
+		expect().that(calledHyrax).is(true)
+		expect().that(calledCapybara).is(false)
+
+		await result2.execute()
+		expect().that(calledHyrax).is(true)
+		expect().that(calledCapybara).is(true)
 	},
 
 	// async "empty program takes no inputs"() {

@@ -4,6 +4,24 @@ import {Param} from "./params.js"
 import {Primitive, Typify} from "./primitives.js"
 import {Command, CommandTree} from "./commands.js"
 
+export type AnalyzeOptions<C extends CommandTree> = {
+	commands: C,
+	shorthandBooleans?: boolean
+}
+
+export type Analysis<C extends CommandTree> = {
+	tree: TreeAnalysis<C>
+	commandSpec: Command
+	command: CommandAnalysis<Command>
+	extraArgs: string[]
+}
+
+export type Distinguished = {
+	argx: string[]
+	path: string[]
+	command: Command
+}
+
 export type ArgsAnalysis<A extends Arg<string, Primitive>[]> = {
 	[K in A[number]["name"]
 		as Extract<A[number], {name: K}> extends {mode: "required" | "default"} ? K : never]:
@@ -28,25 +46,18 @@ export type CommandAnalysis<C extends Command<any, any>> = {
 	path: string[]
 	args: ArgsAnalysis<C["args"]>
 	params: ParamAnalysis<C["params"]>
+	extraArgs: string[]
 }
 
-export type TreeAnalysisWeak<C extends CommandTree> = (
+export type TreeAnalysis<C extends CommandTree> = (
+	NonNullable<TreeAnalysisWeak<C>>
+)
+
+type TreeAnalysisWeak<C extends CommandTree> = (
 	C extends Command<any, any>
 		? CommandAnalysis<C> | undefined
 		: C extends {[key: string]: CommandTree}
 			? {[K in keyof C]: TreeAnalysisWeak<C[K]>}
 			: never
 )
-
-export type TreeAnalysis<C extends CommandTree> = (
-	NonNullable<TreeAnalysisWeak<C>>
-)
-
-// export type TreeAnalysis<C extends CommandTree> = (
-// 	C extends Command<any, any>
-// 		? CommandAnalysis<C>
-// 		: C extends {[key: string]: CommandTree}
-// 			? {[K in keyof C]: TreeAnalysisWeak<C[K]>}
-// 			: never
-// )
 

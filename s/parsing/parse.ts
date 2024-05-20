@@ -4,7 +4,7 @@ import {ParseOptions, Parsed} from "./types.js"
 
 export function parse(
 		argx: string[],
-		options?: ParseOptions,
+		{booleanParams = []}: ParseOptions = {},
 	): Parsed {
 
 	const {before, after} = cleave(argx, "--")
@@ -12,7 +12,6 @@ export function parse(
 	const params = new Map<string, string>()
 	const flags = new Set<string>()
 
-	const booleanParams = options?.booleanParams ?? []
 	let openParam: string | null = null
 
 	for (const string of before) {

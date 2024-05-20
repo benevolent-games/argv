@@ -1,5 +1,6 @@
 
 import {analyze} from "./analyze.js"
+import {splitty} from "../testing/argv.js"
 import {CommandTree} from "./types/commands.js"
 import {arg, command, param} from "./helpers.js"
 import {expect} from "../testing/framework/expect.js"
@@ -7,12 +8,7 @@ import {testSuite} from "../testing/framework/test-suite.js"
 
 function testing<C extends CommandTree>(commands: C) {
 	return (input: string) => {
-		const analysis = analyze({
-			commands,
-			argw: input
-				.split(/\s+/gim)
-				.filter(s => s.length > 0),
-		})
+		const analysis = analyze(splitty(input), {commands})
 		if (!analysis)
 			throw new Error("null analysis")
 		return analysis
@@ -26,11 +22,11 @@ export default testSuite({
 	//
 
 	async "no inputs, no problem"() {
-		const commands = command({args: [], params: {}, help: `help`})
-		analyze({argw: [], commands})
-		analyze({argw: ["extra"], commands})
-		expect().that(!!analyze({argw: [], commands})?.command).is(true)
-		expect().that(analyze({argw: ["extra"], commands})?.argx[0]).is("extra")
+		const o = {commands: command({args: [], params: {}})}
+		analyze(splitty(""), o)
+		analyze(splitty("extra"), o)
+		expect().that(!!analyze(splitty(""), o)?.command).is(true)
+		expect().that(analyze(splitty("extra"), o)?.extraArgs[0]).is("extra")
 	},
 
 	...(function args() {
@@ -61,6 +57,9 @@ export default testSuite({
 			},
 			async "args, wrong number type"() {
 				expect().that(() => test(`arcturus WRONG`)).throws()
+			},
+			async "extraArgs"() {
+				expect().that(test(`arcturus 420 123 abc`).extraArgs[0]).is("abc")
 			},
 		}
 	}()),

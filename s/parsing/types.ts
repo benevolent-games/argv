@@ -1,6 +1,6 @@
 
 export type ParseOptions = {
-	booleanParams: string[]
+	booleanParams?: string[]
 }
 
 export type Parsed = {
