@@ -1,4 +1,5 @@
 
+import {processFlag} from "./utils/utils.js"
 import {Primitive, Typify} from "./types/primitives.js"
 import {Command, CommandOptions} from "./types/commands.js"
 import {Arg, ArgDefault, ArgOptional, ArgRequired} from "./types/args.js"
@@ -85,14 +86,5 @@ export const param = {
 		help: o.help,
 		flag: processFlag(flag),
 	}),
-}
-
-function processFlag(flag: string) {
-	flag = flag.startsWith("-")
-		? flag.slice(1)
-		: flag
-	if (flag.length !== 1)
-		throw new Error(`flag must be 1 character "${flag}"`)
-	return flag
 }
 

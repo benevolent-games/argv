@@ -3,6 +3,7 @@ import {Parsed} from "../../parsing/types.js"
 import {Primitive} from "../types/primitives.js"
 import {Command, CommandTree} from "../types/commands.js"
 import {CommandAnalysis, Distinguished, TreeAnalysis} from "../types/analysis.js"
+import {InvalidFlagError, InvalidNumberError, RequiredArgError, RequiredParamError, UnknownModeError, UnknownPrimitiveError} from "../../errors.js"
 
 export function produceTreeAnalysis<C extends CommandTree>(
 		commands: C,
@@ -61,7 +62,7 @@ export function analyzeCommand(
 
 			case "required":
 				if (input === undefined)
-					throw new Error(`required argument "${argspec.name}"`)
+					throw new RequiredArgError(argspec.name)
 				return [
 					argspec.name,
 					convertPrimitive(name, argspec.primitive, input),
@@ -82,6 +83,9 @@ export function analyzeCommand(
 						? convertPrimitive(name, argspec.primitive, input)
 						: argspec.fallback,
 				]
+
+			default:
+				throw new UnknownModeError()
 		}
 	}))
 
@@ -92,7 +96,7 @@ export function analyzeCommand(
 
 				case "required":
 					if (input === undefined)
-						throw new Error(`param required "--${key}"`)
+						throw new RequiredParamError(key)
 					return [
 						key,
 						convertPrimitive(key, paramspec.primitive, input),
@@ -126,7 +130,7 @@ export function analyzeCommand(
 					]
 
 				default:
-					throw new Error(`unknown primitive`)
+					throw new UnknownModeError()
 			}
 		})
 	)
@@ -136,6 +140,15 @@ export function analyzeCommand(
 		: []
 
 	return {path, args, params, extraArgs}
+}
+
+export function processFlag(flag: string) {
+	flag = flag.startsWith("-")
+		? flag.slice(1)
+		: flag
+	if (flag.length !== 1)
+		throw new InvalidFlagError(flag)
+	return flag
 }
 
 ///////////////////////////
@@ -158,11 +171,12 @@ function convertPrimitive(name: string, primitive: Primitive, input: string) {
 
 		case Number:
 			const n = Number(input)
-			if (isNaN(n)) throw new Error(`"${name}" is not a valid number`)
+			if (isNaN(n))
+				throw new InvalidNumberError(name, input)
 			return Number(input)
 
 		default:
-			throw new Error(`"${name}" has an unknown primitive type`)
+			throw new UnknownPrimitiveError(name)
 	}
 }
 

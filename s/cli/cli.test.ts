@@ -77,6 +77,28 @@ export default testSuite({
 		expect().that(calledCapybara).is(true)
 	},
 
+	async "error handling"() {
+		const config = cliConfig({
+			name: "example",
+			commands: {
+				icecream: command({
+					args: [],
+					params: {scoops: param.required(Number)},
+				}),
+				pizza: command({
+					args: [],
+					params: {slices: param.required(Number)},
+				}),
+			},
+		})
+		expect("invalid number")
+			.that(() => cli(argv("icecream --scoops=FAIL"), config))
+			.throws()
+		expect("missing required param")
+			.that(() => cli(argv("icecream"), config))
+			.throws()
+	},
+
 	// async "empty program takes no inputs"() {
 	// 	let ran = false
 

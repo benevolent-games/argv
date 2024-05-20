@@ -1,5 +1,6 @@
 
 import {cleave} from "./utils/cleave.js"
+import {OpenParamError} from "../errors.js"
 import {ParseOptions, Parsed} from "./types.js"
 
 export function parse(
@@ -46,7 +47,7 @@ export function parse(
 		args.push(string)
 
 	if (openParam !== null)
-		throw new Error(`missing value for parameter "--${openParam}"`)
+		throw new OpenParamError(openParam)
 
 	return {args, flags, params}
 }
