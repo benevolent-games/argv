@@ -1,5 +1,5 @@
 
-export function redent(code: string) {
+export function undent(code: string) {
 	const lines = code.split(/\r|\n/)
 
 	let baseTabLevel: number | undefined

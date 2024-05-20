@@ -3,7 +3,7 @@ import {themes} from "../themes.js"
 import {CliConfig} from "../cli.js"
 import {wrap} from "../../tooling/text/wrap.js"
 import {Args} from "../../analysis/types/args.js"
-import {redent} from "../../tooling/text/redent.js"
+import {undent} from "../../tooling/text/undent.js"
 import {indent} from "../../tooling/text/indent.js"
 import {Params} from "../../analysis/types/params.js"
 import {CommandTree} from "../../analysis/analyze.js"
@@ -49,7 +49,7 @@ export function printHelp({
 			[
 				headline.join(" "),
 				command.help
-					? tab(1, redent(command.help))
+					? tab(1, undent(command.help))
 					: null,
 			].filter(nonvoid).join("\n"),
 			tab(1, printArgs(command.args)),
