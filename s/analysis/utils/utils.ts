@@ -4,6 +4,7 @@ import {Primitive} from "../types/primitives.js"
 import {Command, CommandTree} from "../types/commands.js"
 import {CommandAnalysis, SelectedCommand, TreeAnalysis} from "../types/analysis.js"
 import {InvalidFlagError, InvalidNumberError, RequiredArgError, RequiredParamError, UnknownModeError, UnknownPrimitiveError} from "../../errors.js"
+import { parse } from "../../parsing/parse.js"
 
 export function produceTreeAnalysis<C extends CommandTree>(
 		commands: C,
@@ -159,7 +160,8 @@ export function processFlag(flag: string) {
 const truisms = ["true", "yes", "on"]
 
 function isCommandMatching(argw: string[], path: string[]) {
-	return path.every((part, index) => part === argw[index])
+	const {args} = parse(argw, {booleanParams: ["help"]})
+	return path.every((part, index) => part === args[index])
 }
 
 function convertPrimitive(name: string, primitive: Primitive, input: string) {

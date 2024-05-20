@@ -20,6 +20,7 @@ const standard = {
 	required: [color.red],
 	mode: [color.brightBlue],
 	type: [color.blue],
+	value: [color.blue],
 }
 
 //
@@ -32,7 +33,7 @@ export const themes = {
 
 	noColor: Object.fromEntries(
 		Object.entries(standard)
-			.map(([key, value]) => [key, [(s: string) => s]])
+			.map(([key]) => [key, [(s: string) => s]])
 	) as any,
 
 	dracula: {

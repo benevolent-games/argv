@@ -36,8 +36,10 @@ export function printHelp({
 	function printCommand({path, command}: {path: string[], command: Command}) {
 		const name = [
 			p.program(programName),
-			p.command(path.join(" ")),
-		].join(" ")
+			(path.length > 0)
+				? p.command(path.join(" "))
+				: "",
+		].filter(present).join(" ")
 		const args = command.args
 			.map(arg => arg.name).map(n => p.arg(`<${n}>`))
 			.join(" ")
@@ -65,6 +67,9 @@ export function printHelp({
 					? p.required(arg.mode)
 					: p.mode(arg.mode),
 				p.type(primitiveName(arg.primitive)),
+				arg.mode === "default"
+					? p.value(JSON.stringify(arg.fallback))
+					: null,
 			].filter(nonvoid).join(" ")
 			return [
 				header,
@@ -82,12 +87,13 @@ export function printHelp({
 				param.mode === "flag"
 					? p.flag("-" + param.flag + ",")
 					: null,
-				(
-					param.mode === "required"
-						? p.required(param.mode)
-						: p.mode(param.mode)
-				),
+				param.mode === "required"
+					? p.required(param.mode)
+					: p.mode(param.mode),
 				p.type(primitiveName(param.primitive)),
+				param.mode === "default"
+					? p.value(`"${param.fallback.toString()}"`)
+					: null,
 			].filter(nonvoid).join(" ")
 			return [
 				header,
@@ -98,28 +104,40 @@ export function printHelp({
 		}).filter(nonvoid).join("\n\n")
 	}
 
+	const commandlist = listAllCommands(commands)
+
+	const programHeader = [
+		p.program(programName) + (
+			(commandlist.length > 1)
+				? " " + p.command("<command>")
+				: ""
+		),
+		programHelp
+			? brick(1, programHelp)
+			: null,
+	].join("\n")
+
 	if (selectedCommand) {
 		const {command, path} = selectedCommand
-		return []
-		return brick(0, `
-			${p.program(programName)} ${p.command(path.join(" "))}
-		`)
+		return [
+			programHeader,
+			brick(1, printCommand({command, path})),
+		].filter(nonvoid)
+			.map(t => wrap(columns, t))
+			.join("\n\n")
+
 	}
 	else {
 		return [
-			p.program(programName) + " " + p.command("<command>"),
-			programHelp
-				? brick(1, programHelp)
-				: null,
-			"",
-			tab(1, listAllCommands(commands)
+			programHeader,
+			tab(1, commandlist
 				.map(printCommand)
 				.map(t => brick(0, t))
 				.join("\n\n")),
 		].filter(nonvoid)
 			.map(t => brick(0, t))
 			.map(t => wrap(columns, t))
-			.join("\n")
+			.join("\n\n")
 	}
 }
 
@@ -127,6 +145,10 @@ export function printHelp({
 
 function nonvoid<X>(x: X): x is NonNullable<X> {
 	return x !== null && x !== undefined
+}
+
+function present(x: any) {
+	return !!x
 }
 
 function listAllCommands(commands: CommandTree) {
