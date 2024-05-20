@@ -13,15 +13,13 @@ export type ArgvTheme = typeof standard
 
 const standard = {
 	program: [color.brightCyan, color.bold],
-	command: [color.cyan],
-	arg: [color.brightGreen],
-	param: [color.brightYellow],
+	command: [color.cyan, color.bold],
+	arg: [color.brightGreen, color.bold],
+	param: [color.brightYellow, color.bold],
 	flag: [color.yellow],
-	mode: [color.blue],
 	required: [color.red],
+	mode: [color.brightBlue],
 	type: [color.blue],
-	value: [color.blue],
-	got: [color.yellow],
 }
 
 //
@@ -31,6 +29,11 @@ const standard = {
 export const themes = {
 
 	standard,
+
+	noColor: Object.fromEntries(
+		Object.entries(standard)
+			.map(([key, value]) => [key, [(s: string) => s]])
+	) as any,
 
 	dracula: {
 		...standard,

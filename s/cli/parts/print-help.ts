@@ -60,11 +60,11 @@ export function printHelp({
 	function printArgs(args: Args) {
 		return args.map(arg => {
 			const header = [
-				p.arg(arg.name),
+				p.arg(arg.name + ","),
 				arg.mode === "required"
 					? p.required(arg.mode)
 					: p.mode(arg.mode),
-				p.type(primitiveName(arg.primitive))
+				p.type(primitiveName(arg.primitive)),
 			].filter(nonvoid).join(" ")
 			return [
 				header,
@@ -78,7 +78,16 @@ export function printHelp({
 	function printParams(params: Params) {
 		return Object.entries(params).map(([paramName, param]) => {
 			const header = [
-				p.param(paramName)
+				p.param("--" + paramName + ","),
+				param.mode === "flag"
+					? p.flag("-" + param.flag + ",")
+					: null,
+				(
+					param.mode === "required"
+						? p.required(param.mode)
+						: p.mode(param.mode)
+				),
+				p.type(primitiveName(param.primitive)),
 			].filter(nonvoid).join(" ")
 			return [
 				header,
