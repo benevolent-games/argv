@@ -3,6 +3,8 @@ import {ConfigError} from "../../errors.js"
 
 export type Primitive = typeof Boolean | typeof Number | typeof String
 
+export type Validator<P extends Primitive> = (arg: Typify<P>) => Typify<P>
+
 export type Typify<P extends Primitive> = (
 	P extends typeof Boolean ? boolean
 	: P extends typeof Number ? number

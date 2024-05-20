@@ -1,5 +1,5 @@
 
-import {Primitive, Typify} from "./primitives.js"
+import {Primitive, Typify, Validator} from "./primitives.js"
 
 export type Args = Arg<string, Primitive>[]
 
@@ -11,6 +11,7 @@ export type ArgBase<N extends string, P extends Primitive> = {
 	name: N
 	primitive: P
 	help: string | undefined
+	validate: Validator<P>
 }
 
 export type ArgRequired<N extends string, P extends Primitive> = {

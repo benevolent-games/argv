@@ -1,10 +1,10 @@
 
+import {parse} from "../../parsing/parse.js"
 import {Parsed} from "../../parsing/types.js"
 import {Primitive} from "../types/primitives.js"
 import {Command, CommandTree} from "../types/commands.js"
 import {CommandAnalysis, SelectedCommand, TreeAnalysis} from "../types/analysis.js"
 import {InvalidFlagError, InvalidNumberError, RequiredArgError, RequiredParamError, UnknownModeError, UnknownPrimitiveError} from "../../errors.js"
-import { parse } from "../../parsing/parse.js"
 
 export function produceTreeAnalysis<C extends CommandTree>(
 		commands: C,
@@ -68,14 +68,14 @@ export function analyzeCommand(
 					throw new RequiredArgError(argspec.name)
 				return [
 					argspec.name,
-					convertPrimitive(name, argspec.primitive, input),
+					argspec.validate(convertPrimitive(name, argspec.primitive, input)),
 				]
 
 			case "optional":
 				return [
 					argspec.name,
 					input
-						? convertPrimitive(name, argspec.primitive, input)
+						? argspec.validate(convertPrimitive(name, argspec.primitive, input))
 						: undefined,
 				]
 
@@ -83,7 +83,7 @@ export function analyzeCommand(
 				return [
 					argspec.name,
 					input
-						? convertPrimitive(name, argspec.primitive, input)
+						? argspec.validate(convertPrimitive(name, argspec.primitive, input))
 						: argspec.fallback,
 				]
 
@@ -102,7 +102,7 @@ export function analyzeCommand(
 						throw new RequiredParamError(key)
 					return [
 						key,
-						convertPrimitive(key, paramspec.primitive, input),
+						paramspec.validate(convertPrimitive(key, paramspec.primitive, input)),
 					]
 
 				case "flag":
@@ -112,7 +112,7 @@ export function analyzeCommand(
 						flaginput
 							? true
 							: input
-								? convertPrimitive(key, Boolean, input)
+								? paramspec.validate(convertPrimitive(key, Boolean, input) as boolean)
 								: false,
 					]
 
@@ -120,7 +120,7 @@ export function analyzeCommand(
 					return [
 						key,
 						input
-							? convertPrimitive(key, paramspec.primitive, input)
+							? paramspec.validate(convertPrimitive(key, paramspec.primitive, input))
 							: undefined,
 					]
 
@@ -128,7 +128,7 @@ export function analyzeCommand(
 					return [
 						key,
 						input
-							? convertPrimitive(key, paramspec.primitive, input)
+							? paramspec.validate(convertPrimitive(key, paramspec.primitive, input))
 							: paramspec.fallback,
 					]
 

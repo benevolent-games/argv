@@ -3,6 +3,8 @@ export class ArgvError extends Error {}
 export class ConfigError extends ArgvError {}
 export class InputError extends ArgvError {}
 
+export class ValidationError extends InputError {}
+
 //////// analyze errors
 
 export class InvalidFlagError extends ConfigError {

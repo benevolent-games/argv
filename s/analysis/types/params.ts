@@ -1,5 +1,5 @@
 
-import {Primitive, Typify} from "./primitives.js"
+import {Primitive, Typify, Validator} from "./primitives.js"
 
 export type Params = Record<string, Param<Primitive>>
 
@@ -10,6 +10,7 @@ export type Param<P extends Primitive> = (
 export type ParamBase<P extends Primitive> = {
 	primitive: P
 	help: string | undefined
+	validate: Validator<P>
 }
 
 export type ParamRequired<P extends Primitive> = {
@@ -28,6 +29,5 @@ export type ParamDefault<P extends Primitive> = {
 export type ParamFlag = {
 	mode: "flag"
 	flag: string
-	primitive: typeof Boolean
 } & ParamBase<typeof Boolean>
 
