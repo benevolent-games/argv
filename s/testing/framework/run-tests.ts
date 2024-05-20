@@ -1,6 +1,6 @@
 
 import {TestSuite} from "./test-suite.js"
-import {color} from "../../tooling/colors.js"
+import {color} from "../../tooling/text/coloring.js"
 import {TestFailure} from "./errors/test-failure.js"
 
 export async function runTests(suites: Record<string, TestSuite>) {
@@ -60,3 +60,4 @@ export async function runTests(suites: Record<string, TestSuite>) {
 		process.exit(0)
 	}
 }
+

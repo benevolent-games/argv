@@ -1,13 +1,15 @@
 
+import {ArgvTheme} from "../themes.js"
 import {Logger} from "../../tooling/logger.js"
 import {CommandTree} from "../../analysis/types/commands.js"
 
 export type CliConfig<C extends CommandTree> = {
-	commands: C
 	name: string
+	columns: number
+	commands: C
 	help?: string
 	logger?: Logger
-	columns?: number
+	theme?: ArgvTheme
 }
 
 export function cliConfig<C extends CommandTree>(c: CliConfig<C>) {

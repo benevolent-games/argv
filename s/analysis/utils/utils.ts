@@ -2,7 +2,7 @@
 import {Parsed} from "../../parsing/types.js"
 import {Primitive} from "../types/primitives.js"
 import {Command, CommandTree} from "../types/commands.js"
-import {CommandAnalysis, Distinguished, TreeAnalysis} from "../types/analysis.js"
+import {CommandAnalysis, SelectedCommand, TreeAnalysis} from "../types/analysis.js"
 import {InvalidFlagError, InvalidNumberError, RequiredArgError, RequiredParamError, UnknownModeError, UnknownPrimitiveError} from "../../errors.js"
 
 export function produceTreeAnalysis<C extends CommandTree>(
@@ -10,6 +10,7 @@ export function produceTreeAnalysis<C extends CommandTree>(
 		command: Command,
 		commandAnalysis: CommandAnalysis<Command>,
 	): TreeAnalysis<C> {
+
 	function recurse(c: CommandTree, path: string[]): any {
 		if (c instanceof Command)
 			return (c === command)
@@ -21,6 +22,7 @@ export function produceTreeAnalysis<C extends CommandTree>(
 					.map(([key, c2]) => [key, recurse(c2, [...path, key])])
 			)
 	}
+
 	return recurse(commands, [])
 }
 
@@ -32,8 +34,8 @@ export function extractBooleanParams(command: Command) {
 	return booleanParams
 }
 
-export function distinguishCommand(argw: string[], commands: CommandTree) {
-	function recurse(c: CommandTree, path: string[]): Distinguished | undefined {
+export function selectCommand(argw: string[], commands: CommandTree) {
+	function recurse(c: CommandTree, path: string[]): SelectedCommand | undefined {
 		if (c instanceof Command) {
 			if (isCommandMatching(argw, path)) {
 				const argx = argw.slice(path.length)

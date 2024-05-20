@@ -1,24 +1,33 @@
-#!/usr/bin/node
+#!/usr/bin/env node
 
-import {cli} from "./cli/cli.js"
-import {arg, command, param} from "./analysis/helpers.js"
+import {cli} from "../cli/cli.js"
+import {themes} from "../cli/themes.js"
+import {arg, command, param} from "../analysis/helpers.js"
 
 const input = cli(process.argv, {
-	name: "restaurant",
-	help: `are you in the mood for pizza, or icecream?`,
+	name: "cafe",
+	// theme: themes.dracula,
+	columns: process.stdout.columns,
+	help: `
+		a vibrant italian café that tantalizes taste buds with its perfect combination of artisanal pizzas and creamy, homemade gelato.
+	`,
 	commands: {
 		pizza: command({
-			help: `made with the finest mozza!`,
+			help: `made with the finest mozza, mama mia!`,
 			args: [
 				arg.required("size", String, {help: `small, medium, or large?`}),
+				arg.default("crust", String, {fallback: "thick", help: `thick or thin`}),
 			],
 			params: {
 				slices: param.required(Number, {help: `we serve it by the slice`}),
-				pepperoni: param.flag("p", {help: `we go heavy on the meaty pepperoni`}),
+				pepperoni: param.flag("p", {help: `
+					we go heavy on the meaty pepperoni
+				`}),
 				mushrooms: param.flag("m", {help: `fresh fungi`}),
 			},
 		}),
 		icecream: command({
+			help: `it's actually gelatto!`,
 			args: [
 				arg.default("vessel", String, {fallback: "cone", help: `cone, waffle, or bowl?`}),
 			],

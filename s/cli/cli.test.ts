@@ -1,16 +1,19 @@
 
 import {cli} from "./cli.js"
 import {argv} from "../testing/argv.js"
-import {arg, command, param} from "../analysis/helpers.js"
+import {cliConfig} from "./types/cli-config.js"
 import {expect} from "../testing/framework/expect.js"
+import {arg, command, param} from "../analysis/helpers.js"
 import {testSuite} from "../testing/framework/test-suite.js"
-import { cliConfig } from "./types/cli-config.js"
+
+const columns = 72
 
 export default testSuite({
 
 	async "no inputs, no problem"() {
 		const result = cli(argv(), {
 			name: "example",
+			columns,
 			commands: command({
 				args: [],
 				params: {},
@@ -24,6 +27,7 @@ export default testSuite({
 	async "command execution"() {
 		const result = cli(argv("aaa --bravo bbb"), {
 			name: "example",
+			columns,
 			commands: command({
 				args: [arg.required("alpha", String)],
 				params: {bravo: param.required(String)},
@@ -41,6 +45,7 @@ export default testSuite({
 		let calledCapybara = false
 		const config = cliConfig({
 			name: "example",
+			columns,
 			commands: {
 				hyrax: command({
 					args: [arg.required("alpha", String)],
@@ -80,6 +85,7 @@ export default testSuite({
 	async "error handling"() {
 		const config = cliConfig({
 			name: "example",
+			columns,
 			commands: {
 				icecream: command({
 					args: [],

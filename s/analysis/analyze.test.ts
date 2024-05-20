@@ -73,6 +73,7 @@ export default testSuite({
 				echo: param.optional(Number),
 				foxtrot: param.default(Number, {fallback: 2}),
 				golf: param.flag("g"),
+				hotel: param.flag("h"),
 			},
 		}))
 		return {
@@ -110,7 +111,7 @@ export default testSuite({
 					.that(test(`--delta=a -g`).tree.params.golf)
 					.is(true)
 				expect()
-					.that(test(`--delta=a -agb`).tree.params.golf)
+					.that(test(`--delta=a -hg`).tree.params.golf)
 					.is(true)
 			},
 		}

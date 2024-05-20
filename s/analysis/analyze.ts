@@ -3,7 +3,7 @@ import {parse} from "../parsing/parse.js"
 import {CommandTree} from "./types/commands.js"
 import {CommandNotFoundError, UnknownFlagError, UnknownParamError} from "../errors.js"
 import {Analysis, AnalyzeOptions} from "./types/analysis.js"
-import {analyzeCommand, distinguishCommand, extractBooleanParams, produceTreeAnalysis} from "./utils/utils.js"
+import {analyzeCommand, selectCommand, extractBooleanParams, produceTreeAnalysis} from "./utils/utils.js"
 
 export {CommandTree, AnalyzeOptions, Analysis}
 export {command, arg, param} from "./helpers.js"
@@ -13,12 +13,12 @@ export function analyze<C extends CommandTree>(
 		{commands, shorthandBooleans = false}: AnalyzeOptions<C>
 	): Analysis<C> {
 
-	const distinguished = distinguishCommand(argw, commands)
+	const selected = selectCommand(argw, commands)
 
-	if (!distinguished)
+	if (!selected)
 		throw new CommandNotFoundError()
 
-	const {argx, command, path} = distinguished
+	const {argx, command, path} = selected
 
 	const booleanParams = shorthandBooleans
 		? extractBooleanParams(command)

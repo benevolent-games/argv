@@ -16,7 +16,7 @@ export type Analysis<C extends CommandTree> = {
 	extraArgs: string[]
 }
 
-export type Distinguished = {
+export type SelectedCommand = {
 	argx: string[]
 	path: string[]
 	command: Command
