@@ -1,25 +1,32 @@
 
-import {CliConfig} from "./types.js"
-import {InputError} from "../errors.js"
 import {analyze} from "../analysis/analyze.js"
+import {CliConfig, CliResult} from "./types.js"
 import {checkHelp} from "../parsing/check-help.js"
-import {ConsoleLogger} from "../tooling/logger.js"
 import {printHelp} from "./printing/print-help.js"
 import {printError} from "./printing/print-error.js"
+import {InputError, NoExitError} from "../errors.js"
 import {selectCommand} from "../analysis/utils/utils.js"
 import {Command, CommandTree} from "../analysis/types/commands.js"
 
+/**
+ * process command line input.
+ *  - reads args and params based on the provided config.
+ *  - returns the data all nicely organized for you to use in your program.
+ *  - autogenerates a tidy little --help page.
+ */
 export function cli<C extends CommandTree>(
 		argv: string[],
 		config: CliConfig<C>,
-	) {
+	): CliResult<C> {
 
 	const [bin, script, ...argw] = argv
 
 	const {
 		columns,
 		commands,
-		logger = new ConsoleLogger(),
+		onExit = code => process.exit(code),
+		onHelp = help => console.log(help),
+		onMistake = mistake => console.error(mistake),
 	} = config
 
 	try {
@@ -31,12 +38,13 @@ export function cli<C extends CommandTree>(
 			&& !thisCliHasOneSingleRootCommand
 
 		if (userProvidedHelpParam || userNeedsHelp) {
-			logger.log(printHelp({...config, commands, selectedCommand}))
-			process.exit(0)
+			onHelp(printHelp({...config, commands, selectedCommand}))
+			onExit(0)
 		}
 
 		const analysis = analyze(argw, {commands})
 		const execute = () => analysis.commandSpec.execute(analysis.command)
+
 		return {
 			...analysis,
 			bin,
@@ -45,11 +53,13 @@ export function cli<C extends CommandTree>(
 		}
 	}
 	catch (error) {
-		if (error instanceof InputError)
-			logger.error(printError(error, columns))
-		else
-			throw error
-		process.exit(1)
+		if (error instanceof InputError) {
+			onMistake(printError(error, columns))
+			onExit(1)
+		}
+		else throw error
 	}
+
+	throw new NoExitError("cli 'exit' failed to end process")
 }
 

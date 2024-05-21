@@ -1,8 +1,7 @@
 
 import {ArgvTheme} from "./themes.js"
-import {Logger} from "../tooling/logger.js"
-import {CommandTree} from "../analysis/types/commands.js"
 import {Analysis} from "../analysis/types/analysis.js"
+import {CommandTree} from "../analysis/types/commands.js"
 
 export type CliConfig<C extends CommandTree> = {
 	name: string
@@ -10,8 +9,10 @@ export type CliConfig<C extends CommandTree> = {
 	commands: C
 	readme?: string
 	help?: string
-	logger?: Logger
 	theme?: ArgvTheme
+	onExit?: (code: number) => void
+	onHelp?: (help: string) => void
+	onMistake?: (mistake: string) => void
 }
 
 export function cliConfig<C extends CommandTree>(c: CliConfig<C>) {

@@ -12,6 +12,8 @@ export class ValidationError extends InputError {}
 
 //////// analyze errors
 
+export class NoExitError extends ArgvError {}
+
 export class InvalidFlagError extends ConfigError {
 	constructor(public invalidFlag: string) {
 		super(`flag must be 1 character, and "${invalidFlag}" was not`)
