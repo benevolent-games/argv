@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import {cli} from "../cli/cli.js"
-import {arg, chooser, command, param} from "../analysis/helpers.js"
+import {cli} from "../areas/cli/cli.js"
+import {arg, chooser, command, param} from "../areas/analysis/helpers.js"
 
 const input = cli(process.argv, {
 	name: "cafe",
