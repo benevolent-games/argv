@@ -11,6 +11,7 @@ import {makePalette} from "../../tooling/text/coloring.js"
 import {primitiveName} from "../../analysis/types/primitives.js"
 import {SelectedCommand} from "../../analysis/types/analysis.js"
 import {Command, CommandTree} from "../../analysis/types/commands.js"
+import {listAllCommands} from "../../analysis/utils/list-all-commands.js"
 
 export function printHelp({
 		columns,
@@ -152,18 +153,5 @@ function nonvoid<X>(x: X): x is NonNullable<X> {
 
 function present(x: any) {
 	return !!x
-}
-
-function listAllCommands(commands: CommandTree) {
-	const commandlist: {path: string[], command: Command}[] = []
-	function recurse(c: CommandTree, path: string[]): any {
-		if (c instanceof Command)
-			commandlist.push({path, command: c})
-		else
-			for (const [key, c2] of Object.entries(c))
-				recurse(c2, [...path, key])
-	}
-	recurse(commands, [])
-	return commandlist
 }
 

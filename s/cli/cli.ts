@@ -7,7 +7,7 @@ import {ConsoleLogger} from "../tooling/logger.js"
 import {printHelp} from "./printing/print-help.js"
 import {printError} from "./printing/print-error.js"
 import {selectCommand} from "../analysis/utils/utils.js"
-import {CommandTree} from "../analysis/types/commands.js"
+import {Command, CommandTree} from "../analysis/types/commands.js"
 
 export function cli<C extends CommandTree>(
 		argv: string[],
@@ -23,10 +23,14 @@ export function cli<C extends CommandTree>(
 	} = config
 
 	try {
-		const help = checkHelp(argw)
+		const userProvidedHelpParam = checkHelp(argw)
 		const selectedCommand = selectCommand(argw, commands)
+		const thisCliHasOneSingleRootCommand = commands instanceof Command
 
-		if (help) {
+		const userNeedsHelp = !selectedCommand
+			&& !thisCliHasOneSingleRootCommand
+
+		if (userProvidedHelpParam || userNeedsHelp) {
 			logger.log(printHelp({...config, commands, selectedCommand}))
 			process.exit(0)
 		}
