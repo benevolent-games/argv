@@ -1,18 +1,32 @@
 
+/**
+ * base class for all known argv errors.
+ *  - ideally, argv will only throw errors that are subclasses of this.
+ */
 export class ArgvError extends Error {
 	constructor(message: string) {
 		super(message)
 		this.name = this.constructor.name
 	}
 }
+
+/** developer error configuring argv. */
 export class ConfigError extends ArgvError {}
+
+/** user error in supplying command line inputs. */
 export class MistakeError extends ArgvError {}
 
+/** cli is expeceted to throw this during testing scenarios. */
+export class FakeExit extends ArgvError {}
+
+//
+// ANALYSIS ERRORS
+// ===============
+// errors that might happen during `analyze`
+//
+
+/** user input has failed validation. */
 export class ValidationError extends MistakeError {}
-
-//////// analyze errors
-
-export class NoExitError extends ArgvError {}
 
 export class InvalidFlagError extends ConfigError {
 	constructor(public invalidFlag: string) {
@@ -76,7 +90,11 @@ export class UnknownFlagError extends MistakeError {
 
 export class InvalidNumberError extends MistakeError {}
 
-//////// parse errors
+//
+// PARSING ERRORS
+// ==============
+// errors that might happen during `parse`
+//
 
 export class OpenParamError extends MistakeError {
 	constructor(public paramName: string) {

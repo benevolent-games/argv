@@ -4,7 +4,7 @@ import {CliConfig, CliResult} from "./types.js"
 import {checkHelp} from "../parsing/check-help.js"
 import {printHelp} from "./printing/print-help.js"
 import {printError} from "./printing/print-error.js"
-import {MistakeError, NoExitError} from "../errors.js"
+import {MistakeError, FakeExit} from "../errors.js"
 import {selectCommand} from "../analysis/utils/utils.js"
 import {Command, CommandTree} from "../analysis/types/commands.js"
 
@@ -60,6 +60,9 @@ export function cli<C extends CommandTree>(
 		else throw error
 	}
 
-	throw new NoExitError("cli 'exit' failed to end process")
+	// if the user-supplied `onExit` fails to actually end the process,
+	// we need to throw an error, so that typescript sees that this function
+	// will never return undefined.
+	throw new FakeExit("cli 'exit' failed to end process")
 }
 

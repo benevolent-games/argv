@@ -1,11 +1,11 @@
 
 import {cli} from "./cli.js"
 import {argv} from "../testing/argv.js"
-import {NoExitError} from "../errors.js"
+import {FakeExit} from "../errors.js"
 import {CliConfig, cliConfig} from "./types.js"
 import {expect} from "../testing/framework/expect.js"
-import {arg, command, param} from "../analysis/helpers.js"
 import {CommandTree} from "../analysis/types/commands.js"
+import {arg, command, param} from "../analysis/helpers.js"
 import {testSuite} from "../testing/framework/test-suite.js"
 
 const columns = 72
@@ -26,7 +26,7 @@ function spyCli<C extends CommandTree>(argv: string[], config: CliConfig<C>) {
 		return {...data, ...result}
 	}
 	catch (error) {
-		if (error instanceof NoExitError)
+		if (error instanceof FakeExit)
 			return data
 		else
 			throw error
