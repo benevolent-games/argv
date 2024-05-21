@@ -1,10 +1,12 @@
 
+import {Arg} from "../types/args.js"
+import {Param} from "../types/params.js"
 import {parse} from "../../parsing/parse.js"
 import {Parsed} from "../../parsing/types.js"
 import {Primitive} from "../types/primitives.js"
 import {Command, CommandTree} from "../types/commands.js"
 import {CommandAnalysis, SelectedCommand, TreeAnalysis} from "../types/analysis.js"
-import {InvalidFlagError, InvalidNumberError, RequiredArgError, RequiredParamError, UnknownModeError, UnknownPrimitiveError} from "../../errors.js"
+import {InvalidFlagError, InvalidNumberError, RequiredArgError, RequiredParamError, UnknownModeError, UnknownPrimitiveError, ValidationError} from "../../errors.js"
 
 export function produceTreeAnalysis<C extends CommandTree>(
 		commands: C,
@@ -58,24 +60,50 @@ export function analyzeCommand(
 		parsed: Parsed,
 	): CommandAnalysis<Command> {
 
+	function coerce(
+			inputkind: "arg" | "param",
+			name: string,
+			primitive: Primitive,
+			input: string,
+			validate: (value: any) => any,
+		) {
+		const converted = convertPrimitive(inputkind, name, primitive, input)
+		try {
+			return validate(converted)
+		}
+		catch (error) {
+			throw new ValidationError(
+				(
+					(inputkind === "arg")
+						? `arg "${name}"`
+						: `param --${name}`
+				) + (
+					(error instanceof Error)
+						? ": " + error.message
+						: ""
+				)
+			)
+		}
+	}
+
 	const args = Object.fromEntries(command.args.map((argspec, index) => {
-		const {name} = argspec
+		const {mode, name, primitive, validate} = argspec
 		const input = parsed.args.at(index)
-		switch (argspec.mode) {
+		switch (mode) {
 
 			case "required":
 				if (input === undefined)
-					throw new RequiredArgError(argspec.name)
+					throw new RequiredArgError(name)
 				return [
-					argspec.name,
-					argspec.validate(convertPrimitive(name, argspec.primitive, input)),
+					name,
+					coerce("arg", name, primitive, input, validate),
 				]
 
 			case "optional":
 				return [
 					argspec.name,
 					input
-						? argspec.validate(convertPrimitive(name, argspec.primitive, input))
+						? coerce("arg", name, primitive, input, validate)
 						: undefined,
 				]
 
@@ -83,7 +111,7 @@ export function analyzeCommand(
 				return [
 					argspec.name,
 					input
-						? argspec.validate(convertPrimitive(name, argspec.primitive, input))
+						? coerce("arg", name, primitive, input, validate)
 						: argspec.fallback,
 				]
 
@@ -93,42 +121,43 @@ export function analyzeCommand(
 	}))
 
 	const params: Record<string, any> = Object.fromEntries(
-		Object.entries(command.params).map(([key, paramspec]) => {
-			const input = parsed.params.get(key)
+		Object.entries(command.params).map(([name, paramspec]) => {
+			const {mode, primitive, validate} = paramspec
+			const input = parsed.params.get(name)
 			switch (paramspec.mode) {
 
 				case "required":
 					if (input === undefined)
-						throw new RequiredParamError(key)
+						throw new RequiredParamError(name)
 					return [
-						key,
-						paramspec.validate(convertPrimitive(key, paramspec.primitive, input)),
+						name,
+						coerce("param", name, primitive, input, validate),
 					]
 
 				case "flag":
 					const flaginput = parsed.flags.has(paramspec.flag)
 					return [
-						key,
+						name,
 						flaginput
 							? true
 							: input
-								? paramspec.validate(convertPrimitive(key, Boolean, input) as boolean)
+								? coerce("param", name, primitive, input, validate)
 								: false,
 					]
 
 				case "optional":
 					return [
-						key,
+						name,
 						input
-							? paramspec.validate(convertPrimitive(key, paramspec.primitive, input))
+							? coerce("param", name, primitive, input, validate)
 							: undefined,
 					]
 
 				case "default":
 					return [
-						key,
+						name,
 						input
-							? paramspec.validate(convertPrimitive(key, paramspec.primitive, input))
+							? coerce("param", name, primitive, input, validate)
 							: paramspec.fallback,
 					]
 
@@ -164,7 +193,7 @@ function isCommandMatching(argw: string[], path: string[]) {
 	return path.every((part, index) => part === args[index])
 }
 
-function convertPrimitive(name: string, primitive: Primitive, input: string) {
+function convertPrimitive(inputkind: "arg" | "param", name: string, primitive: Primitive, input: string) {
 	switch (primitive) {
 
 		case String:
@@ -173,11 +202,18 @@ function convertPrimitive(name: string, primitive: Primitive, input: string) {
 		case Boolean:
 			return truisms.some(s => s === input.toLowerCase())
 
-		case Number:
+		case Number: {
 			const n = Number(input)
 			if (isNaN(n))
-				throw new InvalidNumberError(name, input)
+				throw new InvalidNumberError(
+					`${(
+						(inputkind === "arg")
+							? `arg "${name}"`
+							: `param --${name}`
+					)} is not a valid number (got "${input}")`
+				)
 			return Number(input)
+		}
 
 		default:
 			throw new UnknownPrimitiveError(name)

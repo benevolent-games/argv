@@ -3,7 +3,10 @@ import {Primitive, Typify, Validator} from "./primitives.js"
 
 export type Args = Arg<string, Primitive>[]
 
-export type Arg<N extends string, P extends Primitive> = (
+export type Arg<
+		N extends string = string,
+		P extends Primitive = Primitive,
+	> = (
 	ArgRequired<N, P> | ArgOptional<N, P> | ArgDefault<N, P>
 )
 

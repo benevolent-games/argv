@@ -17,7 +17,7 @@
 		"start": "run-p watch",
 		"watch": "tsc -w",
 		"watchtest": "chokidar 'x/**/*.js' -c 'clear && node x/tests.test.js'",
-		"watchexample": "chokidar 'x/**/*.js' -c 'clear && node x/examples/cafe.js --help'",
+		"watchexample": "chokidar 'x/**/*.js' -c 'clear && node x/examples/fruit.js --help'",
 		"test": "node x/cli/parsing/parse.test.js"
 	},
 	"devDependencies": {

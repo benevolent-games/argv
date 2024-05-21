@@ -1,5 +1,10 @@
 
-export class ArgvError extends Error {}
+export class ArgvError extends Error {
+	constructor(message: string) {
+		super(message)
+		this.name = this.constructor.name
+	}
+}
 export class ConfigError extends ArgvError {}
 export class InputError extends ArgvError {}
 
@@ -25,7 +30,11 @@ export class UnknownPrimitiveError extends ConfigError {
 	}
 }
 
-export class CommandNotFoundError extends InputError {}
+export class CommandNotFoundError extends InputError {
+	constructor() {
+		super(`ask for --help to see available commands.`)
+	}
+}
 
 export class RequiredArgError extends InputError {
 	constructor(public argName: string) {
@@ -51,11 +60,7 @@ export class UnknownFlagError extends InputError {
 	}
 }
 
-export class InvalidNumberError extends InputError {
-	constructor(public key: string, public invalidInput: string) {
-		super(`"${key}" must be a number, and "${invalidInput}" is not a valid number`)
-	}
-}
+export class InvalidNumberError extends InputError {}
 
 //////// parse errors
 

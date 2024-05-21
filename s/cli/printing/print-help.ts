@@ -1,17 +1,16 @@
 
 import {themes} from "../themes.js"
-import {CliConfig} from "../cli.js"
+import {CliConfig} from "../types.js"
 import {wrap} from "../../tooling/text/wrap.js"
 import {Args} from "../../analysis/types/args.js"
 import {undent} from "../../tooling/text/undent.js"
 import {indent} from "../../tooling/text/indent.js"
 import {Params} from "../../analysis/types/params.js"
-import {CommandTree} from "../../analysis/analyze.js"
-import {Command} from "../../analysis/types/commands.js"
 import {textbrick} from "../../tooling/text/textbrick.js"
 import {makePalette} from "../../tooling/text/coloring.js"
 import {primitiveName} from "../../analysis/types/primitives.js"
 import {SelectedCommand} from "../../analysis/types/analysis.js"
+import {Command, CommandTree} from "../../analysis/types/commands.js"
 
 export function printHelp({
 		columns,
@@ -119,7 +118,7 @@ export function printHelp({
 		programHelp
 			? brick(1, programHelp)
 			: null,
-	].join("\n")
+	].filter(nonvoid).join("\n")
 
 	if (selectedCommand) {
 		const {command, path} = selectedCommand

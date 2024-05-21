@@ -15,7 +15,6 @@ const input = cli(process.argv, {
 			help: `made with the finest mozza, mama mia!`,
 			args: [
 				arg.required("size", String, chooser({
-					name: "size",
 					choices: ["small", "medium", "large"],
 					help: "we make 'em all sizes!",
 				})),

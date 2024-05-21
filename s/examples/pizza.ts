@@ -1,12 +1,10 @@
 #!/usr/bin/env node
 
 import {cli} from "../cli/cli.js"
-import {themes} from "../cli/themes.js"
 import {arg, command, param} from "../analysis/helpers.js"
 
 const input = cli(process.argv, {
 	name: "pizza",
-	// theme: themes.dracula,
 	columns: process.stdout.columns,
 	help: `are you in the mood for pizza, or icecream?`,
 	commands: command({

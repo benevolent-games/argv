@@ -1,7 +1,7 @@
 
 import {cli} from "./cli.js"
+import {cliConfig} from "./types.js"
 import {argv} from "../testing/argv.js"
-import {cliConfig} from "./types/cli-config.js"
 import {expect} from "../testing/framework/expect.js"
 import {arg, command, param} from "../analysis/helpers.js"
 import {testSuite} from "../testing/framework/test-suite.js"

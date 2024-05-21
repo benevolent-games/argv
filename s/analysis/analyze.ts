@@ -5,9 +5,6 @@ import {CommandNotFoundError, UnknownFlagError, UnknownParamError} from "../erro
 import {Analysis, AnalyzeOptions} from "./types/analysis.js"
 import {analyzeCommand, selectCommand, extractBooleanParams, produceTreeAnalysis} from "./utils/utils.js"
 
-export {CommandTree, AnalyzeOptions, Analysis}
-export {command, arg, param} from "./helpers.js"
-
 export function analyze<C extends CommandTree>(
 		argw: string[],
 		{commands, shorthandBooleans = false}: AnalyzeOptions<C>

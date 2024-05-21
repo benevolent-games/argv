@@ -1,11 +1,10 @@
 
 import {processFlag} from "./utils/utils.js"
+import {undent} from "../tooling/text/undent.js"
 import {Command, CommandOptions} from "./types/commands.js"
 import {Primitive, Typify, Validator} from "./types/primitives.js"
 import {Arg, ArgDefault, ArgOptional, ArgRequired} from "./types/args.js"
 import {Param, ParamDefault, ParamFlag, ParamOptional, ParamRequired} from "./types/params.js"
-import { ValidationError } from "../errors.js"
-import { undent } from "../tooling/text/undent.js"
 
 export function command<
 		A extends Arg<string, Primitive>[],
@@ -104,15 +103,14 @@ export const param = {
 	}),
 }
 
-export function chooser({name, choices, help}: {
-		name: string
+export function chooser({choices, help}: {
 		choices: string[]
 		help?: string
 	}): BaseOptions<typeof String> {
 	return {
 		validate(input: string) {
 			if (!choices.includes(input))
-				throw new ValidationError(`invalid choice for "${name}"`)
+				throw new Error(`invalid choice, got "${input}", but it needs to be ${choices.map(c => `"${c}"`).join(", ")}`)
 			return input
 		},
 		help: [
