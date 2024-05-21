@@ -1,6 +1,6 @@
 
 import {processFlag} from "./utils/utils.js"
-import {undent} from "../tooling/text/undent.js"
+import {undent} from "../../tooling/text/undent.js"
 import {Command, CommandOptions} from "./types/commands.js"
 import {Primitive, Typify, Validator} from "./types/primitives.js"
 import {Arg, ArgDefault, ArgOptional, ArgRequired} from "./types/args.js"

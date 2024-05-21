@@ -1,10 +1,10 @@
 
 import {analyze} from "./analyze.js"
-import {splitty} from "../testing/argv.js"
+import {splitty} from "../../testing/argv.js"
 import {CommandTree} from "./types/commands.js"
 import {arg, command, param} from "./helpers.js"
-import {expect} from "../testing/framework/expect.js"
-import {testSuite} from "../testing/framework/test-suite.js"
+import {expect} from "../../testing/framework/expect.js"
+import {testSuite} from "../../testing/framework/test-suite.js"
 
 function testing<C extends CommandTree>(commands: C) {
 	return (input: string) => {

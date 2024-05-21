@@ -1,7 +1,7 @@
 
 import {cleave} from "./utils/cleave.js"
 import {ParseOptions, Parsed} from "./types.js"
-import {OpenParamError} from "../errors/kinds/mistakes.js"
+import {OpenParamError} from "../../errors/kinds/mistakes.js"
 
 export function parse(
 		argx: string[],

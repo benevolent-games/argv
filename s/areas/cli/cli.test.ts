@@ -1,12 +1,12 @@
 
 import {cli} from "./cli.js"
-import {argv} from "../testing/argv.js"
-import {FakeExit} from "../errors/basic.js"
+import {argv} from "../../testing/argv.js"
+import {FakeExit} from "../../errors/basic.js"
 import {CliConfig, cliConfig} from "./types.js"
-import {expect} from "../testing/framework/expect.js"
+import {expect} from "../../testing/framework/expect.js"
 import {CommandTree} from "../analysis/types/commands.js"
 import {arg, command, param} from "../analysis/helpers.js"
-import {testSuite} from "../testing/framework/test-suite.js"
+import {testSuite} from "../../testing/framework/test-suite.js"
 
 const columns = 72
 

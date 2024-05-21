@@ -4,8 +4,8 @@ import {Parsed} from "../../parsing/types.js"
 import {Primitive} from "../types/primitives.js"
 import {Command, CommandTree} from "../types/commands.js"
 import {CommandAnalysis, SelectedCommand, TreeAnalysis} from "../types/analysis.js"
-import {InvalidFlagError, UnknownModeError, UnknownPrimitiveError} from "../../errors/kinds/config.js"
-import {InvalidNumberError, RequiredArgError, RequiredParamError, ValidationError} from "../../errors/kinds/mistakes.js"
+import {InvalidFlagError, UnknownModeError, UnknownPrimitiveError} from "../../../errors/kinds/config.js"
+import {InvalidNumberError, RequiredArgError, RequiredParamError, ValidationError} from "../../../errors/kinds/mistakes.js"
 
 export function produceTreeAnalysis<C extends CommandTree>(
 		commands: C,

@@ -1,7 +1,7 @@
 
 import {parse} from "./parse.js"
-import {expect} from "../testing/framework/expect.js"
-import {testSuite} from "../testing/framework/test-suite.js"
+import {expect} from "../../testing/framework/expect.js"
+import {testSuite} from "../../testing/framework/test-suite.js"
 
 export default testSuite({
 

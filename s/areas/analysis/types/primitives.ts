@@ -1,5 +1,5 @@
 
-import {ConfigError} from "../../errors/basic.js"
+import {ConfigError} from "../../../errors/basic.js"
 
 export type Primitive = typeof Boolean | typeof Number | typeof String
 export type Validator<P extends Primitive> = (value: Typify<P>) => Typify<P>

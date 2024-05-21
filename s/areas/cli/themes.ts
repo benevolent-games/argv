@@ -1,5 +1,5 @@
 
-import {color, colorHex} from "../tooling/text/coloring.js"
+import {color, colorHex} from "../../tooling/text/coloring.js"
 
 //
 // theme type

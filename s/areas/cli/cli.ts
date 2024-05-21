@@ -5,7 +5,7 @@ import {checkHelp} from "../parsing/check-help.js"
 import {printHelp} from "./printing/print-help.js"
 import {printError} from "./printing/print-error.js"
 import {selectCommand} from "../analysis/utils/utils.js"
-import {FakeExit, MistakeError} from "../errors/basic.js"
+import {FakeExit, MistakeError} from "../../errors/basic.js"
 import {Command, CommandTree} from "../analysis/types/commands.js"
 
 /**

@@ -1,7 +1,7 @@
 
-import cli from "./cli/cli.test.js"
-import parse from "./parsing/parse.test.js"
-import analyze from "./analysis/analyze.test.js"
+import cli from "./areas/cli/cli.test.js"
+import parse from "./areas/parsing/parse.test.js"
+import analyze from "./areas/analysis/analyze.test.js"
 import {runTests} from "./testing/framework/run-tests.js"
 
 await runTests({
