@@ -117,6 +117,20 @@ export default testSuite({
 		}
 	}()),
 
+	async "cannot configure duplicate args"() {
+		expect().that(() => command({args: [
+			arg.optional("alpha", String),
+			arg.optional("alpha", String),
+		], params: {}})).throws()
+	},
+
+	async "cannot configure duplicate flags"() {
+		expect().that(() => command({args: [], params: {
+			alpha: param.flag("-a"),
+			bravo: param.flag("-a"),
+		}})).throws()
+	},
+
 	...(function multiple_commands() {
 		const test = testing({
 			alpha: command({args: [arg.required("a", String)], params: {}}),

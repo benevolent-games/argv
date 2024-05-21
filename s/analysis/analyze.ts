@@ -1,8 +1,8 @@
 
 import {parse} from "../parsing/parse.js"
 import {CommandTree} from "./types/commands.js"
-import {CommandNotFoundError, UnknownFlagError, UnknownParamError} from "../errors.js"
 import {Analysis, AnalyzeOptions} from "./types/analysis.js"
+import {CommandNotFoundError, UnknownFlagError, UnknownParamError} from "../errors.js"
 import {analyzeCommand, selectCommand, extractBooleanParams, produceTreeAnalysis} from "./utils/utils.js"
 
 export function analyze<C extends CommandTree>(

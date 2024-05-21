@@ -18,6 +18,18 @@ export class InvalidFlagError extends ConfigError {
 	}
 }
 
+export class DuplicateArgError extends ConfigError {
+	constructor(public arg: string) {
+		super(`duplicate arg "${arg}" not allowed`)
+	}
+}
+
+export class DuplicateFlagError extends ConfigError {
+	constructor(public flag: string) {
+		super(`duplicate flag "-${flag}" not allowed`)
+	}
+}
+
 export class UnknownModeError extends ConfigError {
 	constructor() {
 		super(`unknown mode for arg or param`)
