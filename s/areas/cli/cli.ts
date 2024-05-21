@@ -9,7 +9,7 @@ import {FakeExit, MistakeError} from "../../errors/basic.js"
 import {Command, CommandTree} from "../analysis/types/commands.js"
 
 /**
- * process command line input.
+ * read input for a command line program.
  *  - reads args and params based on the provided config.
  *  - returns the data all nicely organized for you to use in your program.
  *  - autogenerates a tidy little --help page.
@@ -24,6 +24,7 @@ export function cli<C extends CommandTree>(
 	const {
 		columns,
 		commands,
+		shorthandBooleans,
 		onExit = code => process.exit(code),
 		onHelp = help => console.log(help),
 		onMistake = mistake => console.error(mistake),
@@ -42,7 +43,7 @@ export function cli<C extends CommandTree>(
 			onExit(0)
 		}
 
-		const analysis = analyze(argw, {commands})
+		const analysis = analyze(argw, {commands, shorthandBooleans})
 		const execute = () => analysis.commandSpec.execute(analysis.command)
 
 		return {

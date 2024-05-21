@@ -5,6 +5,11 @@ import {Analysis, AnalyzeOptions} from "./types/analysis.js"
 import {CommandNotFoundError, UnknownFlagError, UnknownParamError} from "../../errors/kinds/mistakes.js"
 import {analyzeCommand, selectCommand, extractBooleanParams, produceTreeAnalysis} from "./utils/utils.js"
 
+/**
+ * smartly read and validate command line input.
+ *  - takes your `commands` config into account, and validates input as such.
+ *  - input is validated and organized into a returned `tree` object.
+ */
 export function analyze<C extends CommandTree>(
 		argw: string[],
 		{commands, shorthandBooleans = false}: AnalyzeOptions<C>

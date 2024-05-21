@@ -10,6 +10,7 @@ export type CliConfig<C extends CommandTree> = {
 	readme?: string
 	help?: string
 	theme?: ArgvTheme
+	shorthandBooleans?: boolean
 	onExit?: (code: number) => void
 	onHelp?: (help: string) => void
 	onMistake?: (mistake: string) => void

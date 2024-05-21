@@ -3,6 +3,16 @@ import {cleave} from "./utils/cleave.js"
 import {ParseOptions, Parsed} from "./types.js"
 import {OpenParamError} from "../../errors/kinds/mistakes.js"
 
+/**
+ * dumb command line parsing.
+ *  - accepts 'argx' which are the argv strings after the bin and script.
+ *  - no validation or anything like that, it has no expectations.
+ *  - doesn't know about commands.
+ *  - separates args into an array for you.
+ *  - separates params into a map for you.
+ *  - separates flags into a set for you.
+ *  - you can provide `booleanParams` which are parameters that don't accept values.
+ */
 export function parse(
 		argx: string[],
 		{booleanParams = []}: ParseOptions = {},
