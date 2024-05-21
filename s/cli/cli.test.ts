@@ -1,7 +1,7 @@
 
 import {cli} from "./cli.js"
 import {argv} from "../testing/argv.js"
-import {FakeExit} from "../errors.js"
+import {FakeExit} from "../errors/basic.js"
 import {CliConfig, cliConfig} from "./types.js"
 import {expect} from "../testing/framework/expect.js"
 import {CommandTree} from "../analysis/types/commands.js"

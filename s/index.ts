@@ -1,6 +1,8 @@
 
 // errors
-export * from "./errors.js"
+export * from "./errors/basic.js"
+export * from "./errors/kinds/config.js"
+export * from "./errors/kinds/mistakes.js"
 
 // cli
 export * from "./cli/cli.js"

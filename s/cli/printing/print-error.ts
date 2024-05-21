@@ -1,7 +1,7 @@
 
 import {wrap} from "../../tooling/text/wrap.js"
 import {color} from "../../tooling/text/coloring.js"
-import {ArgvError, ConfigError} from "../../errors.js"
+import {ArgvError, ConfigError} from "../../errors/basic.js"
 
 export function printError(error: ArgvError, columns: number) {
 	const content = [

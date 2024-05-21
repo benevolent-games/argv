@@ -1,7 +1,7 @@
 
 import {Command} from "../types/commands.js"
 import {Param, ParamFlag} from "../types/params.js"
-import {DuplicateArgError, DuplicateFlagError} from "../../errors.js"
+import {DuplicateArgError, DuplicateFlagError} from "../../errors/kinds/config.js"
 
 export function validateCommand(command: Command) {
 	const args = new Set<string>()
