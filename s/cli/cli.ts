@@ -4,7 +4,7 @@ import {CliConfig, CliResult} from "./types.js"
 import {checkHelp} from "../parsing/check-help.js"
 import {printHelp} from "./printing/print-help.js"
 import {printError} from "./printing/print-error.js"
-import {InputError, NoExitError} from "../errors.js"
+import {MistakeError, NoExitError} from "../errors.js"
 import {selectCommand} from "../analysis/utils/utils.js"
 import {Command, CommandTree} from "../analysis/types/commands.js"
 
@@ -53,7 +53,7 @@ export function cli<C extends CommandTree>(
 		}
 	}
 	catch (error) {
-		if (error instanceof InputError) {
+		if (error instanceof MistakeError) {
 			onMistake(printError(error, columns))
 			onExit(1)
 		}

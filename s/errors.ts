@@ -6,9 +6,9 @@ export class ArgvError extends Error {
 	}
 }
 export class ConfigError extends ArgvError {}
-export class InputError extends ArgvError {}
+export class MistakeError extends ArgvError {}
 
-export class ValidationError extends InputError {}
+export class ValidationError extends MistakeError {}
 
 //////// analyze errors
 
@@ -44,41 +44,41 @@ export class UnknownPrimitiveError extends ConfigError {
 	}
 }
 
-export class CommandNotFoundError extends InputError {
+export class CommandNotFoundError extends MistakeError {
 	constructor() {
 		super(`ask for --help to see available commands.`)
 	}
 }
 
-export class RequiredArgError extends InputError {
+export class RequiredArgError extends MistakeError {
 	constructor(public argName: string) {
 		super(`required argument "${argName}" is missing`)
 	}
 }
 
-export class RequiredParamError extends InputError {
+export class RequiredParamError extends MistakeError {
 	constructor(public paramName: string) {
 		super(`required param "--${paramName}" is missing`)
 	}
 }
 
-export class UnknownParamError extends InputError {
+export class UnknownParamError extends MistakeError {
 	constructor(public paramName: string) {
 		super(`unknown param "--${paramName}" is unwanted`)
 	}
 }
 
-export class UnknownFlagError extends InputError {
+export class UnknownFlagError extends MistakeError {
 	constructor(public flag: string) {
 		super(`unknown flag "-${flag}" is unwanted`)
 	}
 }
 
-export class InvalidNumberError extends InputError {}
+export class InvalidNumberError extends MistakeError {}
 
 //////// parse errors
 
-export class OpenParamError extends InputError {
+export class OpenParamError extends MistakeError {
 	constructor(public paramName: string) {
 		super(`no value was provided for "--${paramName}"`)
 	}
