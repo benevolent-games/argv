@@ -5,10 +5,10 @@ import {CommandTree} from "../analysis/types/commands.js"
 
 export type CliConfig<C extends CommandTree> = {
 	name: string
-	columns: number
 	commands: C
-	readme?: string
 	help?: string
+	readme?: string
+	columns?: number
 	theme?: ArgvTheme
 	shorthandBooleans?: boolean
 	onExit?: (code: number) => void

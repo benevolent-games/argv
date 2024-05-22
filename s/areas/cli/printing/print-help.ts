@@ -3,6 +3,7 @@ import {themes} from "../themes.js"
 import {CliConfig} from "../types.js"
 import {Args} from "../../analysis/types/args.js"
 import {wrap} from "../../../tooling/text/wrap.js"
+import {default_columns} from "./default-columns.js"
 import {Params} from "../../analysis/types/params.js"
 import {undent} from "../../../tooling/text/undent.js"
 import {indent} from "../../../tooling/text/indent.js"
@@ -14,10 +15,10 @@ import {Command, CommandTree} from "../../analysis/types/commands.js"
 import {listAllCommands} from "../../analysis/utils/list-all-commands.js"
 
 export function printHelp({
-		columns,
+		readme,
 		commands,
 		selectedCommand,
-		readme,
+		columns = default_columns,
 		name: programName,
 		help: programHelp,
 		theme = themes.standard,
@@ -55,8 +56,12 @@ export function printHelp({
 					? tab(1, undent(command.help))
 					: null,
 			].filter(nonvoid).join("\n"),
-			tab(1, printArgs(command.args)),
-			tab(1, printParams(command.params)),
+			command.args.length > 0
+				? tab(1, printArgs(command.args))
+				: null,
+			Object.keys(command.params).length > 0
+				? tab(1, printParams(command.params))
+				: null,
 		].filter(nonvoid).join("\n\n")
 	}
 
@@ -129,6 +134,7 @@ export function printHelp({
 		].filter(nonvoid)
 			.map(t => wrap(columns, t))
 			.join("\n\n")
+			+ "\n"
 
 	}
 	else {
@@ -142,6 +148,7 @@ export function printHelp({
 			.map(t => brick(0, t))
 			.map(t => wrap(columns, t))
 			.join("\n\n")
+			+ "\n"
 	}
 }
 

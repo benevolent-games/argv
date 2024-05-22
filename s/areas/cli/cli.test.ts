@@ -8,8 +8,6 @@ import {CommandTree} from "../analysis/types/commands.js"
 import {arg, command, param} from "../analysis/helpers.js"
 import {testSuite} from "../../testing/framework/test-suite.js"
 
-const columns = 72
-
 function spyCli<C extends CommandTree>(argv: string[], config: CliConfig<C>) {
 	const data = {
 		exitCode: undefined as number | undefined,
@@ -38,7 +36,6 @@ export default testSuite({
 	async "no inputs, no problem"() {
 		const result = cli(argv(), {
 			name: "example",
-			columns,
 			commands: command({
 				args: [],
 				params: {},
@@ -53,7 +50,6 @@ export default testSuite({
 		let executed = false
 		const result = cli(argv("aaa --bravo bbb"), {
 			name: "example",
-			columns,
 			commands: command({
 				args: [arg.required("alpha", String)],
 				params: {bravo: param.required(String)},
@@ -74,7 +70,6 @@ export default testSuite({
 		let calledCapybara = false
 		const config = cliConfig({
 			name: "example",
-			columns,
 			commands: {
 				hyrax: command({
 					args: [arg.required("alpha", String)],
@@ -114,7 +109,6 @@ export default testSuite({
 	async "error handling"() {
 		const config = cliConfig({
 			name: "example",
-			columns,
 			commands: {
 				icecream: command({
 					args: [],
