@@ -1,12 +1,11 @@
 
 import {processFlag} from "./utils/utils.js"
+import {ConfigError} from "../../errors/basic.js"
 import {Command, CommandOptions} from "./types/commands.js"
+import {tnConnect, tnString} from "../../tooling/text/tn.js"
 import {Primitive, Typify, Validator} from "./types/primitives.js"
 import {Arg, ArgDefault, ArgOptional, ArgRequired} from "./types/args.js"
 import {Param, ParamDefault, ParamFlag, ParamOptional, ParamRequired} from "./types/params.js"
-import { undent } from "../../tooling/text/formatting.js"
-import { tnConnect, tnString } from "../../tooling/text/tn.js"
-import { ConfigError } from "../../errors/basic.js"
 
 export function command<
 		A extends Arg<string, Primitive>[],
