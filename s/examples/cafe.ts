@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import {cli} from "../areas/cli/cli.js"
-import {arg, chooser, command, param} from "../areas/analysis/helpers.js"
+import {arg, choice, command, param} from "../areas/analysis/helpers.js"
 
 const input = cli(process.argv, {
 	name: "cafe",
@@ -14,10 +14,7 @@ const input = cli(process.argv, {
 		pizza: command({
 			help: `made with the finest mozza, mama mia!`,
 			args: [
-				arg.required("size", String, chooser({
-					choices: ["small", "medium", "large"],
-					help: "we make 'em all sizes!",
-				})),
+				arg.required("size", String, choice(["small", "medium", "large"])),
 				arg.default("crust", String, {fallback: "thick", help: `thick or thin`}),
 			],
 			params: {

@@ -14,10 +14,8 @@ export function printError(
 			? color.brightMagenta("(Argv Configuration Error)")
 			: null,
 
-		color.brightRed(error.name),
-
 		(error.message)
-			? color.red(error.message)
+			? color.brightRed(error.message)
 			: null,
 
 	].filter(s => !!s).join("\n")

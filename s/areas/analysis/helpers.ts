@@ -103,10 +103,10 @@ export const param = {
 	}),
 }
 
-export function chooser({choices, help}: {
-		choices: string[]
-		help?: string
-	}): BaseOptions<typeof String> {
+export function choice(
+		choices: string[],
+		help?: string,
+	): BaseOptions<typeof String> {
 	return {
 		validate(input: string) {
 			if (!choices.includes(input))
