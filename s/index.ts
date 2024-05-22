@@ -15,6 +15,7 @@ export {CommandTree} from "./areas/analysis/types/commands.js"
 export {AnalyzeOptions, Analysis} from "./areas/analysis/types/analysis.js"
 export * from "./areas/analysis/helpers.js"
 export * as helpers from "./areas/analysis/helpers.js"
+export * as validators from "./areas/analysis/validators.js"
 
 // parsing
 export * from "./areas/parsing/parse.js"
