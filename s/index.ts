@@ -1,30 +1,22 @@
 
-// errors
+// all errors
 export * from "./errors/basic.js"
 export * from "./errors/kinds/config.js"
 export * from "./errors/kinds/mistakes.js"
 
-// cli
+// cli stuff
 export * from "./areas/cli/cli.js"
 export * from "./areas/cli/themes.js"
-export {CliConfig, cliConfig} from "./areas/cli/types.js"
+export * from "./areas/cli/types.js"
 
-// analysis
-export * from "./areas/analysis/analyze.js"
-export {CommandTree} from "./areas/analysis/types/commands.js"
-export {AnalyzeOptions, Analysis} from "./areas/analysis/types/analysis.js"
+// things from analysis relevant to using cli
 export * from "./areas/analysis/helpers.js"
 export * as helpers from "./areas/analysis/helpers.js"
 export * as validators from "./areas/analysis/validators.js"
+export {Command, CommandTree} from "./areas/analysis/types/commands.js"
 
-// parsing
-export * from "./areas/parsing/parse.js"
-
-// text tools
-export * from "./tooling/text/coloring.js"
-export * from "./tooling/text/formatting.js"
-
-// other tools
-export * from "./tooling/death-with-dignity.js"
+// exporting useful tools for making a cli
 export * from "./tooling/logger.js"
+export * from "./tooling/text/coloring.js"
+export * from "./tooling/death-with-dignity.js"
 
