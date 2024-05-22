@@ -12,7 +12,7 @@ import {analyzeCommand, selectCommand, extractBooleanParams, produceTreeAnalysis
  */
 export function analyze<C extends CommandTree>(
 		argw: string[],
-		{commands, shorthandBooleans = false}: AnalyzeOptions<C>
+		{commands, shorthandBooleans = true}: AnalyzeOptions<C>
 	): Analysis<C> {
 
 	const selected = selectCommand(argw, commands)
