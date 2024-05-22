@@ -114,6 +114,11 @@ export default testSuite({
 		}
 	},
 
+	async "forbid redundancies"() {
+		expect().that(() => parse(["-aba"])).throws()
+		expect().that(() => parse(["--a", "a", "--a", "b"])).throws()
+	},
+
 	async "chaos"() {
 		const result = parse([
 			"alpha",
