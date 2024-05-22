@@ -50,7 +50,7 @@ export function printHelp({
 				wiz.commandHeadline(programName, selectedCommand),
 				tnIndent(1, wiz.commandHelp(command)),
 			]),
-			tnIndent(1, tnConnect("\n", [
+			tnIndent(1, tnConnect("\n\n", [
 				wiz.commandArgs(command.args),
 				wiz.commandParams(command.params),
 			]))

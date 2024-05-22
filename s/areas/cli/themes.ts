@@ -14,7 +14,7 @@ export type ArgvTheme = typeof standard
 const standard = {
 	program: [color.brightCyan, color.bold],
 	command: [color.cyan, color.bold],
-	property: [color.magenta],
+	property: [color.magenta, color.bold],
 	link: [color.brightBlue, color.underline],
 	arg: [color.brightGreen, color.bold],
 	param: [color.brightYellow, color.bold],

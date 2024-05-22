@@ -16,7 +16,7 @@
 		"compile": "tsc",
 		"start": "run-p watch",
 		"watch": "tsc -w",
-		"watchexample": "chokidar 'x/**/*.js' -c 'clear && node x/examples/cafe.js'",
+		"watchexample": "chokidar 'x/**/*.js' -c 'clear && node x/examples/pizza.js --help'",
 		"watchtest": "chokidar 'x/**/*.js' -c 'clear && node x/tests.test.js'",
 		"test": "node x/tests.test.js"
 	},

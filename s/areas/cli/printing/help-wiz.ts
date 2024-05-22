@@ -112,7 +112,7 @@ export function helpWiz(theme: ArgvTheme) {
 
 	function programHelp(help?: string, readme?: string) {
 		return tnConnect("\n", [
-			readme && `readme ${readme.trim()}`,
+			readme && `${palette.property("readme")} ${palette.link(readme.trim())}`,
 			help && normalize(help),
 		])
 	}
