@@ -1,27 +1,35 @@
 
 import {Logger} from "./logger.js"
 
+export type DeathListener = (exitCode: number) => void
+
+/**
+ * schedule your node process to die:
+ *  - upon receiving sigint or sigterm (ctrl+c)
+ *  - upon experiencing an uncaught exception or promise rejection
+ *  - also, you can setup listeners to respond to the death
+ */
 export function deathWithDignity(
 		logger: Logger = console,
-		lastWillAndTestament?: () => void
+		lastWillAndTestament?: DeathListener
 	) {
 
-	const rubberneckers = new Set<() => void>()
+	const rubberneckers = new Set<DeathListener>()
 
 	if (lastWillAndTestament)
 		rubberneckers.add(lastWillAndTestament)
 
-	function death(code: number) {
+	function death(exitCode: number) {
 		for (const notifyNextOfKin of rubberneckers)
-			notifyNextOfKin()
-		process.exit(code)
+			notifyNextOfKin(exitCode)
+		process.exit(exitCode)
 	}
 
 	process.on("SIGINT", () => {
 		logger.log("💣 SIGINT")
 		death(0)
 	})
-	
+
 	process.on("SIGTERM", () => {
 		logger.log("🗡️ SIGTERM")
 		death(0)
@@ -38,7 +46,7 @@ export function deathWithDignity(
 	})
 
 	return {
-		onDeath: (listener: () => void) => {
+		onDeath: (listener: DeathListener) => {
 			rubberneckers.add(listener)
 		},
 	}
