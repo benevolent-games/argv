@@ -10,26 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     if: "! github.event.pull_request.head.repo.fork"
     steps:
-
-    - name: 🔔 checkout
-      uses: actions/checkout@v3
-
-    - name: 🔧 setup node
-      uses: actions/setup-node@v3
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: 21
+    - run: npm ci
+    - run: npm run build -s
+    - run: npm test
+    - run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-    - name: 📦 install dependencies
-      run: npm ci
-
-    - name: 🔨 build
-      run: npm run build -s
-
-    - name: 🧪 test
-      run: npm test
-
-    - name: 🚀 npm publish
-      uses: JS-DevTools/npm-publish@v1
-      with:
-        token: ${{ secrets.NPM_TOKEN }}
-        access: public
