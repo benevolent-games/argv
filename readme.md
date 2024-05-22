@@ -97,9 +97,9 @@ pizza small --pepperoni="no" --slice="2"
     ```
 - you get this `tree` object that reflects its shape
     ```ts
-    tree.ride?.params.speed // 9
-    tree.repair.chain?.cycles // true
-    tree.repair.brakes?.readjust // true
+    tree.image?.params.quality // 9
+    tree.media.audio?.mono // false
+    tree.media.video?.codec // "av1"
     ```
     - all the commands are `undefined` except for the "selected" command
     - and yes, all the typings work
