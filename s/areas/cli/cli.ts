@@ -44,12 +44,11 @@ export function cli<C extends CommandTree>(
 			&& !selectedCommand
 			&& argw.length === 0
 
-		// const userNeedsHelp = !selectedCommand
-		// 	&& !singleRootCommand
-
 		if (userAskForHelp || userNeedsHelp) {
-			const help = format(printHelp({...config, commands, selectedCommand}))
-			onHelp(wrap(columns, help))
+			const help = format(
+				printHelp({...config, commands, selectedCommand})
+			) + "\n"
+			onHelp(help)
 			onExit(0)
 		}
 

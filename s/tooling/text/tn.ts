@@ -14,6 +14,10 @@ export function tnConnect(glue: string, tns: Tn[]) {
 		: null
 }
 
+export function tnString(tn: Tn) {
+	return tn || ""
+}
+
 export function tnFinal(columns: number, indent: string, tn: Tn) {
 	return isString(tn)
 		? wrap(columns, replaceTabs(tn, indent))

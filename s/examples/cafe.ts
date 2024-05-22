@@ -15,7 +15,7 @@ const input = cli(process.argv, {
 			help: `made with the finest mozza, mama mia!`,
 			args: [
 				arg.required("size", String, choice(["small", "medium", "large"])),
-				arg.default("crust", String, {fallback: "thick", help: `thick or thin`}),
+				arg.default("crust", String, {fallback: "thick", ...choice(["thick", "thin"])}),
 			],
 			params: {
 				slices: param.required(Number, {help: `we serve it by the slice`}),

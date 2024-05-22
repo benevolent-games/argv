@@ -5,6 +5,8 @@ import {Primitive, Typify, Validator} from "./types/primitives.js"
 import {Arg, ArgDefault, ArgOptional, ArgRequired} from "./types/args.js"
 import {Param, ParamDefault, ParamFlag, ParamOptional, ParamRequired} from "./types/params.js"
 import { undent } from "../../tooling/text/formatting.js"
+import { tnConnect, tnString } from "../../tooling/text/tn.js"
+import { ConfigError } from "../../errors/basic.js"
 
 export function command<
 		A extends Arg<string, Primitive>[],
@@ -107,16 +109,28 @@ export function choice(
 		choices: string[],
 		help?: string,
 	): BaseOptions<typeof String> {
+
+	let message: string
+
+	if (choices.length === 0)
+		throw new ConfigError(`zero choices doesn't make sense`)
+
+	else if (choices.length === 1)
+		message = `must be "${choices[0]}"`
+
+	else
+		message = choices.join(", ")
+
 	return {
 		validate(input: string) {
 			if (!choices.includes(input))
-				throw new Error(`invalid choice, got "${input}", but it needs to be ${choices.map(c => `"${c}"`).join(", ")}`)
+				throw new Error(`invalid choice, got "${input}", but it needs to be one of: ${choices.map(c => `"${c}"`).join(", ")}`)
 			return input
 		},
-		help: [
-			`choose ${choices.map(c => `"${c}"`).join(", ")}.`,
+		help: tnString(tnConnect("\n", [
+			message,
 			help,
-		].filter(s => !!s).map(t => undent(t!)).join("\n"),
+		])),
 	}
 }
 
