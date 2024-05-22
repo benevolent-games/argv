@@ -7,7 +7,6 @@ import {Tn, tnFinal} from "../../tooling/text/tn.js"
 import {printError} from "./printing/print-error.js"
 import {wrap} from "../../tooling/text/formatting.js"
 import {selectCommand} from "../analysis/utils/utils.js"
-import {defaultColumns} from "./printing/default-columns.js"
 import {FakeExit, MistakeError} from "../../errors/basic.js"
 import {Command, CommandTree} from "../analysis/types/commands.js"
 
@@ -28,7 +27,7 @@ export function cli<C extends CommandTree>(
 		commands,
 		indent = "  ",
 		shorthandBooleans,
-		columns = defaultColumns,
+		columns = process.stdout.columns,
 		onExit = code => process.exit(code),
 		onHelp = help => console.log(help),
 		onMistake = mistake => console.error(mistake),
