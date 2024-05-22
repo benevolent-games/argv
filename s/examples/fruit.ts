@@ -1,21 +1,23 @@
 #!/usr/bin/env node
 
 import {cli} from "../areas/cli/cli.js"
-import {arg, choice, command, param} from "../areas/analysis/helpers.js"
+import {command, choice, arg, param} from "../areas/analysis/helpers.js"
 
-const input = cli(process.argv, {
+const {args, params} = cli(process.argv, {
 	name: "fruit",
-	columns: process.stdout.columns,
 	commands: command({
 		args: [
-			arg.required("kind", String, choice(["apple", "orange", "banana"])),
+			arg("kind").required(String, choice(["apple", "orange", "banana"])),
 		],
 		params: {
-			count: param.required(Number),
+			count: param.default(Number, {fallback: 1}),
 			peeled: param.flag("p"),
 		},
 	}),
-})
+}).tree
 
-console.log("fruit", input.tree)
+args.kind // "apple"
+params.count // 1
+params.peeled // false
 
+console.log({args, params})

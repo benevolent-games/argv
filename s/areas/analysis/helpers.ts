@@ -22,9 +22,8 @@ type BaseOptions<P extends Primitive> = {
 	validate?: Validator<P>
 }
 
-export const arg = {
-	required: <N extends string, P extends Primitive>(
-			name: N,
+export const arg = <N extends string>(name: N) => ({
+	required: <P extends Primitive>(
 			primitive: P,
 			o: BaseOptions<P> = {},
 		): ArgRequired<N, P> => ({
@@ -35,8 +34,7 @@ export const arg = {
 		validate: o.validate ?? passValidator,
 	}),
 
-	optional: <N extends string, P extends Primitive>(
-			name: N,
+	optional: <P extends Primitive>(
 			primitive: P,
 			o: BaseOptions<P> = {},
 		): ArgOptional<N, P> => ({
@@ -47,8 +45,7 @@ export const arg = {
 		validate: o.validate ?? passValidator,
 	}),
 
-	default: <N extends string, P extends Primitive>(
-			name: N,
+	default: <P extends Primitive>(
 			primitive: P,
 			o: {fallback: Typify<P>} & BaseOptions<P>,
 		): ArgDefault<N, P> => ({
@@ -59,7 +56,7 @@ export const arg = {
 		fallback: o.fallback,
 		validate: o.validate ?? passValidator,
 	}),
-}
+})
 
 export const param = {
 	required: <P extends Primitive>(

@@ -3,21 +3,21 @@
 import {cli} from "../areas/cli/cli.js"
 import {arg, choice, command, param} from "../areas/analysis/helpers.js"
 
-const input = cli(process.argv, {
+await cli(process.argv, {
 	name: "pizza",
-	columns: process.stdout.columns,
-	readme: "https://github.com/benevolent-games/argv",
+	readme: "https://benev.gg/",
 	commands: command({
 		help: "made with the finest mozza!",
 		args: [
-			arg.required("size", String, choice(["small", "medium", "large"])),
+			arg("size").required(String, choice(["small", "medium", "large"])),
 		],
 		params: {
-			slices: param.required(Number, {help: "we serve it by the slice"}),
+			slices: param.default(Number, {fallback: 1, help: "we serve it by the slice"}),
 			pepperoni: param.flag("p", {help: "we go heavy on the meaty pepperoni"}),
 		},
+		async execute(input) {
+			console.log(input)
+		},
 	}),
-})
-
-console.log("pizza", input.tree)
+}).execute()
 

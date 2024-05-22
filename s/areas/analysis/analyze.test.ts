@@ -33,9 +33,9 @@ export default testSuite({
 		const test = testing(command({
 			help: ``,
 			args: [
-				arg.required("alpha", String),
-				arg.optional("bravo", Number),
-				arg.default("charlie", Number, {fallback: 1}),
+				arg("alpha").required(String),
+				arg("bravo").optional(Number),
+				arg("charlie").default(Number, {fallback: 1}),
 			],
 			params: {},
 		}))
@@ -119,8 +119,8 @@ export default testSuite({
 
 	async "cannot configure duplicate args"() {
 		expect().that(() => command({args: [
-			arg.optional("alpha", String),
-			arg.optional("alpha", String),
+			arg("alpha").optional(String),
+			arg("alpha").optional(String),
 		], params: {}})).throws()
 	},
 
@@ -133,10 +133,10 @@ export default testSuite({
 
 	...(function multiple_commands() {
 		const test = testing({
-			alpha: command({args: [arg.required("a", String)], params: {}}),
+			alpha: command({args: [arg("a").required(String)], params: {}}),
 			bravo: {
-				charlie: command({args: [arg.required("a", String)], params: {}}),
-				delta: command({args: [arg.required("a", String)], params: {}}),
+				charlie: command({args: [arg("a").required(String)], params: {}}),
+				delta: command({args: [arg("a").required(String)], params: {}}),
 			},
 		})
 		return {

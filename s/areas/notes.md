@@ -1,15 +1,5 @@
 
-# 🎛️ `@benev/argv`
-
-***command line argument parser***
-
-<br/>
-
-## source code structure
-
-### concepts
-
-#### primary functions
+## primary functions
 - **`cli(argv, config)`**
   - you provide `argv` strings, and a `commands` outline
   - returns a `tree` object which has all the parsed args and params
@@ -25,7 +15,7 @@
   - isn't aware of high level concerns like commands or type conversions
   - merely parses the inputs into argument strings, param strings, and a set of flags
 
-#### argument strings
+## argument strings
 - **`argv`**
   - eg, `["/usr/bin/node", "/work/cli.js", "compress", "--quality=80", "./lol.png", "rofl"]`
   - strings you can get from `process.argv` in nodejs

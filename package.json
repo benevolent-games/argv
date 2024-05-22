@@ -11,9 +11,10 @@
 		"s"
 	],
 	"scripts": {
-		"build": "run-s clean compile",
+		"build": "run-s clean compile perms",
 		"clean": "rm -rf x && mkdir x",
 		"compile": "tsc",
+		"perms": "chmod -R +x x",
 		"start": "run-p watch",
 		"watch": "tsc -w",
 		"watchexample": "chokidar 'x/**/*.js' -c 'clear && node x/examples/pizza.js --help'",

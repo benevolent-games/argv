@@ -14,8 +14,8 @@ const input = cli(process.argv, {
 		pizza: command({
 			help: `made with the finest mozza, mama mia!`,
 			args: [
-				arg.required("size", String, choice(["small", "medium", "large"])),
-				arg.default("crust", String, {fallback: "thick", ...choice(["thick", "thin"])}),
+				arg("size").required(String, choice(["small", "medium", "large"])),
+				arg("crust").default(String, {fallback: "thick", ...choice(["thick", "thin"])}),
 			],
 			params: {
 				slices: param.required(Number, {help: `we serve it by the slice`}),
@@ -28,7 +28,7 @@ const input = cli(process.argv, {
 		icecream: command({
 			help: `it's actually gelatto!`,
 			args: [
-				arg.default("vessel", String, {fallback: "cone", help: `cone, waffle, or bowl?`}),
+				arg("vessel").default(String, {fallback: "cone", help: `cone, waffle, or bowl?`}),
 			],
 			params: {
 				scoops: param.required(Number, {help: `how many scoops do you want?`}),

@@ -51,7 +51,7 @@ export default testSuite({
 		const result = cli(argv("aaa --bravo bbb"), {
 			name: "example",
 			commands: command({
-				args: [arg.required("alpha", String)],
+				args: [arg("alpha").required(String)],
 				params: {bravo: param.required(String)},
 				execute: async({args, params}) => {
 					executed = true
@@ -72,7 +72,7 @@ export default testSuite({
 			name: "example",
 			commands: {
 				hyrax: command({
-					args: [arg.required("alpha", String)],
+					args: [arg("alpha").required(String)],
 					params: {bravo: param.required(String)},
 					execute: async({args, params}) => {
 						expect().that(args.alpha).is("aaa")
@@ -81,7 +81,7 @@ export default testSuite({
 					},
 				}),
 				capybara: command({
-					args: [arg.required("charlie", String)],
+					args: [arg("charlie").required(String)],
 					params: {delta: param.required(String)},
 					execute: async({args, params}) => {
 						expect().that(args.charlie).is("ccc")
