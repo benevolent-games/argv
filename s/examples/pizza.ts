@@ -6,7 +6,9 @@ import {arg, choice, command, param} from "../areas/analysis/helpers.js"
 const input = cli(process.argv, {
 	name: "pizza",
 	columns: process.stdout.columns,
-	help: `are you in the mood for pizza, or icecream?`,
+	help: `
+		welcome to our infamous pizza parlor!
+	`,
 	commands: command({
 		help: `made with the finest mozza!`,
 		args: [

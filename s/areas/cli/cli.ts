@@ -3,8 +3,11 @@ import {analyze} from "../analysis/analyze.js"
 import {CliConfig, CliResult} from "./types.js"
 import {checkHelp} from "../parsing/check-help.js"
 import {printHelp} from "./printing/print-help.js"
+import {Tn, tnFinal} from "../../tooling/text/tn.js"
 import {printError} from "./printing/print-error.js"
+import {wrap} from "../../tooling/text/formatting.js"
 import {selectCommand} from "../analysis/utils/utils.js"
+import {defaultColumns} from "./printing/default-columns.js"
 import {FakeExit, MistakeError} from "../../errors/basic.js"
 import {Command, CommandTree} from "../analysis/types/commands.js"
 
@@ -22,24 +25,32 @@ export function cli<C extends CommandTree>(
 	const [bin, script, ...argw] = argv
 
 	const {
-		columns,
 		commands,
+		indent = "  ",
 		shorthandBooleans,
+		columns = defaultColumns,
 		onExit = code => process.exit(code),
 		onHelp = help => console.log(help),
 		onMistake = mistake => console.error(mistake),
 	} = config
 
+	const format = (tn: Tn) => tnFinal(columns, indent, tn)
+
 	try {
-		const userProvidedHelpParam = checkHelp(argw)
+		const userAskForHelp = checkHelp(argw)
 		const selectedCommand = selectCommand(argw, commands)
-		const thisCliHasOneSingleRootCommand = commands instanceof Command
+		const singleRootCommand = commands instanceof Command
 
-		const userNeedsHelp = !selectedCommand
-			&& !thisCliHasOneSingleRootCommand
+		const userNeedsHelp = !singleRootCommand
+			&& !selectedCommand
+			&& argw.length === 0
 
-		if (userProvidedHelpParam || userNeedsHelp) {
-			onHelp(printHelp({...config, commands, selectedCommand}))
+		// const userNeedsHelp = !selectedCommand
+		// 	&& !singleRootCommand
+
+		if (userAskForHelp || userNeedsHelp) {
+			const help = format(printHelp({...config, commands, selectedCommand}))
+			onHelp(wrap(columns, help))
 			onExit(0)
 		}
 
@@ -55,7 +66,8 @@ export function cli<C extends CommandTree>(
 	}
 	catch (error) {
 		if (error instanceof MistakeError) {
-			onMistake(printError(error, columns))
+			const mistake = format(printError(error))
+			onMistake(mistake)
 			onExit(1)
 		}
 		else throw error

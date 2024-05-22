@@ -1,24 +1,16 @@
 
-import {wrap} from "../../../tooling/text/wrap.js"
-import {default_columns} from "./default-columns.js"
+import {tnConnect} from "../../../tooling/text/tn.js"
 import {color} from "../../../tooling/text/coloring.js"
 import {ArgvError, ConfigError} from "../../../errors/basic.js"
 
-export function printError(
-		error: ArgvError,
-		columns: number = default_columns,
-	) {
-	const content = [
+export function printError(error: ArgvError) {
+	return tnConnect("", [
 
-		(error instanceof ConfigError)
-			? color.brightMagenta("(Argv Configuration Error)")
-			: null,
+		error instanceof ConfigError
+			&& color.brightMagenta("(Argv Configuration Error)"),
 
-		(error.message)
-			? color.brightRed(error.message)
-			: null,
-
-	].filter(s => !!s).join("\n")
-	return wrap(columns, content)
+		error.message
+			&& color.brightRed(error.message),
+	])
 }
 

@@ -1,3 +1,3 @@
 
-export const default_columns = 72
+export const defaultColumns = 72
 

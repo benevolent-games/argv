@@ -22,10 +22,7 @@ export * from "./areas/parsing/parse.js"
 
 // text tools
 export * from "./tooling/text/coloring.js"
-export * from "./tooling/text/undent.js"
-export * from "./tooling/text/wrap.js"
-export * from "./tooling/text/textbrick.js"
-export * from "./tooling/text/indent.js"
+export * from "./tooling/text/formatting.js"
 
 // other tools
 export * from "./tooling/death-with-dignity.js"

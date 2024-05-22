@@ -7,6 +7,7 @@ export type CliConfig<C extends CommandTree> = {
 	name: string
 	commands: C
 	help?: string
+	indent?: string
 	readme?: string
 	columns?: number
 	theme?: ArgvTheme
