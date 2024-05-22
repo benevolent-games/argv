@@ -17,7 +17,9 @@ jobs:
     - run: npm ci
     - run: npm run build -s
     - run: npm test
-    - run: npm publish
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    - name: 🚀 npm publish
+      uses: JS-DevTools/npm-publish@v3
+      with:
+        token: ${{ secrets.NPM_TOKEN }}
+        access: public
 
