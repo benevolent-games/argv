@@ -219,7 +219,6 @@ pizza small --pepperoni="no" --slice="2"
       help: "it's the best command, nobody makes commands like me",
 
       args: [
-
         arg("active").required(Boolean, {
           help: "all systems go?",
         }),
