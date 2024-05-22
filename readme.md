@@ -22,9 +22,9 @@ pizza --help
 pizza large --pepperoni --slices 3
 
 # or, any way you like it
-pizza --slice=9 large
-pizza medium -p --slice=5
-pizza small --pepperoni="no" --slice="2"
+pizza --slices=9 large
+pizza medium -p --slices=5
+pizza small --pepperoni="no" --slices="2"
 ```
 
 <br/>
