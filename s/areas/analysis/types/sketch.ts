@@ -1,9 +1,15 @@
 
-export type Coerce<In, Out> = (input: In) => Out
+export type IngestFn = (input: string | undefined) => string
+export type CoerceFn<T> = (input: string) => T
+export type ValidateFn<T> = (input: T) => T
 
 export type Unit<T> = {
+	mode: string
+	type: string
+	ingest: IngestFn
+	coerce: CoerceFn<T>
+	validate: ValidateFn<T>
 	help?: string
-	coerce: Coerce<string|undefined, T>
 }
 
 export type Arg<N extends string = string, T = any> = {name: N} & Unit<T>
@@ -15,11 +21,14 @@ export type DistillInput<I extends Unit<any>> = I extends Unit<infer T> ? T : ne
 
 export type Opts<T> = {
 	help?: string
-	coerce?: Coerce<T, T>
+	validate?: ValidateFn<T>
 }
 
-export type ArchetypeFn<T> = (...z: any[]) => Unit<T>
-export const archetypeFn = <Fn extends ArchetypeFn<any>>(fn: Fn) => fn
+export type ModeFn<T> = (...z: any[]) => Unit<T>
+export const modeFn = <Fn extends ModeFn<any>>(fn: Fn) => fn
 
-export type TypeFn<T> = Coerce<string, T>
+export type TypeSpec<T> = {
+	type: string
+	coerce: CoerceFn<T>
+}
 

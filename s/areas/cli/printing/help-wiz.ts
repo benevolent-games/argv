@@ -1,13 +1,11 @@
 
 import {ArgvTheme} from "../themes.js"
-import {Args} from "../../analysis/types/args.js"
-import {Params} from "../../analysis/types/params.js"
 import {Command} from "../../analysis/types/commands.js"
 import {Cmd} from "../../analysis/utils/list-all-commands.js"
 import {makePalette} from "../../../tooling/text/coloring.js"
 import {normalize} from "../../../tooling/text/formatting.js"
 import {tnConnect, tnIndent} from "../../../tooling/text/tn.js"
-import {primitiveName} from "../../analysis/types/primitives.js"
+import { Args } from "../../analysis/types/sketch.js"
 
 export function helpWiz(theme: ArgvTheme) {
 	const palette = makePalette(theme)
