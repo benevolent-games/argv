@@ -1,6 +1,5 @@
 
-import {Args} from "./args.js"
-import {Params} from "./params.js"
+import {Args, Params} from "./sketch.js"
 import {CommandAnalysis} from "./analysis.js"
 import {validateCommand} from "../utils/validate-command.js"
 

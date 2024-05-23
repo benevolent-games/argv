@@ -1,6 +1,5 @@
 
 import {Command} from "../types/commands.js"
-import {Param, ParamFlag} from "../types/params.js"
 import {DuplicateArgError, DuplicateFlagError} from "../../../errors/kinds/config.js"
 
 export function validateCommand(command: Command) {
@@ -9,7 +8,7 @@ export function validateCommand(command: Command) {
 
 	// validate arguments
 	command.args
-		.map(a => a.name)
+		.map(arg => arg.name)
 		.forEach(arg => {
 			if (args.has(arg)) throw new DuplicateArgError(arg)
 			else args.add(arg)
@@ -17,17 +16,11 @@ export function validateCommand(command: Command) {
 
 	// validate flags
 	Object.values(command.params)
-		.filter(isFlag)
-		.map(p => p.flag)
-		.forEach(flag => {
+		.filter(param => !!param.flag)
+		.forEach(param => {
+			const flag = param.flag!
 			if (flags.has(flag)) throw new DuplicateFlagError(flag)
 			else flags.add(flag)
 		})
-}
-
-//////////////////////////
-
-function isFlag(param: Param): param is ParamFlag {
-	return param.mode === "flag"
 }
 
