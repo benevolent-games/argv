@@ -4,7 +4,7 @@ import {splitty} from "../../testing/argv.js"
 import {CommandTree} from "./types/commands.js"
 import {expect} from "../../testing/framework/expect.js"
 import {testSuite} from "../../testing/framework/test-suite.js"
-import {arg, command, number, param, string} from "./helpers.js"
+import {arg, choice, command, number, param, string} from "./helpers.js"
 
 function testing<C extends CommandTree>(commands: C) {
 	return (input: string) => {
@@ -156,5 +156,15 @@ export default testSuite({
 			},
 		}
 	}()),
+
+	async "choices are enforce"() {
+		const o = {commands: command({args: [
+			arg("size").required(string, choice(["alpha", "bravo"])),
+		], params: {}})}
+		expect().that(() => {
+			analyze(splitty("bingus"), o)
+		}).throws()
+
+	},
 })
 

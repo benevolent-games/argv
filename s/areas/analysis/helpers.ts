@@ -155,7 +155,14 @@ export function choice<T>(allowable: T[], {help}: {help?: string} = {}): Opts<T>
 	else
 		message = allowable.map(c => JSON.stringify(c)).join(", ")
 
-	return {help: tnString(tnConnect("\n", [message, help]))}
+	return {
+		help: tnString(tnConnect("\n", [message, help])),
+		validate: item => {
+			if (!allowable.includes(item))
+				throw new Error(`invalid choice`)
+			return item
+		},
+	}
 }
 
 export function list<T>({name: type, coerce}: Type<T>): Type<T[]> {
