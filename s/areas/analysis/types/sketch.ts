@@ -6,9 +6,9 @@ export type ValidateFn<T> = (input: T) => T
 export type Unit<T> = {
 	ingest: IngestFn<T>
 	help?: string
-} & UnitMeta
+} & UnitReflection
 
-export type UnitMeta = {
+export type UnitReflection = {
 	mode: string
 	type: string
 	fallback?: string
@@ -26,15 +26,10 @@ export type Opts<T> = {
 	validate?: ValidateFn<T>
 }
 
-// export type ModeFn<T> = (...z: any[]) => Unit<T>
-// export const modeFn = <Fn extends ModeFn<any, any>>(fn: Fn) => fn
-
 export type ModeFn<T, Z extends any[]> = (type: Type<T>, ...z: Z) => Unit<T>
 
 export type Type<T> = {
 	name: string
 	coerce: CoerceFn<T>
 }
-
-export const asType = <T extends Type<any>>(type: T) => type
 

@@ -13,6 +13,8 @@ export function command<
 	return new Command<A, P>(o)
 }
 
+export const asType = <T extends Type<any>>(type: T) => type
+
 export function asTypes<C extends Record<string, CoerceFn<any>>>(coersions: C) {
 	return obmap(coersions,
 		(coerce, name) => ({name, coerce})
