@@ -1,5 +1,5 @@
 
-import {obmap} from "../../tooling/obmap.js"
+import {obmap} from "../../../tooling/obmap.js"
 
 export type Coerce<In, Out> = (input: In) => Out
 
@@ -122,10 +122,10 @@ export const kind = {
 	},
 } satisfies Record<string, Record<keyof typeof types, any>>
 
-arg("count", kind.default.number(123))
-arg("count", kind.required.string())
-arg("count", kind.optional.boolean())
+// arg("count", kind.default.number(123))
+// arg("count", kind.required.string())
+// arg("count", kind.optional.boolean())
 
-param(kind.required.number({help: ""}))
-flag("-p", kind.required.number({help: ""}))
+// param(kind.required.number({help: ""}))
+// flag("-p", kind.required.number({help: ""}))
 
