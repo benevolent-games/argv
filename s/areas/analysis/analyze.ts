@@ -2,8 +2,8 @@
 import {parse} from "../parsing/parse.js"
 import {CommandTree} from "./types/commands.js"
 import {Analysis, AnalyzeOptions} from "./types/analysis.js"
+import {analyzeCommand, selectCommand, produceTreeAnalysis, getBooleanParams} from "./utils/utils.js"
 import {CommandNotFoundError, UnknownFlagError, UnknownParamError} from "../../errors/kinds/mistakes.js"
-import {analyzeCommand, selectCommand, extractBooleanParams, produceTreeAnalysis} from "./utils/utils.js"
 
 /**
  * smartly read and validate command line input.
@@ -12,7 +12,7 @@ import {analyzeCommand, selectCommand, extractBooleanParams, produceTreeAnalysis
  */
 export function analyze<C extends CommandTree>(
 		argw: string[],
-		{commands, shorthandBooleans = true}: AnalyzeOptions<C>
+		{commands}: AnalyzeOptions<C>
 	): Analysis<C> {
 
 	const selected = selectCommand(argw, commands)
@@ -21,12 +21,7 @@ export function analyze<C extends CommandTree>(
 		throw new CommandNotFoundError()
 
 	const {argx, command, path} = selected
-
-	const booleanParams = shorthandBooleans
-		? extractBooleanParams(command)
-		: []
-
-	const parsed = parse(argx, {booleanParams})
+	const parsed = parse(argx, {booleanParams: getBooleanParams(command)})
 	const commandAnalysis = analyzeCommand(path, command, parsed)
 
 	for (const paramName of parsed.params.keys()) {
@@ -36,7 +31,7 @@ export function analyze<C extends CommandTree>(
 
 	for (const flag of parsed.flags.values()) {
 		const specified = Object.values(command.params)
-			.some(param => param.mode === "flag" && param.flag === flag)
+			.some(param => param.flag === flag)
 		if (!specified)
 			throw new UnknownFlagError(flag)
 	}

@@ -1,133 +1,177 @@
 
-import {processFlag} from "./utils/utils.js"
+import {obmap} from "../../tooling/obmap.js"
+import {ConfigError} from "../../errors/basic.js"
 import {Command, CommandOptions} from "./types/commands.js"
-import {Primitive, Typify, Validator} from "./types/primitives.js"
-import {Arg, ArgDefault, ArgOptional, ArgRequired} from "./types/args.js"
-import {Param, ParamDefault, ParamFlag, ParamOptional, ParamRequired} from "./types/params.js"
-import { undent } from "../../tooling/text/formatting.js"
-import { tnConnect, tnString } from "../../tooling/text/tn.js"
-import { ConfigError } from "../../errors/basic.js"
+import {tnConnect, tnString} from "../../tooling/text/tn.js"
+import {InvalidFlagError} from "../../errors/kinds/config.js"
+import {Arg, CoerceFn, Param, Type, Opts, Args, Params, ValidateFn} from "./types/units.js"
 
 export function command<
-		A extends Arg<string, Primitive>[],
-		P extends Record<string, Param<Primitive>>,
+		A extends Args,
+		P extends Params,
 	>(o: CommandOptions<A, P>): Command<A, P> {
 	return new Command<A, P>(o)
 }
 
-const passValidator: Validator<any> = (x: any) => x
+export const asType = <T extends Type<any>>(type: T) => type
 
-type BaseOptions<P extends Primitive> = {
-	help?: string
-	validate?: Validator<P>
+export function asTypes<C extends Record<string, CoerceFn<any>>>(coersions: C) {
+	return obmap(coersions,
+		(coerce, name) => ({name, coerce})
+	) as {[K in keyof C]: Type<ReturnType<C[K]>>}
+}
+
+export const type = asTypes({
+	string: string => string,
+	number: string => {
+		const number = Number(string)
+		if (isNaN(number)) throw new Error(`not a number`)
+		return number
+	},
+	boolean: (() => {
+		const pairs = [
+			["1", "0"],
+			["on", "off"],
+			["yes", "no"],
+			["true", "false"],
+		]
+		const truisms = pairs.map(p => p[0])
+		const falsisms = pairs.map(p => p[1])
+		return string => {
+			string = string.toLowerCase()
+			if (truisms.includes(string)) return true
+			else if (falsisms.includes(string)) return false
+			else throw new Error(`invalid boolean, try "true" or "false"`)
+		}
+	})(),
+})
+
+const {string, number, boolean} = type
+export {string, number, boolean}
+
+type Ingestion<T> = {
+	coerce: CoerceFn<T>
+	validate: ValidateFn<T>
+}
+
+export const ingestors = {
+	default: <T>({validate, coerce}: Ingestion<T>, fallback: string) =>
+		(value: string | undefined) =>
+			validate(coerce(value ?? fallback)),
+	required: <T>({validate, coerce}: Ingestion<T>) =>
+		(value: string | undefined) => {
+			if (value === undefined)
+				throw new Error(`required but not provided`)
+			return validate(coerce(value))
+		},
+	optional: <T>({validate, coerce}: Ingestion<T>) =>
+		(value: string | undefined) => (value === undefined)
+			? undefined
+			: validate(coerce(value)),
+}
+
+export const param = {
+	flag(flag: string, o: {help?: string} = {}): Param<boolean> {
+		flag = flag.startsWith("-")
+			? flag.slice(1)
+			: flag
+		if (flag.length !== 1)
+			throw new InvalidFlagError(flag)
+		const {name, coerce} = type.boolean
+		return {
+			mode: "flag",
+			type: name,
+			flag,
+			help: o.help,
+			ingest: string => {
+				return (string === undefined)
+					? false
+					: coerce(string)
+			},
+		}
+	},
+	default: <T>(
+			{name: type, coerce}: Type<T>,
+			fallback: string,
+			{help, validate = x => x}: Opts<T> = {},
+		): Param<T> => ({
+		help, type,
+		mode: "default",
+		ingest: ingestors.default({coerce, validate}, fallback),
+	}),
+	required: <T>(
+			{name: type, coerce}: Type<T>,
+			{help, validate = x => x}: Opts<T> = {},
+		): Param<T> => ({
+		help, type,
+		mode: "required",
+		ingest: ingestors.required({coerce, validate}),
+	}),
+	optional: <T>(
+			{name: type, coerce}: Type<T>,
+			{help, validate = x => x}: Opts<T> = {},
+		): Param<T | undefined> => ({
+		help, type,
+		mode: "optional",
+		ingest: ingestors.optional({coerce, validate}),
+	}),
 }
 
 export const arg = <N extends string>(name: N) => ({
-	required: <P extends Primitive>(
-			primitive: P,
-			o: BaseOptions<P> = {},
-		): ArgRequired<N, P> => ({
-		mode: "required",
-		name,
-		primitive,
-		help: o.help,
-		validate: o.validate ?? passValidator,
-	}),
-
-	optional: <P extends Primitive>(
-			primitive: P,
-			o: BaseOptions<P> = {},
-		): ArgOptional<N, P> => ({
-		mode: "optional",
-		name,
-		primitive,
-		help: o.help,
-		validate: o.validate ?? passValidator,
-	}),
-
-	default: <P extends Primitive>(
-			primitive: P,
-			o: {fallback: Typify<P>} & BaseOptions<P>,
-		): ArgDefault<N, P> => ({
+	default: <T>(
+			{name: type, coerce}: Type<T>,
+			fallback: string,
+			{help, validate = x => x}: Opts<T> = {},
+		): Arg<N, T> => ({
+		name, help, type,
 		mode: "default",
-		name,
-		primitive,
-		help: o.help,
-		fallback: o.fallback,
-		validate: o.validate ?? passValidator,
+		ingest: ingestors.default({coerce, validate}, fallback),
+	}),
+	required: <T>(
+			{name: type, coerce}: Type<T>,
+			{help, validate = x => x}: Opts<T> = {},
+		): Arg<N, T> => ({
+		name, help, type,
+		mode: "required",
+		ingest: ingestors.required({coerce, validate}),
+	}),
+	optional: <T>(
+			{name: type, coerce}: Type<T>,
+			{help, validate = x => x}: Opts<T> = {},
+		): Arg<N, T | undefined> => ({
+		name, help, type,
+		mode: "optional",
+		ingest: ingestors.optional({coerce, validate}),
 	}),
 })
 
-export const param = {
-	required: <P extends Primitive>(
-			primitive: P,
-			o: BaseOptions<P> = {},
-		): ParamRequired<P> => ({
-		mode: "required",
-		primitive,
-		help: o.help,
-		validate: o.validate ?? passValidator,
-	}),
-
-	optional: <P extends Primitive>(
-			primitive: P,
-			o: BaseOptions<P> = {},
-		): ParamOptional<P> => ({
-		mode: "optional",
-		primitive,
-		help: o.help,
-		validate: o.validate ?? passValidator,
-	}),
-
-	default: <P extends Primitive>(
-			primitive: P,
-			o: {fallback: Typify<P>} & BaseOptions<P>,
-		): ParamDefault<P> => ({
-		mode: "default",
-		primitive,
-		help: o.help,
-		fallback: o.fallback,
-		validate: o.validate ?? passValidator,
-	}),
-
-	flag: (
-			flag: string,
-			o: {help?: string} = {},
-		): ParamFlag => ({
-		mode: "flag",
-		primitive: Boolean,
-		help: o.help,
-		flag: processFlag(flag),
-		validate: passValidator,
-	}),
-}
-
-export function choice(
-		choices: string[],
-		help?: string,
-	): BaseOptions<typeof String> {
-
+export function choice<T>(allowable: T[], {help}: {help?: string} = {}): Opts<T> {
 	let message: string
 
-	if (choices.length === 0)
+	if (allowable.length === 0)
 		throw new ConfigError(`zero choices doesn't make sense`)
-
-	else if (choices.length === 1)
-		message = `must be "${choices[0]}"`
-
+	else if (allowable.length === 1)
+		message = `must be "${allowable[0]}"`
 	else
-		message = choices.join(", ")
+		message = allowable.map(c => JSON.stringify(c)).join(", ")
 
 	return {
-		validate(input: string) {
-			if (!choices.includes(input))
-				throw new Error(`invalid choice, got "${input}", but it needs to be one of: ${choices.map(c => `"${c}"`).join(", ")}`)
-			return input
+		help: tnString(tnConnect("\n", [message, help])),
+		validate: item => {
+			if (!allowable.includes(item))
+				throw new Error(`invalid choice`)
+			return item
 		},
-		help: tnString(tnConnect("\n", [
-			message,
-			help,
-		])),
+	}
+}
+
+export function list<T>({name: type, coerce}: Type<T>): Type<T[]> {
+	return {
+		name: `list-${type}`,
+		coerce: string => string
+			.split(",")
+			.map(s => s.trim())
+			.map(coerce),
 	}
 }
 

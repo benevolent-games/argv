@@ -1,7 +1,7 @@
 
 import {cleave} from "./utils/cleave.js"
 import {ParseOptions, Parsed} from "./types.js"
-import {OpenParamError, RedundantParamError} from "../../errors/kinds/mistakes.js"
+import {OpenParamError, RedundantFlagError, RedundantParamError} from "../../errors/kinds/mistakes.js"
 
 /**
  * dumb command line parsing.
@@ -29,7 +29,7 @@ export function parse(
 
 	function forbidRedundantFlag(flag: string) {
 		if (flags.has(flag))
-			throw new RedundantParamError(flag)
+			throw new RedundantFlagError(flag)
 	}
 
 	let openParam: string | null = null

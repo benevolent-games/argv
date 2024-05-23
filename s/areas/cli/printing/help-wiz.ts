@@ -1,13 +1,11 @@
 
 import {ArgvTheme} from "../themes.js"
-import {Args} from "../../analysis/types/args.js"
-import {Params} from "../../analysis/types/params.js"
 import {Command} from "../../analysis/types/commands.js"
+import {Args, Params} from "../../analysis/types/units.js"
 import {Cmd} from "../../analysis/utils/list-all-commands.js"
 import {makePalette} from "../../../tooling/text/coloring.js"
 import {normalize} from "../../../tooling/text/formatting.js"
 import {tnConnect, tnIndent} from "../../../tooling/text/tn.js"
-import {primitiveName} from "../../analysis/types/primitives.js"
 
 export function helpWiz(theme: ArgvTheme) {
 	const palette = makePalette(theme)
@@ -55,7 +53,7 @@ export function helpWiz(theme: ArgvTheme) {
 					: palette.mode(arg.mode),
 
 				// arg primitive
-				palette.type(primitiveName(arg.primitive)),
+				palette.type(arg.type),
 
 				// arg fallback
 				arg.mode === "default"
@@ -88,11 +86,11 @@ export function helpWiz(theme: ArgvTheme) {
 						: palette.mode(param.mode),
 
 					// param primitive
-					palette.type(primitiveName(param.primitive)),
+					palette.type(param.type),
 
 					// param default
 					param.mode === "default"
-						&& palette.value(`${param.fallback.toString()}`),
+						&& palette.value(`${param.fallback}`),
 				]),
 
 				// param help

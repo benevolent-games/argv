@@ -2,9 +2,9 @@
 import {analyze} from "./analyze.js"
 import {splitty} from "../../testing/argv.js"
 import {CommandTree} from "./types/commands.js"
-import {arg, command, param} from "./helpers.js"
 import {expect} from "../../testing/framework/expect.js"
 import {testSuite} from "../../testing/framework/test-suite.js"
+import {arg, choice, command, number, param, string} from "./helpers.js"
 
 function testing<C extends CommandTree>(commands: C) {
 	return (input: string) => {
@@ -33,9 +33,9 @@ export default testSuite({
 		const test = testing(command({
 			help: ``,
 			args: [
-				arg("alpha").required(String),
-				arg("bravo").optional(Number),
-				arg("charlie").default(Number, {fallback: 1}),
+				arg("alpha").required(string),
+				arg("bravo").optional(number),
+				arg("charlie").default(number, "1"),
 			],
 			params: {},
 		}))
@@ -69,9 +69,9 @@ export default testSuite({
 			help: ``,
 			args: [],
 			params: {
-				delta: param.required(String),
-				echo: param.optional(Number),
-				foxtrot: param.default(Number, {fallback: 2}),
+				delta: param.required(string),
+				echo: param.optional(number),
+				foxtrot: param.default(number, "2"),
 				golf: param.flag("g"),
 				hotel: param.flag("h"),
 			},
@@ -119,8 +119,8 @@ export default testSuite({
 
 	async "cannot configure duplicate args"() {
 		expect().that(() => command({args: [
-			arg("alpha").optional(String),
-			arg("alpha").optional(String),
+			arg("alpha").optional(string),
+			arg("alpha").optional(string),
 		], params: {}})).throws()
 	},
 
@@ -133,10 +133,10 @@ export default testSuite({
 
 	...(function multiple_commands() {
 		const test = testing({
-			alpha: command({args: [arg("a").required(String)], params: {}}),
+			alpha: command({args: [arg("a").required(string)], params: {}}),
 			bravo: {
-				charlie: command({args: [arg("a").required(String)], params: {}}),
-				delta: command({args: [arg("a").required(String)], params: {}}),
+				charlie: command({args: [arg("a").required(string)], params: {}}),
+				delta: command({args: [arg("a").required(string)], params: {}}),
 			},
 		})
 		return {
@@ -156,5 +156,15 @@ export default testSuite({
 			},
 		}
 	}()),
+
+	async "choices are enforce"() {
+		const o = {commands: command({args: [
+			arg("size").required(string, choice(["alpha", "bravo"])),
+		], params: {}})}
+		expect().that(() => {
+			analyze(splitty("bingus"), o)
+		}).throws()
+
+	},
 })
 

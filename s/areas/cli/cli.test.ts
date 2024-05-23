@@ -5,8 +5,8 @@ import {FakeExit} from "../../errors/basic.js"
 import {CliConfig, cliConfig} from "./types.js"
 import {expect} from "../../testing/framework/expect.js"
 import {CommandTree} from "../analysis/types/commands.js"
-import {arg, command, param} from "../analysis/helpers.js"
 import {testSuite} from "../../testing/framework/test-suite.js"
+import {arg, command, number, param, string} from "../analysis/helpers.js"
 
 function spyCli<C extends CommandTree>(argv: string[], config: CliConfig<C>) {
 	const data = {
@@ -51,8 +51,8 @@ export default testSuite({
 		const result = cli(argv("aaa --bravo bbb"), {
 			name: "example",
 			commands: command({
-				args: [arg("alpha").required(String)],
-				params: {bravo: param.required(String)},
+				args: [arg("alpha").required(string)],
+				params: {bravo: param.required(string)},
 				execute: async({args, params}) => {
 					executed = true
 					expect().that(args.alpha).is("aaa")
@@ -72,8 +72,8 @@ export default testSuite({
 			name: "example",
 			commands: {
 				hyrax: command({
-					args: [arg("alpha").required(String)],
-					params: {bravo: param.required(String)},
+					args: [arg("alpha").required(string)],
+					params: {bravo: param.required(string)},
 					execute: async({args, params}) => {
 						expect().that(args.alpha).is("aaa")
 						expect().that(params.bravo).is("bbb")
@@ -81,8 +81,8 @@ export default testSuite({
 					},
 				}),
 				capybara: command({
-					args: [arg("charlie").required(String)],
-					params: {delta: param.required(String)},
+					args: [arg("charlie").required(string)],
+					params: {delta: param.required(string)},
 					execute: async({args, params}) => {
 						expect().that(args.charlie).is("ccc")
 						expect().that(params.delta).is("ddd")
@@ -112,11 +112,11 @@ export default testSuite({
 			commands: {
 				icecream: command({
 					args: [],
-					params: {scoops: param.required(Number)},
+					params: {scoops: param.required(number)},
 				}),
 				pizza: command({
 					args: [],
-					params: {slices: param.required(Number)},
+					params: {slices: param.required(number)},
 				}),
 			},
 		})

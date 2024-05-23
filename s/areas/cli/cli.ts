@@ -5,7 +5,6 @@ import {checkHelp} from "../parsing/check-help.js"
 import {printHelp} from "./printing/print-help.js"
 import {Tn, tnFinal} from "../../tooling/text/tn.js"
 import {printError} from "./printing/print-error.js"
-import {wrap} from "../../tooling/text/formatting.js"
 import {selectCommand} from "../analysis/utils/utils.js"
 import {FakeExit, MistakeError} from "../../errors/basic.js"
 import {Command, CommandTree} from "../analysis/types/commands.js"
@@ -26,7 +25,6 @@ export function cli<C extends CommandTree>(
 	const {
 		commands,
 		indent = "  ",
-		shorthandBooleans,
 		columns = process.stdout.columns,
 		onExit = code => process.exit(code),
 		onHelp = help => console.log(help),
@@ -52,7 +50,7 @@ export function cli<C extends CommandTree>(
 			onExit(0)
 		}
 
-		const analysis = analyze(argw, {commands, shorthandBooleans})
+		const analysis = analyze(argw, {commands})
 		const execute = () => analysis.commandSpec.execute(analysis.command)
 
 		return {

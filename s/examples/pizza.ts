@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import {cli} from "../areas/cli/cli.js"
-import {arg, choice, command, param} from "../areas/analysis/helpers.js"
+import {arg, choice, command, param, type} from "../areas/analysis/helpers.js"
 
 await cli(process.argv, {
 	name: "pizza",
@@ -9,10 +9,10 @@ await cli(process.argv, {
 	commands: command({
 		help: "made with the finest mozza!",
 		args: [
-			arg("size").required(String, choice(["small", "medium", "large"])),
+			arg("size").required(type.string, choice(["small", "medium", "large"])),
 		],
 		params: {
-			slices: param.default(Number, {fallback: 1, help: "we serve it by the slice"}),
+			slices: param.default(type.number, "1", {help: "we serve it by the slice"}),
 			pepperoni: param.flag("p", {help: "we go heavy on the meaty pepperoni"}),
 		},
 		async execute(input) {
