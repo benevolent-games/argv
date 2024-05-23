@@ -87,9 +87,13 @@ export function analyzeCommand(
 	return {path, args, params, extraArgs}
 }
 
-export function getFlagNames(command: Command) {
+export function getBooleanParams(command: Command) {
 	return Object.entries(command.params)
-		.filter(([,param]) => !!param.flag)
+		.filter(([,param]) => (
+			param.flag ||
+			param.mode === "flag" ||
+			param.mode === "boolean"
+		))
 		.map(([name]) => name)
 }
 

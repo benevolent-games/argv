@@ -2,7 +2,7 @@
 import {parse} from "../parsing/parse.js"
 import {CommandTree} from "./types/commands.js"
 import {Analysis, AnalyzeOptions} from "./types/analysis.js"
-import {analyzeCommand, selectCommand, produceTreeAnalysis, getFlagNames} from "./utils/utils.js"
+import {analyzeCommand, selectCommand, produceTreeAnalysis, getBooleanParams} from "./utils/utils.js"
 import {CommandNotFoundError, UnknownFlagError, UnknownParamError} from "../../errors/kinds/mistakes.js"
 
 /**
@@ -21,7 +21,7 @@ export function analyze<C extends CommandTree>(
 		throw new CommandNotFoundError()
 
 	const {argx, command, path} = selected
-	const parsed = parse(argx, {booleanParams: getFlagNames(command)})
+	const parsed = parse(argx, {booleanParams: getBooleanParams(command)})
 	const commandAnalysis = analyzeCommand(path, command, parsed)
 
 	for (const paramName of parsed.params.keys()) {
