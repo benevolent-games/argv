@@ -1,4 +1,19 @@
 
+### v0.3.0
+- (breaking) custom types!
+    - import the types `import {string, number, boolean} from "@benev/argv"`
+    - `String` becomes `string`
+    - `Number` becomes `number`
+    - `Boolean` becomes `boolean`
+- (breaking) defaults are no longer in the options
+    ```ts
+    // old
+    param.default(string, {fallback: "hello"})
+
+    // new
+    param.default(string, "hello")
+    ```
+
 ### v0.2.0
 - (breaking) massive nuclear rewrite
 
@@ -11,3 +26,4 @@
 
 ### v0.0.0
 - initial release
+
