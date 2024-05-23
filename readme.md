@@ -37,7 +37,7 @@ pizza small --pepperoni="no" --slices="2"
     ```
 1. import stuff
     ```ts
-    import {cli, command, arg, param} from "@benev/argv"
+    import {cli, command, arg, param, string, number} from "@benev/argv"
     ```
 1. specify your cli, and perform the parsing
     ```ts
@@ -45,10 +45,10 @@ pizza small --pepperoni="no" --slices="2"
       name: "pizza",
       commands: command({
         args: [
-          arg("size").required(String),
+          arg("size").required(string),
         ],
         params: {
-          slices: param.default(Number, {fallback: 1}),
+          slices: param.default(number, "1"),
           pepperoni: param.flag("p"),
         },
       }),
@@ -76,20 +76,20 @@ pizza small --pepperoni="no" --slices="2"
         image: command({
           args: [],
           params: {
-            quality: param.required(Number),
+            quality: param.required(number),
           },
         }),
         media: {
           audio: command({
             args: [],
             params: {
-              mono: param.required(Boolean),
+              mono: param.required(boolean),
             },
           }),
           video: command({
             args: [],
             params: {
-              codec: param.required(String),
+              codec: param.required(string),
             },
           })
         },
@@ -113,8 +113,8 @@ pizza small --pepperoni="no" --slices="2"
     command({
       args: [],
       params: {
-        active: param.required(Boolean),
-        count: param.default(Number, {fallback: 101}),
+        active: param.required(boolean),
+        count: param.default(number, "101"),
       },
       async execute({params}) {
         params.active // true
@@ -132,7 +132,7 @@ pizza small --pepperoni="no" --slices="2"
         meatlovers: command({
           args: [],
           params: {
-            meatiness: param.required(Number),
+            meatiness: param.required(number),
           },
           async execute({params}) {
             console.log(params.meatiness) // 9
@@ -141,7 +141,7 @@ pizza small --pepperoni="no" --slices="2"
         hawaiian: command({
           args: [],
           params: {
-            pineappleyness: param.required(Number),
+            pineappleyness: param.required(number),
           },
           async execute({params}) {
             console.log(params.pineappleyness) // 8
@@ -176,36 +176,36 @@ pizza small --pepperoni="no" --slices="2"
     ```ts
     command({
       args: [
-        arg("active").required(Boolean),
-        arg("count").default(Number, {fallback: 101}),
-        arg("name").optional(String),
+        arg("active").required(boolean),
+        arg("count").default(number, "101"),
+        arg("name").optional(string),
       ],
       params: {},
     })
     ```
     - args are in an array, so each needs a name, eg "active" above
-    - so we're flexing `required`, `default`, and `optional`
+    - there are three modes, `required`, `default`, and `optional`
     - `default` requires a fallback value
-    - there are three possible primitives: `Boolean`, `Number`, or `String`
+    - there are three basic types, `string`, `number`, and `boolean`, but you can make your own types
 - now let's talk about params
     ```ts
     command({
       args: [],
       params: {
-        active: param.required(Boolean),
-        count: param.default(Number, {fallback: 101}),
-        name: param.optional(String),
+        active: param.required(boolean),
+        count: param.default(number, "101"),
+        name: param.optional(string),
         verbose: param.flag("-v"),
       },
     })
     ```
     - pretty similar. but see the way the names are different?
-    - there's a new variety of param called `flag`, of course, it's automatically a `Boolean` (how could it be otherwise?)
+    - there's a new variety of param called `flag`, of course, it's automatically a `boolean` (how could it be otherwise?)
 
 ### validation for args and params
 - you can set a `validate` function on any `arg` or `param`
     ```ts
-    arg("quality").optional(Number, {
+    arg("quality").optional(number, {
       validate: n => {
         if (n > 100) throw new Error("to big")
         if (n < 0) throw new Error("to smol")
@@ -222,32 +222,30 @@ pizza small --pepperoni="no" --slices="2"
       help: "it's the best command, nobody makes commands like me",
 
       args: [
-        arg("active").required(Boolean, {
+        arg("active").required(boolean, {
           help: "all systems go?",
         }),
 
-        arg("count").default(Number, {
-          fallback: 101,
+        arg("count").default(number, "101", {
           help: "number of dalmatians",
         }),
 
-        arg("name").optional(String, {help: `
+        arg("name").optional(string, {help: `
           see this multi-line string?
           it will be trimmed all nicely on the help page.
         `}),
       ],
 
       params: {
-        active: param.required(Boolean, {
+        active: param.required(boolean, {
           help: "toggle this carefully!",
         }),
 
-        count: param.default(Number, {
-          fallback: 101,
+        count: param.default(number, "101", {
           help: "classroom i'm late for",
         }),
 
-        name: param.optional(String, {
+        name: param.optional(string, {
           help: "pick your pseudonym",
         }),
 
@@ -261,11 +259,11 @@ pizza small --pepperoni="no" --slices="2"
 ### `choice` helper
 - you can use the `choice` helper to set up a multiple choice string
     ```ts
-    arg("crust").required(String, choice(["thick", "thin"]))
+    arg("crust").required(string, choice(["thick", "thin"]))
     ```
 - you can add a help to it as well
     ```ts
-    arg("crust").required(String, choice(["thick", "thin"], {
+    arg("crust").required(string, choice(["thick", "thin"], {
       help: "made with organic whole-wheat flour",
     }))
     ```
