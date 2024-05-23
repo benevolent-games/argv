@@ -259,14 +259,59 @@ pizza small --pepperoni="no" --slices="2"
 ### `choice` helper
 - you can use the `choice` helper to set up a multiple choice string
     ```ts
-    arg("crust").required(string, choice(["thick", "thin"]))
+    param.required(string, choice(["thick", "thin"]))
     ```
 - you can add a help to it as well
     ```ts
-    arg("crust").required(string, choice(["thick", "thin"], {
+    param.required(string, choice(["thick", "thin"], {
       help: "made with organic whole-wheat flour",
     }))
     ```
+
+### `list` helper
+- okay this is seriously crazy cool, check this out
+    ```ts
+    param.required(list(string))
+    ```
+- you can just wrap any type in the `list` helper
+    - user inputs comma-separated values `mp3,wav,ogg`
+    - you get an array `["mp3", "wav", "ogg"]`
+- is works with *any type*, like numbers and such
+    ```ts
+    param.required(list(number))
+    ```
+    - now you get a `number[]` array (not strings)
+    - yes, `list` preserves the type's validation
+
+<br/>
+
+## 🛠️ custom types
+- i can't believe i got all the types working for everything with custom types
+- it's easy to make your own types
+    ```ts
+    const date = asType({
+      name: "date",
+      coerce: string => new Date(string),
+    })
+    ```
+    - the `name` is shown in help pages
+    - the `coerce` function takes a string input, and you turn it into anything you like
+- then you can use 'em in your args and params like normal
+    ```ts
+    param.required(date)
+    ```
+- hey why not make a list of 'em while we're at it
+    ```ts
+    param.required(list(date))
+    ```
+- feeling spiffy? make a whole group of custom types with this one weird tip
+    ```ts
+    const date = asTypes({
+      date: string => new Date(string),
+      integer: string => Math.floor(Number(string)),
+    })
+    ```
+    - `asTypes` will use your object's property names as the type `name`
 
 <br/>
 
