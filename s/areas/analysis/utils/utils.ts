@@ -51,7 +51,7 @@ export function analyzeCommand(
 	const args = Object.fromEntries(
 		command.args.map((arg, index) => {
 			const input = parsed.args.at(index)
-			return [arg.name, arg.coerce(input)]
+			return [arg.name, arg.ingest(input)]
 		})
 	)
 
@@ -65,7 +65,7 @@ export function analyzeCommand(
 				}
 				else {
 					const input = parsed.params.get(name)
-					return [name, param.coerce(input)]
+					return [name, param.ingest(input)]
 				}
 			})
 	)

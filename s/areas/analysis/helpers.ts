@@ -13,34 +13,6 @@ export function command<
 	return new Command<A, P>(o)
 }
 
-// export function arg<N extends string, T>(name: N, input: Unit<T>): Arg<N, T> {
-// 	return {...input, name}
-// }
-
-// export function param<T>(input: Unit<T>): Param<T> {
-// 	return input
-// }
-
-export function flag(flag: string, o: {help?: string}): Param<boolean> {
-	flag = flag.startsWith("-")
-		? flag.slice(1)
-		: flag
-	if (flag.length !== 1)
-		throw new InvalidFlagError(flag)
-	const {name, coerce} = type.boolean
-	return {
-		mode: "flag",
-		type: name,
-		flag,
-		help: o.help,
-		ingest: string => {
-			return (string === undefined)
-				? false
-				: coerce(string)
-		},
-	}
-}
-
 export function asTypes<C extends Record<string, CoerceFn<any>>>(coersions: C) {
 	return obmap(coersions,
 		(coerce, name) => ({name, coerce})
@@ -72,28 +44,50 @@ export const type = asTypes({
 	})(),
 })
 
-export type ModeOptions<T> = {
+const {string, number, boolean} = type
+export {string, number, boolean}
+
+type Ingestion<T> = {
 	coerce: CoerceFn<T>
 	validate: ValidateFn<T>
 }
 
 export const ingestors = {
-	default: <T>({validate, coerce}: ModeOptions<T>, fallback: string) =>
+	default: <T>({validate, coerce}: Ingestion<T>, fallback: string) =>
 		(value: string | undefined) =>
 			validate(coerce(value ?? fallback)),
-	required: <T>({validate, coerce}: ModeOptions<T>) =>
+	required: <T>({validate, coerce}: Ingestion<T>) =>
 		(value: string | undefined) => {
 			if (value === undefined)
 				throw new Error(`required, but not provided`)
 			return validate(coerce(value))
 		},
-	optional: <T>({validate, coerce}: ModeOptions<T>) =>
+	optional: <T>({validate, coerce}: Ingestion<T>) =>
 		(value: string | undefined) => (value === undefined)
 			? undefined
 			: validate(coerce(value)),
 }
 
 export const param = {
+	flag(flag: string, o: {help?: string} = {}): Param<boolean> {
+		flag = flag.startsWith("-")
+			? flag.slice(1)
+			: flag
+		if (flag.length !== 1)
+			throw new InvalidFlagError(flag)
+		const {name, coerce} = type.boolean
+		return {
+			mode: "flag",
+			type: name,
+			flag,
+			help: o.help,
+			ingest: string => {
+				return (string === undefined)
+					? false
+					: coerce(string)
+			},
+		}
+	},
 	default: <T>(
 			{name: type, coerce}: Type<T>,
 			fallback: string,

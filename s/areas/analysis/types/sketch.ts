@@ -4,10 +4,14 @@ export type CoerceFn<T> = (input: string) => T
 export type ValidateFn<T> = (input: T) => T
 
 export type Unit<T> = {
-	mode: string
-	type: string
 	ingest: IngestFn<T>
 	help?: string
+} & UnitMeta
+
+export type UnitMeta = {
+	mode: string
+	type: string
+	fallback?: string
 }
 
 export type Arg<N extends string = string, T = any> = {name: N} & Unit<T>
