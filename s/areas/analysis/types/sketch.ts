@@ -1,14 +1,12 @@
 
-export type IngestFn = (input: string | undefined) => string
+export type IngestFn<T> = (input: string | undefined) => T
 export type CoerceFn<T> = (input: string) => T
 export type ValidateFn<T> = (input: T) => T
 
 export type Unit<T> = {
 	mode: string
 	type: string
-	ingest: IngestFn
-	coerce: CoerceFn<T>
-	validate: ValidateFn<T>
+	ingest: IngestFn<T>
 	help?: string
 }
 
@@ -24,11 +22,15 @@ export type Opts<T> = {
 	validate?: ValidateFn<T>
 }
 
-export type ModeFn<T> = (...z: any[]) => Unit<T>
-export const modeFn = <Fn extends ModeFn<any>>(fn: Fn) => fn
+// export type ModeFn<T> = (...z: any[]) => Unit<T>
+// export const modeFn = <Fn extends ModeFn<any, any>>(fn: Fn) => fn
 
-export type TypeSpec<T> = {
-	type: string
+export type ModeFn<T, Z extends any[]> = (type: Type<T>, ...z: Z) => Unit<T>
+
+export type Type<T> = {
+	name: string
 	coerce: CoerceFn<T>
 }
+
+export const asType = <T extends Type<any>>(type: T) => type
 
