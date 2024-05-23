@@ -5,7 +5,7 @@
     - `String` becomes `string`
     - `Number` becomes `number`
     - `Boolean` becomes `boolean`
-- (breaking) defaults are no longer in the options
+- (breaking) default fallback is no longer in the options
     ```ts
     // old
     param.default(string, {fallback: "hello"})
@@ -13,6 +13,7 @@
     // new
     param.default(string, "hello")
     ```
+- new helpers, `asType`, `asTypes`, `list`
 
 ### v0.2.0
 - (breaking) massive nuclear rewrite
