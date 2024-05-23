@@ -1,7 +1,7 @@
 
 import {ArgvTheme} from "../themes.js"
 import {Command} from "../../analysis/types/commands.js"
-import {Args, Params} from "../../analysis/types/sketch.js"
+import {Args, Params} from "../../analysis/types/units.js"
 import {Cmd} from "../../analysis/utils/list-all-commands.js"
 import {makePalette} from "../../../tooling/text/coloring.js"
 import {normalize} from "../../../tooling/text/formatting.js"

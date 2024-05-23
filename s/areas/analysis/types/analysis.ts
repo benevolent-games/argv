@@ -1,6 +1,6 @@
 
 import {Command, CommandTree} from "./commands.js"
-import {Args, DistillInput, Params} from "./sketch.js"
+import {Args, DistillInput, Params} from "./units.js"
 
 export type AnalyzeOptions<C extends CommandTree> = {
 	commands: C,
