@@ -1,9 +1,9 @@
 
 import {parse} from "../../parsing/parse.js"
 import {Parsed} from "../../parsing/types.js"
+import {MistakeError} from "../../../errors/basic.js"
 import {Command, CommandTree} from "../types/commands.js"
 import {CommandAnalysis, SelectedCommand, TreeAnalysis} from "../types/analysis.js"
-import { MistakeError } from "../../../errors/basic.js"
 
 export function produceTreeAnalysis<C extends CommandTree>(
 		commands: C,

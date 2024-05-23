@@ -61,7 +61,7 @@ export const ingestors = {
 	required: <T>({validate, coerce}: Ingestion<T>) =>
 		(value: string | undefined) => {
 			if (value === undefined)
-				throw new Error(`required, but not provided`)
+				throw new Error(`required but not provided`)
 			return validate(coerce(value))
 		},
 	optional: <T>({validate, coerce}: Ingestion<T>) =>
