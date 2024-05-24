@@ -96,6 +96,7 @@ export const param = {
 			{help, validate = x => x}: Opts<T> = {},
 		): Param<T> => ({
 		help, type,
+		fallback,
 		mode: "default",
 		ingest: ingestors.default({coerce, validate}, fallback),
 	}),
@@ -124,6 +125,7 @@ export const arg = <N extends string>(name: N) => ({
 			{help, validate = x => x}: Opts<T> = {},
 		): Arg<N, T> => ({
 		name, help, type,
+		fallback,
 		mode: "default",
 		ingest: ingestors.default({coerce, validate}, fallback),
 	}),
