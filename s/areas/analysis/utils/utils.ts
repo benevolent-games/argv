@@ -28,9 +28,8 @@ export function produceTreeAnalysis<C extends CommandTree>(
 }
 
 export function listRelevantCommands(argw: string[], commands: CommandTree) {
-	const {args} = parse(argw, {booleanParams: ["help"]})
 	return listAllCommands(commands)
-		.filter(({path}) => arrayStartsWith(path, args))
+		.filter(({path}) => isCommandMatching(argw, path))
 }
 
 export function selectCommand(argw: string[], commands: CommandTree) {
@@ -110,11 +109,5 @@ export function getBooleanParams(command: Command) {
 function isCommandMatching(argw: string[], path: string[]) {
 	const {args} = parse(argw, {booleanParams: ["help"]})
 	return path.every((part, index) => part === args[index])
-}
-
-function arrayStartsWith(array: any[], query: any[]) {
-	return (query.length > array.length)
-		? false
-		: query.every((item, index) => item === array[index])
 }
 
