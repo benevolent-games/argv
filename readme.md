@@ -67,6 +67,137 @@ pizza small --pepperoni="no" --slices="2"
 
 <br/>
 
+## 🧑‍🔧 configuring your cli's `args` and `params`
+- let's start by making a command
+    ```ts
+    command({
+      args: [],
+      params: {},
+    })
+    ```
+- a command can optionally accept a `help` string
+    ```ts
+    command({
+      help: "what a time to be alive!",
+      args: [],
+      params: {},
+    })
+    ```
+- let's add positional args
+    ```ts
+    command({
+      args: [
+        arg("active").required(boolean),
+        arg("count").default(number, "101"),
+        arg("name").optional(string),
+      ],
+      params: {},
+    })
+    ```
+    - args are in an array, so each needs a name, eg "active" above
+    - there are three modes, `required`, `default`, and `optional`
+    - `default` requires a fallback value
+    - there are three basic types, `string`, `number`, and `boolean`, but you can make your own types
+- now let's talk about params
+    ```ts
+    command({
+      args: [],
+      params: {
+        active: param.required(boolean),
+        count: param.default(number, "101"),
+        name: param.optional(string),
+        verbose: param.flag("-v"),
+      },
+    })
+    ```
+    - pretty similar. but see the way the names are different?
+    - there's a new variety of param called `flag`, of course, it's automatically a `boolean` (how could it be otherwise?)
+
+### validation for args and params
+- you can set a `validate` function on any `arg` or `param`
+    ```ts
+    arg("quality").optional(number, {
+      validate: n => {
+        if (n > 100) throw new Error("to big")
+        if (n < 0) throw new Error("to smol")
+        return n
+      },
+    })
+    ```
+    - if you throw any error in a `validate`, it will be printed all nice-like to the user
+
+### `help` literally everywhere!
+- in fact, every `arg` and `param` can have its own `help`
+    ```ts
+    command({
+      help: "it's the best command, nobody makes commands like me",
+
+      args: [
+        arg("active").required(boolean, {
+          help: "all systems go?",
+        }),
+
+        arg("count").default(number, "101", {
+          help: "number of dalmatians",
+        }),
+
+        arg("name").optional(string, {
+          help: `
+            see this multi-line string?
+            it will be trimmed all nicely on the help page.
+          `
+        }),
+      ],
+
+      params: {
+        active: param.required(boolean, {
+          help: "toggle this carefully!",
+        }),
+
+        count: param.default(number, "101", {
+          help: "classroom i'm late for",
+        }),
+
+        name: param.optional(string, {
+          help: "pick your pseudonym",
+        }),
+
+        verbose: param.flag("-v", {
+          help: "going loud",
+        }),
+      },
+    })
+    ```
+
+### `choice` helper
+- you can use the `choice` helper to set up a multiple choice string
+    ```ts
+    param.required(string, choice(["thick", "thin"]))
+    ```
+- you can add a help to it as well
+    ```ts
+    param.required(string, choice(["thick", "thin"], {
+      help: "made with organic whole-wheat flour",
+    }))
+    ```
+
+### `list` helper
+- okay this is seriously crazy cool, check this out
+    ```ts
+    param.required(list(string))
+    ```
+- you can just wrap any type in the `list` helper
+    - user inputs comma-separated values `mp3,wav,ogg`
+    - you get an array `["mp3", "wav", "ogg"]`
+- is works with *any type*, like numbers and such
+    ```ts
+    param.required(list(number))
+    ```
+    - now you get a `number[]` array (not strings)
+    - yes, `list` preserves the type's validation
+
+<br/>
+
 ## 🌳 tree of multiple `commands`
 - the `commands` object is a recursive tree with `command` leaves
     ```ts
@@ -162,137 +293,6 @@ pizza small --pepperoni="no" --slices="2"
 
 <br/>
 
-## 🧑‍🔧 the handy `helpers`
-
-### `command`, `arg`, and `param`
-- let's start by making a command
-    ```ts
-    command({
-      args: [],
-      params: {},
-    })
-    ```
-- a command can optionally accept a `help` string
-    ```ts
-    command({
-      help: "what a time to be alive!",
-      args: [],
-      params: {},
-    })
-    ```
-- let's add positional args
-    ```ts
-    command({
-      args: [
-        arg("active").required(boolean),
-        arg("count").default(number, "101"),
-        arg("name").optional(string),
-      ],
-      params: {},
-    })
-    ```
-    - args are in an array, so each needs a name, eg "active" above
-    - there are three modes, `required`, `default`, and `optional`
-    - `default` requires a fallback value
-    - there are three basic types, `string`, `number`, and `boolean`, but you can make your own types
-- now let's talk about params
-    ```ts
-    command({
-      args: [],
-      params: {
-        active: param.required(boolean),
-        count: param.default(number, "101"),
-        name: param.optional(string),
-        verbose: param.flag("-v"),
-      },
-    })
-    ```
-    - pretty similar. but see the way the names are different?
-    - there's a new variety of param called `flag`, of course, it's automatically a `boolean` (how could it be otherwise?)
-
-### validation for args and params
-- you can set a `validate` function on any `arg` or `param`
-    ```ts
-    arg("quality").optional(number, {
-      validate: n => {
-        if (n > 100) throw new Error("to big")
-        if (n < 0) throw new Error("to smol")
-        return n
-      },
-    })
-    ```
-    - if you throw any error in a `validate`, it will be printed all nice-like to the user
-
-### `help` literally everywhere!
-- in fact, every `arg` and `param` can have its own `help`
-    ```ts
-    command({
-      help: "it's the best command, nobody makes commands like me",
-
-      args: [
-        arg("active").required(boolean, {
-          help: "all systems go?",
-        }),
-
-        arg("count").default(number, "101", {
-          help: "number of dalmatians",
-        }),
-
-        arg("name").optional(string, {help: `
-          see this multi-line string?
-          it will be trimmed all nicely on the help page.
-        `}),
-      ],
-
-      params: {
-        active: param.required(boolean, {
-          help: "toggle this carefully!",
-        }),
-
-        count: param.default(number, "101", {
-          help: "classroom i'm late for",
-        }),
-
-        name: param.optional(string, {
-          help: "pick your pseudonym",
-        }),
-
-        verbose: param.flag("-v", {
-          help: "going loud",
-        }),
-      },
-    })
-    ```
-
-### `choice` helper
-- you can use the `choice` helper to set up a multiple choice string
-    ```ts
-    param.required(string, choice(["thick", "thin"]))
-    ```
-- you can add a help to it as well
-    ```ts
-    param.required(string, choice(["thick", "thin"], {
-      help: "made with organic whole-wheat flour",
-    }))
-    ```
-
-### `list` helper
-- okay this is seriously crazy cool, check this out
-    ```ts
-    param.required(list(string))
-    ```
-- you can just wrap any type in the `list` helper
-    - user inputs comma-separated values `mp3,wav,ogg`
-    - you get an array `["mp3", "wav", "ogg"]`
-- is works with *any type*, like numbers and such
-    ```ts
-    param.required(list(number))
-    ```
-    - now you get a `number[]` array (not strings)
-    - yes, `list` preserves the type's validation
-
-<br/>
-
 ## 🛠️ custom types
 - i can't believe i got all the types working for everything with custom types
 - it's easy to make your own types
@@ -362,4 +362,6 @@ pizza small --pepperoni="no" --slices="2"
 ## 🌠 give me a github star!
 
 - i worked way too hard on this
+- please submit issues for any problems or questions
+- maybe make a cool help theme and submit a PR for it
 
