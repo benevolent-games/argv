@@ -1,11 +1,22 @@
 
+### legend
+
+- 🟥 *breaking change*
+- 🔶 *maybe breaking change*
+- 🍏 *non-breaking addition, fix, or enhancement*
+
+### v0.3.1
+- 🍏 improved help pages structuring, can view command subtrees
+- 🍏 improved custom theming facilities, added `seaside` theme
+- 🔶 removed some undocumented theming types and functions
+
 ### v0.3.0
-- (breaking) custom types!
+- 🟥 custom types!
     - import the types `import {string, number, boolean} from "@benev/argv"`
     - `String` becomes `string`
     - `Number` becomes `number`
     - `Boolean` becomes `boolean`
-- (breaking) default fallback is no longer in the options
+- 🟥 default fallback is no longer in the options
     ```ts
     // old
     param.default(string, {fallback: "hello"})
@@ -13,13 +24,13 @@
     // new
     param.default(string, "hello")
     ```
-- new helpers, `asType`, `asTypes`, `list`
+- 🍏 new helpers, `asType`, `asTypes`, `list`
 
 ### v0.2.0
-- (breaking) massive nuclear rewrite
+- 🟥 massive nuclear rewrite
 
 ### v0.1.0
-- (breaking) redesign param parsing to remove dashes
+- redesign param parsing to remove dashes
     - `params["--flavor"]` becomes `params.flavor`
     - this change requires downstream change in Params type signatures
     - remove the "--" double dashes that prefix your params
