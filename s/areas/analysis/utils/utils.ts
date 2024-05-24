@@ -62,14 +62,14 @@ export function analyzeCommand(
 			const message = (error instanceof Error)
 				? error.message
 				: "unknown error"
-			throw new MistakeError(`${subject} "${name}": ${message}`)
+			throw new MistakeError(`${subject} ${name} ${message}`)
 		}
 	}
 
 	const args = Object.fromEntries(
 		command.args.map((arg, index) => {
 			const input = parsed.args.at(index)
-			return handleError("arg", arg.name, () =>
+			return handleError("arg", `"${arg.name}"`, () =>
 				[arg.name, arg.ingest(input)]
 			)
 		})
