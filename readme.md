@@ -321,6 +321,42 @@ pizza small --pepperoni="no" --slices="2"
     ```
     - `asTypes` will use your object's property names as the type `name`
 
+## 🦚 custom themes
+
+- you can tell `cli` what `theme` to use. by default, it does this:
+    ```ts
+    import {themes} from
+
+    await cli(process.argv, {
+
+      // the standard theme
+      theme: themes.standard,
+
+      ...otherStuff,
+    }).execute()
+    ```
+    - if you hate fun, use `themes.noColor` to disable ansi colors
+- make your own theme like this:
+    ```ts
+    import {theme, color} from
+
+    const seaside = theme({
+      plain: [color.white],
+      error: [color.brightRed, color.bold],
+      program: [color.brightCyan, color.bold],
+      command: [color.cyan, color.bold],
+      property: [color.blue],
+      link: [color.brightBlue, color.underline],
+      arg: [color.brightBlue, color.bold],
+      param: [color.brightBlue, color.bold],
+      flag: [color.brightBlue],
+      required: [color.cyan],
+      mode: [color.blue],
+      type: [color.brightBlue],
+      value: [color.cyan],
+    })
+    ```
+
 <br/>
 
 ## 🌠 give me a github star!

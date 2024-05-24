@@ -1,7 +1,7 @@
 
 import {ArgvTheme} from "../themes.js"
+import {Palette} from "../../../tooling/text/theming.js"
 import {Command} from "../../analysis/types/commands.js"
-import {Palette} from "../../../tooling/text/coloring.js"
 import {Args, Params} from "../../analysis/types/units.js"
 import {Cmd} from "../../analysis/utils/list-all-commands.js"
 import {normalize} from "../../../tooling/text/formatting.js"
@@ -26,7 +26,7 @@ export function helpWiz(palette: Palette<ArgvTheme>) {
 			// args
 			command.args
 				.map(arg => arg.name)
-				.map(n => palette.arg(`<${n}>`))
+				.map(n => palette.arg(`${n}`))
 				.join(" "),
 
 			// params
@@ -40,7 +40,7 @@ export function helpWiz(palette: Palette<ArgvTheme>) {
 
 	function commandHelp(command: Command) {
 		return command.help
-			&& normalize(command.help)
+			&& palette.plain(normalize(command.help))
 	}
 
 	function commandArgs(args: Args) {
@@ -67,7 +67,7 @@ export function helpWiz(palette: Palette<ArgvTheme>) {
 
 			// arg help
 			arg.help
-				&& tnIndent(1, normalize(arg.help)),
+				&& tnIndent(1, palette.plain(normalize(arg.help))),
 		])))
 	}
 
@@ -100,7 +100,7 @@ export function helpWiz(palette: Palette<ArgvTheme>) {
 
 				// param help
 				param.help
-					&& tnIndent(1, normalize(param.help)),
+					&& tnIndent(1, palette.plain(normalize(param.help))),
 			]))
 		)
 	}
@@ -116,7 +116,7 @@ export function helpWiz(palette: Palette<ArgvTheme>) {
 	function programHelp(help?: string, readme?: string) {
 		return tnConnect("\n", [
 			readme && `${palette.property("readme")} ${palette.link(readme.trim())}`,
-			help && normalize(help),
+			help && palette.plain(normalize(help)),
 		])
 	}
 

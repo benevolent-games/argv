@@ -84,41 +84,23 @@ export function colorBgRgb(r: number, g: number, b: number) {
 	return (s: string) => `${code}${s}${codes.reset}`
 }
 
-export const color = <{[key in keyof typeof codes]: (s: string) => string}>(
-	Object.fromEntries(
-		Object.entries(codes)
-			.map(([key, code]) => [
-				key,
-				(s: string) => `${code}${s}${codes.reset}`,
-			])
-	)
-)
+export const color = {
+	none: (s: string) => s,
+	...<{[key in keyof typeof codes]: (s: string) => string}>(
+		Object.fromEntries(
+			Object.entries(codes)
+				.map(([key, code]) => [
+					key,
+					(s: string) => `${code}${s}${codes.reset}`,
+				])
+		)
+	),
+}
 
 export function uncolor(s: string) {
 	return s.replace(
 		/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
 		"",
 	)
-}
-
-export type Theme = Record<string, ThemeFns>
-export type ThemeFns = ((s: string) => string)[]
-export type Palette<T extends Theme> = {[K in keyof T]: ((s: string) => string)}
-
-export function theme<T extends Theme>(t: T) {
-	return t
-}
-
-export function makePalette<T extends Theme>(theme: T) {
-	return Object.fromEntries(
-		Object.entries(theme).map(([key, fns]) => [
-			key,
-			(s: string) => {
-				for (const fn of fns)
-					s = fn(s)
-				return s
-			},
-		])
-	) as Palette<T>
 }
 
