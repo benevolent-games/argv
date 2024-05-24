@@ -1,28 +1,30 @@
 
-import {themes} from "../themes.js"
+import {ArgvTheme, themes} from "../themes.js"
 import {helpWiz} from "./help-wiz.js"
 import {CliConfig} from "../types.js"
 import {tnConnect, tnIndent} from "../../../tooling/text/tn.js"
 import {SelectedCommand} from "../../analysis/types/analysis.js"
 import {Command, CommandTree} from "../../analysis/types/commands.js"
 import {Cmd, listAllCommands} from "../../analysis/utils/list-all-commands.js"
+import { Palette } from "../../../tooling/text/coloring.js"
 
 export function printHelp({
 		readme,
+		palette,
 		commands,
 		selectedCommand,
 		relevantCommands,
 		name: programName,
 		help: programHelp,
 		summarize = true,
-		theme = themes.standard,
 	}: {
 		commands: CommandTree
-		selectedCommand: SelectedCommand | undefined
 		relevantCommands: Cmd[]
+		palette: Palette<ArgvTheme>
+		selectedCommand: SelectedCommand | undefined
 	} & CliConfig<CommandTree>) {
 
-	const wiz = helpWiz(theme)
+	const wiz = helpWiz(palette)
 	const commandList = listAllCommands(commands)
 	const singleRootCommand = commands instanceof Command
 

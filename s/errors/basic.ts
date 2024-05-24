@@ -11,7 +11,11 @@ export class ArgvError extends Error {
 }
 
 /** developer error configuring argv. */
-export class ConfigError extends ArgvError {}
+export class ConfigError extends ArgvError {
+	constructor(message: string) {
+		super(`(Argv Config Error) ${message}`)
+	}
+}
 
 /** user error in supplying command line inputs. */
 export class MistakeError extends ArgvError {
@@ -20,8 +24,11 @@ export class MistakeError extends ArgvError {
 	}
 }
 
-/** cli is expeceted to throw this during testing scenarios. */
-export class FakeExit extends ArgvError {}
+/** devs should throw this error in an `execute` function, if they want argv to pretty-print the error. */
+export class ExecutionError extends ArgvError {}
+
+/** happens when user-provided onExit doesn't actually end the process (also useful in testing). */
+export class ExitFail extends ArgvError {}
 
 // i just think this is fun
 function pleaseSeekHelp() {

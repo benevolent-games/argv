@@ -103,6 +103,7 @@ export function uncolor(s: string) {
 
 export type Theme = Record<string, ThemeFns>
 export type ThemeFns = ((s: string) => string)[]
+export type Palette<T extends Theme> = {[K in keyof T]: ((s: string) => string)}
 
 export function theme<T extends Theme>(t: T) {
 	return t
@@ -118,6 +119,6 @@ export function makePalette<T extends Theme>(theme: T) {
 				return s
 			},
 		])
-	) as {[K in keyof T]: ((s: string) => string)}
+	) as Palette<T>
 }
 

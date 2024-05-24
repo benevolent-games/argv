@@ -1,16 +1,8 @@
 
-import {tnConnect} from "../../../tooling/text/tn.js"
-import {color} from "../../../tooling/text/coloring.js"
-import {ArgvError, ConfigError} from "../../../errors/basic.js"
+import {ArgvTheme} from "../themes.js"
+import {ArgvError} from "../../../errors/basic.js"
+import {Palette} from "../../../tooling/text/coloring.js"
 
-export function printError(error: ArgvError) {
-	return tnConnect("", [
-
-		error instanceof ConfigError
-			&& color.brightMagenta("(Argv Configuration Error)"),
-
-		error.message
-			&& color.brightRed(error.message),
-	])
+export function printError(palette: Palette<ArgvTheme>, error: ArgvError) {
 }
 

@@ -1,13 +1,14 @@
 
+import {themes} from "./themes.js"
 import {analyze} from "../analysis/analyze.js"
 import {CliConfig, CliResult} from "./types.js"
 import {printHelp} from "./printing/print-help.js"
 import {checkHelp} from "../parsing/check-help.js"
-import {Tn, tnFinal} from "../../tooling/text/tn.js"
-import {printError} from "./printing/print-error.js"
+import {tnFinal} from "../../tooling/text/tn.js"
 import {CommandTree} from "../analysis/types/commands.js"
-import {FakeExit, MistakeError} from "../../errors/basic.js"
+import {makePalette} from "../../tooling/text/coloring.js"
 import {CommandNotFoundError} from "../../errors/kinds/mistakes.js"
+import {ArgvError, ExitFail, MistakeError} from "../../errors/basic.js"
 import {listRelevantCommands, selectCommand} from "../analysis/utils/utils.js"
 
 /**
@@ -26,13 +27,19 @@ export function cli<C extends CommandTree>(
 	const {
 		commands,
 		indent = "  ",
+		theme = themes.standard,
 		columns = process.stdout.columns,
 		onExit = code => process.exit(code),
 		onHelp = help => console.log(help),
 		onMistake = mistake => console.error(mistake),
 	} = config
 
-	const format = (tn: Tn) => tnFinal(columns, indent, tn)
+	const palette = makePalette(theme)
+
+	const exit = (code: number) => {
+		onExit(code)
+		throw new ExitFail("cli 'onExit' failed to end process")
+	}
 
 	try {
 		const userAskedForHelp = checkHelp(argw)
@@ -44,13 +51,25 @@ export function cli<C extends CommandTree>(
 			throw new CommandNotFoundError()
 
 		if (userAskedForHelp || userNeedsHelp) {
-			const help = printHelp({...config, selectedCommand, relevantCommands})
-			onHelp(format(help) + "\n")
-			onExit(0)
+			const help = printHelp({...config, selectedCommand, relevantCommands, palette})
+			const formatted = tnFinal(columns, indent, help)
+			onHelp(formatted + "\n")
+			return exit(0)
 		}
 
 		const analysis = analyze(argw, {commands})
-		const execute = () => analysis.commandSpec.execute(analysis.command)
+		const execute = async() => {
+			try {
+				return await analysis.commandSpec.execute(analysis.command)
+			}
+			catch (error) {
+				if (error instanceof ArgvError) {
+					console.error(palette.error(error.message))
+					return exit(1)
+				}
+				else throw error
+			}
+		}
 
 		return {
 			...analysis,
@@ -61,16 +80,14 @@ export function cli<C extends CommandTree>(
 	}
 	catch (error) {
 		if (error instanceof MistakeError) {
-			const mistake = format(printError(error))
-			onMistake(mistake)
-			onExit(1)
+			onMistake(
+				error.message
+					? palette.error(error.message)
+					: error.name
+			)
+			return exit(1)
 		}
 		else throw error
 	}
-
-	// if the user-supplied `onExit` fails to actually end the process,
-	// we need to throw an error, so that typescript sees that this function
-	// will never return undefined.
-	throw new FakeExit("cli 'exit' failed to end process")
 }
 

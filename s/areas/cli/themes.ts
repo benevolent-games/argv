@@ -12,6 +12,7 @@ export type ArgvTheme = typeof standard
 //
 
 const standard = {
+	error: [color.brightRed, color.bold],
 	program: [color.brightCyan, color.bold],
 	command: [color.cyan, color.bold],
 	property: [color.magenta, color.bold],
