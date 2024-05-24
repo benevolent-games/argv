@@ -1,35 +1,40 @@
 
-import {themes} from "../themes.js"
+import {ArgvTheme} from "../themes.js"
 import {helpWiz} from "./help-wiz.js"
 import {CliConfig} from "../types.js"
+import {Palette} from "../../../tooling/text/theming.js"
 import {tnConnect, tnIndent} from "../../../tooling/text/tn.js"
 import {SelectedCommand} from "../../analysis/types/analysis.js"
 import {Command, CommandTree} from "../../analysis/types/commands.js"
-import {listAllCommands} from "../../analysis/utils/list-all-commands.js"
+import {Cmd, listAllCommands} from "../../analysis/utils/list-all-commands.js"
 
 export function printHelp({
 		readme,
+		palette,
 		commands,
 		selectedCommand,
+		relevantCommands,
 		name: programName,
 		help: programHelp,
-		theme = themes.standard,
+		summarize = true,
 	}: {
 		commands: CommandTree
+		relevantCommands: Cmd[]
+		palette: Palette<ArgvTheme>
 		selectedCommand: SelectedCommand | undefined
 	} & CliConfig<CommandTree>) {
 
-	const wiz = helpWiz(theme)
+	const wiz = helpWiz(palette)
 	const commandList = listAllCommands(commands)
 	const singleRootCommand = commands instanceof Command
 
-	// general help, this cli has one single command
+	// this cli has one root command
 	if (singleRootCommand) {
 		const selectedCommand = commandList[0]
 		const {command} = selectedCommand
 		return tnConnect("\n\n", [
 			tnConnect("\n", [
-				wiz.commandHeadline(programName, selectedCommand),
+				wiz.commandHeadline(programName, selectedCommand, false),
 				tnIndent(1, tnConnect("\n", [
 					wiz.programHelp(programHelp, readme),
 					wiz.commandHelp(command),
@@ -42,12 +47,12 @@ export function printHelp({
 		])
 	}
 
-	// user is asking for help about a specific command
+	// user asks about one specific command
 	else if (selectedCommand) {
 		const {command} = selectedCommand
 		return tnConnect("\n\n", [
 			tnConnect("\n", [
-				wiz.commandHeadline(programName, selectedCommand),
+				wiz.commandHeadline(programName, selectedCommand, false),
 				tnIndent(1, wiz.commandHelp(command)),
 			]),
 			tnIndent(1, tnConnect("\n\n", [
@@ -57,25 +62,47 @@ export function printHelp({
 		])
 	}
 
-	// general help, this cli has multiple commands
-	else {
+	// help home page, multiple commands are available
+	else if (relevantCommands.length === commandList.length) {
+		const actuallySummarize = summarize && relevantCommands.length > 1
 		return tnConnect("\n\n", [
 			tnConnect("\n", [
-				wiz.programHeadline(programName, commandList),
+				wiz.programHeadline(programName, relevantCommands),
 				tnIndent(1, wiz.programHelp(programHelp))
 			]),
-			...commandList
+			...relevantCommands
 				.map(cmd => tnIndent(1, tnConnect("\n\n", [
 					tnConnect("\n", [
-						wiz.commandHeadline(programName, cmd),
+						wiz.commandHeadline(programName, cmd, actuallySummarize),
 						tnIndent(1, wiz.commandHelp(cmd.command)),
 					]),
-					tnIndent(1, tnConnect("\n\n", [
+					actuallySummarize
+						? null
+						: tnIndent(1, tnConnect("\n\n", [
+							wiz.commandArgs(cmd.command.args),
+							wiz.commandParams(cmd.command.params),
+						])),
+				])))
+		])
+	}
+
+	// a subset of commands
+	else {
+		const actuallySummarize = summarize && relevantCommands.length > 1
+		return tnConnect("\n\n", relevantCommands
+			.map(cmd => tnConnect("\n\n", [
+				tnConnect("\n", [
+					wiz.commandHeadline(programName, cmd, actuallySummarize),
+					tnIndent(1, wiz.commandHelp(cmd.command)),
+				]),
+				actuallySummarize
+					? null
+					: tnIndent(1, tnConnect("\n\n", [
 						wiz.commandArgs(cmd.command.args),
 						wiz.commandParams(cmd.command.params),
 					])),
-				])))
-		])
+			]))
+		)
 	}
 }
 

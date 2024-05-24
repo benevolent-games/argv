@@ -1,8 +1,10 @@
 
 import {parse} from "../parsing/parse.js"
 import {CommandTree} from "./types/commands.js"
+import {analyzeCommand} from "./utils/analyze-command.js"
+import {produceTreeAnalysis} from "./utils/analyze-tree.js"
 import {Analysis, AnalyzeOptions} from "./types/analysis.js"
-import {analyzeCommand, selectCommand, produceTreeAnalysis, getBooleanParams} from "./utils/utils.js"
+import {selectCommand, getBooleanParams} from "./utils/utils.js"
 import {CommandNotFoundError, UnknownFlagError, UnknownParamError} from "../../errors/kinds/mistakes.js"
 
 /**

@@ -11,6 +11,7 @@ export type CliConfig<C extends CommandTree> = {
 	readme?: string
 	columns?: number
 	theme?: ArgvTheme
+	summarize?: boolean
 	onExit?: (code: number) => void
 	onHelp?: (help: string) => void
 	onMistake?: (mistake: string) => void

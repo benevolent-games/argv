@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import {cli} from "../areas/cli/cli.js"
+import {themes} from "../areas/cli/themes.js"
 import {arg, choice, command, param, type} from "../areas/analysis/helpers.js"
 
 await cli(process.argv, {

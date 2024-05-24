@@ -1,7 +1,7 @@
 
 import {cli} from "./cli.js"
 import {argv} from "../../testing/argv.js"
-import {FakeExit} from "../../errors/basic.js"
+import {ExitFail} from "../../errors/basic.js"
 import {CliConfig, cliConfig} from "./types.js"
 import {expect} from "../../testing/framework/expect.js"
 import {CommandTree} from "../analysis/types/commands.js"
@@ -24,7 +24,7 @@ function spyCli<C extends CommandTree>(argv: string[], config: CliConfig<C>) {
 		return {...data, ...result}
 	}
 	catch (error) {
-		if (error instanceof FakeExit)
+		if (error instanceof ExitFail)
 			return data
 		else
 			throw error

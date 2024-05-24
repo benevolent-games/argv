@@ -1,16 +1,19 @@
 
 import {ArgvTheme} from "../themes.js"
+import {Palette} from "../../../tooling/text/theming.js"
 import {Command} from "../../analysis/types/commands.js"
 import {Args, Params} from "../../analysis/types/units.js"
 import {Cmd} from "../../analysis/utils/list-all-commands.js"
-import {makePalette} from "../../../tooling/text/coloring.js"
 import {normalize} from "../../../tooling/text/formatting.js"
 import {tnConnect, tnIndent} from "../../../tooling/text/tn.js"
 
-export function helpWiz(theme: ArgvTheme) {
-	const palette = makePalette(theme)
+export function helpWiz(palette: Palette<ArgvTheme>) {
 
-	function commandHeadline(programName: string, {command, path}: Cmd) {
+	function commandHeadline(
+			programName: string,
+			{command, path}: Cmd,
+			summarize: boolean,
+		) {
 		return tnConnect(" ", [
 
 			// program name
@@ -23,19 +26,21 @@ export function helpWiz(theme: ArgvTheme) {
 			// args
 			command.args
 				.map(arg => arg.name)
-				.map(n => palette.arg(`<${n}>`))
+				.map(n => palette.arg(`${n}`))
 				.join(" "),
 
 			// params
-			Object.keys(command.params).length === 0
-				? null
-				: palette.param(`{params}`),
+			summarize
+				? palette.param(`--help`)
+				: Object.keys(command.params).length === 0
+					? null
+					: palette.param(`{params}`),
 		])
 	}
 
 	function commandHelp(command: Command) {
 		return command.help
-			&& normalize(command.help)
+			&& palette.plain(normalize(command.help))
 	}
 
 	function commandArgs(args: Args) {
@@ -62,7 +67,7 @@ export function helpWiz(theme: ArgvTheme) {
 
 			// arg help
 			arg.help
-				&& tnIndent(1, normalize(arg.help)),
+				&& tnIndent(1, palette.plain(normalize(arg.help))),
 		])))
 	}
 
@@ -95,7 +100,7 @@ export function helpWiz(theme: ArgvTheme) {
 
 				// param help
 				param.help
-					&& tnIndent(1, normalize(param.help)),
+					&& tnIndent(1, palette.plain(normalize(param.help))),
 			]))
 		)
 	}
@@ -111,7 +116,7 @@ export function helpWiz(theme: ArgvTheme) {
 	function programHelp(help?: string, readme?: string) {
 		return tnConnect("\n", [
 			readme && `${palette.property("readme")} ${palette.link(readme.trim())}`,
-			help && normalize(help),
+			help && palette.plain(normalize(help)),
 		])
 	}
 

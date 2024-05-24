@@ -123,6 +123,14 @@ pizza small --pepperoni="no" --slices="2"
     })
     ```
     - your execute function receives fully-typed `args`, `params`, and some more stuff
+- your `execute` function can opt-into pretty-printing errors (with colors) by throwing an `ExecutionError`
+    ```ts
+    import {ExecutionError, command} from "@benev/argv"
+
+    async execute({params}) {
+      throw new ExecutionError("scary error printed in red!")
+    }
+    ```
 - if you choose to use this command-execution strategy, then you need to call your cli's final `execute` function
     ```ts
     // 👇 awaiting cli execution
@@ -312,6 +320,42 @@ pizza small --pepperoni="no" --slices="2"
     })
     ```
     - `asTypes` will use your object's property names as the type `name`
+
+## 🦚 custom themes
+
+- you can tell `cli` what `theme` to use. by default, it does this:
+    ```ts
+    import {themes} from
+
+    await cli(process.argv, {
+
+      // the standard theme
+      theme: themes.standard,
+
+      ...otherStuff,
+    }).execute()
+    ```
+    - if you hate fun, use `themes.noColor` to disable ansi colors
+- make your own theme like this:
+    ```ts
+    import {theme, color} from
+
+    const seaside = theme({
+      plain: [color.white],
+      error: [color.brightRed, color.bold],
+      program: [color.brightCyan, color.bold],
+      command: [color.cyan, color.bold],
+      property: [color.blue],
+      link: [color.brightBlue, color.underline],
+      arg: [color.brightBlue, color.bold],
+      param: [color.brightBlue, color.bold],
+      flag: [color.brightBlue],
+      required: [color.cyan],
+      mode: [color.blue],
+      type: [color.brightBlue],
+      value: [color.cyan],
+    })
+    ```
 
 <br/>
 

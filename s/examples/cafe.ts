@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import {cli} from "../areas/cli/cli.js"
+import {themes} from "../areas/cli/themes.js"
 import {arg, choice, command, number, param, string} from "../areas/analysis/helpers.js"
 
 const input = cli(process.argv, {
