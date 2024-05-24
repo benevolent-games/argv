@@ -16,7 +16,7 @@
 pizza --help
 ```
 
-![](https://imgur.com/Mpsujsv.png)
+![](https://imgur.com/aSAP8cb.png)
 
 ```sh
 pizza large --pepperoni --slices 3
