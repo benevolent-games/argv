@@ -123,6 +123,14 @@ pizza small --pepperoni="no" --slices="2"
     })
     ```
     - your execute function receives fully-typed `args`, `params`, and some more stuff
+- your `execute` function can opt-into pretty-printing errors (with colors) by throwing an `ExecutionError`
+    ```ts
+    import {ExecutionError, command} from "@benev/argv"
+
+    async execute({params}) {
+      throw new ExecutionError("scary error printed in red!")
+    }
+    ```
 - if you choose to use this command-execution strategy, then you need to call your cli's final `execute` function
     ```ts
     // 👇 awaiting cli execution
