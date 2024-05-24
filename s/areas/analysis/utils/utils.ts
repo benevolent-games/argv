@@ -5,9 +5,15 @@ import {listAllCommands} from "./list-all-commands.js"
 import {Command, CommandTree} from "../types/commands.js"
 
 export function listRelevantCommands(argw: string[], commands: CommandTree) {
+	const list = listAllCommands(commands)
 	const {args} = parse(argw, {booleanParams: ["help"]})
-	return listAllCommands(commands)
-		.filter(({path}) => args.every((arg, index) => arg === path[index]))
+	return (args.length === 0)
+		? list
+		: list.filter(({path}) => {
+			const pathFits = path.every((p, i) => p === args[i])
+			const argsFits = args.every((a, i) => a === path[i])
+			return pathFits || argsFits
+		})
 }
 
 export function selectCommand(argw: string[], commands: CommandTree) {

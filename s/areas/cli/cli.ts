@@ -7,6 +7,7 @@ import {Tn, tnFinal} from "../../tooling/text/tn.js"
 import {printError} from "./printing/print-error.js"
 import {CommandTree} from "../analysis/types/commands.js"
 import {FakeExit, MistakeError} from "../../errors/basic.js"
+import {CommandNotFoundError} from "../../errors/kinds/mistakes.js"
 import {listRelevantCommands, selectCommand} from "../analysis/utils/utils.js"
 
 /**
@@ -40,7 +41,7 @@ export function cli<C extends CommandTree>(
 		const userNeedsHelp = !selectedCommand
 
 		if (relevantCommands.length === 0)
-			throw new MistakeError(`invalid command`)
+			throw new CommandNotFoundError()
 
 		if (userAskedForHelp || userNeedsHelp) {
 			const help = printHelp({...config, selectedCommand, relevantCommands})
