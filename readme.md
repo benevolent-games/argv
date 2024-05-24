@@ -320,6 +320,23 @@ pizza small --pepperoni="no" --slices="2"
     })
     ```
     - `asTypes` will use your object's property names as the type `name`
+- your custom types can throw errors and it works as validation
+    ```ts
+    const integer = asType({
+      name: "integer",
+      coerce: string => {
+        const n = Number(string)
+
+        if (isNaN(n))
+          throw new Error("not a number")
+
+        if (!Number.isSafeInteger(n))
+          throw new Error("not a safe integer")
+
+        return n
+      },
+    })
+    ```
 
 <br/>
 
