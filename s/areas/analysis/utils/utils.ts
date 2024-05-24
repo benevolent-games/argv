@@ -28,8 +28,9 @@ export function produceTreeAnalysis<C extends CommandTree>(
 }
 
 export function listRelevantCommands(argw: string[], commands: CommandTree) {
+	const {args} = parse(argw, {booleanParams: ["help"]})
 	return listAllCommands(commands)
-		.filter(({path}) => arrayStartsWith(path, argw))
+		.filter(({path}) => arrayStartsWith(path, args))
 }
 
 export function selectCommand(argw: string[], commands: CommandTree) {
@@ -80,7 +81,7 @@ export function analyzeCommand(
 				if (param.flag && parsed.flags.has(param.flag))
 					return [name, true]
 				const input = parsed.params.get(name)
-				return handleError("param", name, () =>
+				return handleError("param", `--${name}`, () =>
 					[name, param.ingest(input)]
 				)
 			})
