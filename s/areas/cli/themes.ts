@@ -21,8 +21,8 @@ const standard = {
 	flag: [color.yellow],
 	required: [color.red],
 	mode: [color.blue],
-	type: [color.magenta],
-	value: [color.blue],
+	type: [color.brightBlue, color.bold],
+	value: [color.magenta],
 }
 
 //
