@@ -26,7 +26,7 @@ export function printHelp({
 	const commandList = listAllCommands(commands)
 	const singleRootCommand = commands instanceof Command
 
-	// this cli has one single command
+	// this cli has one root command
 	if (singleRootCommand) {
 		const selectedCommand = commandList[0]
 		const {command} = selectedCommand
@@ -45,7 +45,7 @@ export function printHelp({
 		])
 	}
 
-	// user is asking for help about one specific command
+	// user asks about one specific command
 	else if (selectedCommand) {
 		const {command} = selectedCommand
 		return tnConnect("\n\n", [
@@ -62,6 +62,7 @@ export function printHelp({
 
 	// help home page, multiple commands are available
 	else if (relevantCommands.length === commandList.length) {
+		const actuallySummarize = summarize && relevantCommands.length > 1
 		return tnConnect("\n\n", [
 			tnConnect("\n", [
 				wiz.programHeadline(programName, relevantCommands),
@@ -70,10 +71,10 @@ export function printHelp({
 			...relevantCommands
 				.map(cmd => tnIndent(1, tnConnect("\n\n", [
 					tnConnect("\n", [
-						wiz.commandHeadline(programName, cmd, summarize),
+						wiz.commandHeadline(programName, cmd, actuallySummarize),
 						tnIndent(1, wiz.commandHelp(cmd.command)),
 					]),
-					summarize
+					actuallySummarize
 						? null
 						: tnIndent(1, tnConnect("\n\n", [
 							wiz.commandArgs(cmd.command.args),
@@ -85,8 +86,7 @@ export function printHelp({
 
 	// a subset of commands
 	else {
-		const onlyOneCommand = relevantCommands.length === 1
-		const actuallySummarize = summarize && !onlyOneCommand
+		const actuallySummarize = summarize && relevantCommands.length > 1
 		return tnConnect("\n\n", relevantCommands
 			.map(cmd => tnConnect("\n\n", [
 				tnConnect("\n", [
