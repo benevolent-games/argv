@@ -1,13 +1,13 @@
 
 import {analyze} from "../analysis/analyze.js"
 import {CliConfig, CliResult} from "./types.js"
-import {checkHelp} from "../parsing/check-help.js"
 import {printHelp} from "./printing/print-help.js"
+import {checkHelp} from "../parsing/check-help.js"
 import {Tn, tnFinal} from "../../tooling/text/tn.js"
 import {printError} from "./printing/print-error.js"
-import {selectCommand} from "../analysis/utils/utils.js"
+import {CommandTree} from "../analysis/types/commands.js"
 import {FakeExit, MistakeError} from "../../errors/basic.js"
-import {Command, CommandTree} from "../analysis/types/commands.js"
+import {listRelevantCommands, selectCommand} from "../analysis/utils/utils.js"
 
 /**
  * read input for a command line program.
@@ -34,19 +34,17 @@ export function cli<C extends CommandTree>(
 	const format = (tn: Tn) => tnFinal(columns, indent, tn)
 
 	try {
-		const userAskForHelp = checkHelp(argw)
+		const userAskedForHelp = checkHelp(argw)
 		const selectedCommand = selectCommand(argw, commands)
-		const singleRootCommand = commands instanceof Command
+		const relevantCommands = listRelevantCommands(argw, commands)
+		const userNeedsHelp = !selectedCommand
 
-		const userNeedsHelp = !singleRootCommand
-			&& !selectedCommand
-			&& argw.length === 0
+		if (relevantCommands.length === 0)
+			throw new MistakeError(`invalid command`)
 
-		if (userAskForHelp || userNeedsHelp) {
-			const help = format(
-				printHelp({...config, commands, selectedCommand})
-			) + "\n"
-			onHelp(help)
+		if (userAskedForHelp || userNeedsHelp) {
+			const help = printHelp({...config, selectedCommand, relevantCommands})
+			onHelp(format(help) + "\n")
 			onExit(0)
 		}
 

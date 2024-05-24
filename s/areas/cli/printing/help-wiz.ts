@@ -10,7 +10,11 @@ import {tnConnect, tnIndent} from "../../../tooling/text/tn.js"
 export function helpWiz(theme: ArgvTheme) {
 	const palette = makePalette(theme)
 
-	function commandHeadline(programName: string, {command, path}: Cmd) {
+	function commandHeadline(
+			programName: string,
+			{command, path}: Cmd,
+			summarize: boolean,
+		) {
 		return tnConnect(" ", [
 
 			// program name
@@ -27,9 +31,11 @@ export function helpWiz(theme: ArgvTheme) {
 				.join(" "),
 
 			// params
-			Object.keys(command.params).length === 0
-				? null
-				: palette.param(`{params}`),
+			summarize
+				? palette.param(`--help`)
+				: Object.keys(command.params).length === 0
+					? null
+					: palette.param(`{params}`),
 		])
 	}
 

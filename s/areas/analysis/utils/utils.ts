@@ -4,6 +4,7 @@ import {Parsed} from "../../parsing/types.js"
 import {MistakeError} from "../../../errors/basic.js"
 import {Command, CommandTree} from "../types/commands.js"
 import {CommandAnalysis, SelectedCommand, TreeAnalysis} from "../types/analysis.js"
+import { listAllCommands } from "./list-all-commands.js"
 
 export function produceTreeAnalysis<C extends CommandTree>(
 		commands: C,
@@ -24,6 +25,11 @@ export function produceTreeAnalysis<C extends CommandTree>(
 	}
 
 	return recurse(commands, [])
+}
+
+export function listRelevantCommands(argw: string[], commands: CommandTree) {
+	return listAllCommands(commands)
+		.filter(({path}) => arrayStartsWith(path, argw))
 }
 
 export function selectCommand(argw: string[], commands: CommandTree) {
@@ -103,5 +109,11 @@ export function getBooleanParams(command: Command) {
 function isCommandMatching(argw: string[], path: string[]) {
 	const {args} = parse(argw, {booleanParams: ["help"]})
 	return path.every((part, index) => part === args[index])
+}
+
+function arrayStartsWith(array: any[], query: any[]) {
+	return (query.length > array.length)
+		? false
+		: query.every((item, index) => item === array[index])
 }
 
