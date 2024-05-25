@@ -102,7 +102,7 @@ export function pipe(text: string, fns: ((s: string) => string)[]) {
 function breakLinesBasedOnLength(columns: number) {
 	return (line: string) => {
 		const [whitespace, content] = extractLeadingWhitespace(line)
-		const words = content.split(/\s+/)
+		const words = content.split(/[\s.,!?;:()-]+/)
 		const sublines: string[] = []
 		let current = whitespace
 
