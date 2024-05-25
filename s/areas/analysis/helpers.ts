@@ -1,8 +1,8 @@
 
 import {obmap} from "../../tooling/obmap.js"
+import * as tn from "../../tooling/text/tn.js"
 import {ConfigError} from "../../errors/basic.js"
 import {Command, CommandOptions} from "./types/commands.js"
-import {tnConnect, tnString} from "../../tooling/text/tn.js"
 import {InvalidFlagError} from "../../errors/kinds/config.js"
 import {Arg, CoerceFn, Param, Type, Opts, Args, Params, ValidateFn} from "./types/units.js"
 
@@ -158,7 +158,7 @@ export function choice<T>(allowable: T[], {help}: {help?: string} = {}): Opts<T>
 		message = allowable.map(c => JSON.stringify(c)).join(", ")
 
 	return {
-		help: tnString(tnConnect("\n", [message, help])),
+		help: tn.string(tn.connect("\n", [message, help])),
 		validate: item => {
 			if (!allowable.includes(item))
 				throw new Error(`invalid choice`)

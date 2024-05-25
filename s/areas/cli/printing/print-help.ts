@@ -3,10 +3,11 @@ import {ArgvTheme} from "../themes.js"
 import {helpWiz} from "./help-wiz.js"
 import {CliConfig} from "../types.js"
 import {Palette} from "../../../tooling/text/theming.js"
-import {tnConnect, tnIndent} from "../../../tooling/text/tn.js"
 import {SelectedCommand} from "../../analysis/types/analysis.js"
 import {Command, CommandTree} from "../../analysis/types/commands.js"
 import {Cmd, listAllCommands} from "../../analysis/utils/list-all-commands.js"
+
+import * as tn from "../../../tooling/text/tn.js"
 
 export function printHelp({
 		readme,
@@ -32,15 +33,15 @@ export function printHelp({
 	if (singleRootCommand) {
 		const selectedCommand = commandList[0]
 		const {command} = selectedCommand
-		return tnConnect("\n\n", [
-			tnConnect("\n", [
+		return tn.connect("\n\n", [
+			tn.connect("\n", [
 				wiz.commandHeadline(programName, selectedCommand, false),
-				tnIndent(1, tnConnect("\n", [
+				tn.indent(1, tn.connect("\n", [
 					wiz.programHelp(programHelp, readme),
 					wiz.commandHelp(command),
 				])),
 			]),
-			tnIndent(1, tnConnect("\n\n", [
+			tn.indent(1, tn.connect("\n\n", [
 				wiz.commandArgs(command.args),
 				wiz.commandParams(command.params),
 			])),
@@ -50,12 +51,12 @@ export function printHelp({
 	// user asks about one specific command
 	else if (selectedCommand) {
 		const {command} = selectedCommand
-		return tnConnect("\n\n", [
-			tnConnect("\n", [
+		return tn.connect("\n\n", [
+			tn.connect("\n", [
 				wiz.commandHeadline(programName, selectedCommand, false),
-				tnIndent(1, wiz.commandHelp(command)),
+				tn.indent(1, wiz.commandHelp(command)),
 			]),
-			tnIndent(1, tnConnect("\n\n", [
+			tn.indent(1, tn.connect("\n\n", [
 				wiz.commandArgs(command.args),
 				wiz.commandParams(command.params),
 			]))
@@ -65,20 +66,20 @@ export function printHelp({
 	// help home page, multiple commands are available
 	else if (relevantCommands.length === commandList.length) {
 		const actuallySummarize = summarize && relevantCommands.length > 1
-		return tnConnect("\n\n", [
-			tnConnect("\n", [
+		return tn.connect("\n\n", [
+			tn.connect("\n", [
 				wiz.programHeadline(programName, relevantCommands),
-				tnIndent(1, wiz.programHelp(programHelp))
+				tn.indent(1, wiz.programHelp(programHelp))
 			]),
 			...relevantCommands
-				.map(cmd => tnIndent(1, tnConnect("\n\n", [
-					tnConnect("\n", [
+				.map(cmd => tn.indent(1, tn.connect("\n\n", [
+					tn.connect("\n", [
 						wiz.commandHeadline(programName, cmd, actuallySummarize),
-						tnIndent(1, wiz.commandHelp(cmd.command)),
+						tn.indent(1, wiz.commandHelp(cmd.command)),
 					]),
 					actuallySummarize
 						? null
-						: tnIndent(1, tnConnect("\n\n", [
+						: tn.indent(1, tn.connect("\n\n", [
 							wiz.commandArgs(cmd.command.args),
 							wiz.commandParams(cmd.command.params),
 						])),
@@ -89,15 +90,15 @@ export function printHelp({
 	// a subset of commands
 	else {
 		const actuallySummarize = summarize && relevantCommands.length > 1
-		return tnConnect("\n\n", relevantCommands
-			.map(cmd => tnConnect("\n\n", [
-				tnConnect("\n", [
+		return tn.connect("\n\n", relevantCommands
+			.map(cmd => tn.connect("\n\n", [
+				tn.connect("\n", [
 					wiz.commandHeadline(programName, cmd, actuallySummarize),
-					tnIndent(1, wiz.commandHelp(cmd.command)),
+					tn.indent(1, wiz.commandHelp(cmd.command)),
 				]),
 				actuallySummarize
 					? null
-					: tnIndent(1, tnConnect("\n\n", [
+					: tn.indent(1, tn.connect("\n\n", [
 						wiz.commandArgs(cmd.command.args),
 						wiz.commandParams(cmd.command.params),
 					])),

@@ -4,7 +4,7 @@ import {analyze} from "../analysis/analyze.js"
 import {CliConfig, CliResult} from "./types.js"
 import {printHelp} from "./printing/print-help.js"
 import {checkHelp} from "../parsing/check-help.js"
-import {tnFinal} from "../../tooling/text/tn.js"
+import {final} from "../../tooling/text/tn.js"
 import {makePalette} from "../../tooling/text/theming.js"
 import {CommandTree} from "../analysis/types/commands.js"
 import {CommandNotFoundError} from "../../errors/kinds/mistakes.js"
@@ -52,7 +52,7 @@ export function cli<C extends CommandTree>(
 
 		if (userAskedForHelp || userNeedsHelp) {
 			const help = printHelp({...config, selectedCommand, relevantCommands, palette})
-			const formatted = tnFinal(columns, indent, help)
+			const formatted = final(columns, indent, help)
 			onHelp(formatted + "\n")
 			return exit(0)
 		}

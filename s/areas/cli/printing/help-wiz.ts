@@ -4,8 +4,9 @@ import {Palette} from "../../../tooling/text/theming.js"
 import {Command} from "../../analysis/types/commands.js"
 import {Args, Params} from "../../analysis/types/units.js"
 import {Cmd} from "../../analysis/utils/list-all-commands.js"
-import {normalize} from "../../../tooling/text/formatting.js"
-import {tnConnect, tnIndent} from "../../../tooling/text/tn.js"
+
+import * as tn from "../../../tooling/text/tn.js"
+import * as fmt from "../../../tooling/text/formatting.js"
 
 export function helpWiz(palette: Palette<ArgvTheme>) {
 
@@ -14,14 +15,14 @@ export function helpWiz(palette: Palette<ArgvTheme>) {
 			{command, path}: Cmd,
 			summarize: boolean,
 		) {
-		return tnConnect(" ", [
+		return tn.connect(" ", [
 
 			// program name
 			palette.program(programName),
 
 			// command
 			(path.length > 0)
-				&& tnConnect(" ", path.map(palette.command)),
+				&& tn.connect(" ", path.map(palette.command)),
 
 			// args
 			command.args
@@ -40,14 +41,14 @@ export function helpWiz(palette: Palette<ArgvTheme>) {
 
 	function commandHelp(command: Command) {
 		return command.help
-			&& palette.plain(normalize(command.help))
+			&& palette.plain(fmt.normalize(command.help))
 	}
 
 	function commandArgs(args: Args) {
-		return tnConnect("\n\n", args.map(arg => tnConnect("\n", [
+		return tn.connect("\n\n", args.map(arg => tn.connect("\n", [
 
 			// arg header
-			tnConnect(" ", [
+			tn.connect(" ", [
 
 				// arg name
 				palette.arg(arg.name + ","),
@@ -67,16 +68,16 @@ export function helpWiz(palette: Palette<ArgvTheme>) {
 
 			// arg help
 			arg.help
-				&& tnIndent(1, palette.plain(normalize(arg.help))),
+				&& tn.indent(1, palette.plain(fmt.normalize(arg.help))),
 		])))
 	}
 
 	function commandParams(params: Params) {
-		return tnConnect("\n\n", Object.entries(params)
-			.map(([name, param]) => tnConnect("\n", [
+		return tn.connect("\n\n", Object.entries(params)
+			.map(([name, param]) => tn.connect("\n", [
 
 				// param header
-				tnConnect(" ", [
+				tn.connect(" ", [
 
 					// param name
 					palette.param(`--${name},`),
@@ -100,13 +101,13 @@ export function helpWiz(palette: Palette<ArgvTheme>) {
 
 				// param help
 				param.help
-					&& tnIndent(1, palette.plain(normalize(param.help))),
+					&& tn.indent(1, palette.plain(fmt.normalize(param.help))),
 			]))
 		)
 	}
 
 	function programHeadline(name: string, commandList: Cmd[]) {
-		return tnConnect(" ", [
+		return tn.connect(" ", [
 			palette.program(name),
 			(commandList.length > 1)
 				&& palette.command("<command>"),
@@ -114,9 +115,9 @@ export function helpWiz(palette: Palette<ArgvTheme>) {
 	}
 
 	function programHelp(help?: string, readme?: string) {
-		return tnConnect("\n", [
+		return tn.connect("\n", [
 			readme && `${palette.property("readme")} ${palette.link(readme.trim())}`,
-			help && palette.plain(normalize(help)),
+			help && palette.plain(fmt.normalize(help)),
 		])
 	}
 

@@ -19,4 +19,6 @@ export {Command, CommandTree} from "./areas/analysis/types/commands.js"
 export * from "./tooling/logger.js"
 export * from "./tooling/text/coloring.js"
 export * from "./tooling/death-with-dignity.js"
+export * as tn from "./tooling/text/tn.js"
+export * as fmt from "./tooling/text/formatting.js"
 
