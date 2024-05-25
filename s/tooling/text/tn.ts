@@ -14,7 +14,7 @@ export function connect(glue: string, tns: Tn[]) {
 		: null
 }
 
-export function string(tn: Tn) {
+export function str(tn: Tn) {
 	return tn || ""
 }
 

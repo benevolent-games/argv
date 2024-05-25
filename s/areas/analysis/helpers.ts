@@ -153,16 +153,40 @@ export function choice<T>(allowable: T[], {help}: {help?: string} = {}): Opts<T>
 	if (allowable.length === 0)
 		throw new ConfigError(`zero choices doesn't make sense`)
 	else if (allowable.length === 1)
-		message = `must be "${allowable[0]}"`
+		message = `can be "${allowable[0]}"`
 	else
-		message = allowable.map(c => JSON.stringify(c)).join(", ")
+		message = `choose one: ${allowable.map(c => JSON.stringify(c)).join(", ")}`
 
 	return {
-		help: tn.string(tn.connect("\n", [message, help])),
+		help: tn.str(tn.connect("\n", [message, help])),
 		validate: item => {
 			if (!allowable.includes(item))
 				throw new Error(`invalid choice`)
 			return item
+		},
+	}
+}
+
+export function multipleChoice<T>(allowable: T[], {help}: {help?: string} = {}): Opts<T[]> {
+	let message: string
+
+	if (allowable.length === 0)
+		throw new ConfigError(`zero choices doesn't make sense`)
+	else if (allowable.length === 1)
+		message = `can be "${allowable[0]}"`
+	else
+		message = `
+			choose from these: ${allowable.map(c => JSON.stringify(c)).join(", ")}.
+			you should use commas to separate the values.
+		`
+
+	return {
+		help: tn.str(tn.connect("\n", [message, help])),
+		validate: list => {
+			for (const item of list)
+				if (!allowable.includes(item))
+					throw new Error(`invalid choice`)
+			return list
 		},
 	}
 }
