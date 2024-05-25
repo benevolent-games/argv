@@ -169,7 +169,7 @@ export function choice<T>(allowable: T[], {help}: {help?: string} = {}): Opts<T>
 
 export function list<T>({name: type, coerce}: Type<T>): Type<T[]> {
 	return {
-		name: `list-${type}`,
+		name: `${type}-list`,
 		coerce: string => string
 			.split(",")
 			.map(s => s.trim())
