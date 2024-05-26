@@ -11,9 +11,10 @@ export * from "./areas/cli/types.js"
 
 // things from analysis relevant to using cli
 export * from "./areas/analysis/helpers.js"
+export * from "./areas/analysis/types/units.js"
+export * from "./areas/analysis/types/commands.js"
 export * as helpers from "./areas/analysis/helpers.js"
 export * as validators from "./areas/analysis/validators.js"
-export {Command, CommandTree} from "./areas/analysis/types/commands.js"
 
 // exporting useful tools for making a cli
 export * from "./tooling/logger.js"
