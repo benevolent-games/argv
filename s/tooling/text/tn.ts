@@ -1,26 +1,26 @@
 
-import {indent, isString, replaceTabs, wrap} from "./formatting.js"
+import * as fmt from "./formatting.js"
 
 export type Tn = string | null | undefined | false
 
-export function tnIndent(depth: number, tn: Tn) {
-	return isString(tn) && indent(depth, tn)
+export function indent(depth: number, tn: Tn) {
+	return fmt.isString(tn) && fmt.indent(depth, tn)
 }
 
-export function tnConnect(glue: string, tns: Tn[]) {
-	const processed = tns.flat(Infinity).filter(isString)
+export function connect(glue: string, tns: Tn[]) {
+	const processed = tns.flat(Infinity).filter(fmt.isString)
 	return processed.length
 		? processed.join(glue)
 		: null
 }
 
-export function tnString(tn: Tn) {
+export function str(tn: Tn) {
 	return tn || ""
 }
 
-export function tnFinal(columns: number, indent: string, tn: Tn) {
-	return isString(tn)
-		? wrap(columns, replaceTabs(tn, indent))
+export function final(columns: number, indent: string, tn: Tn) {
+	return fmt.isString(tn)
+		? fmt.wrap(columns, fmt.replaceTabs(tn, indent))
 		: ""
 }
 

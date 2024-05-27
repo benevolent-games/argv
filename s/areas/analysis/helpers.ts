@@ -2,9 +2,11 @@
 import {obmap} from "../../tooling/obmap.js"
 import {ConfigError} from "../../errors/basic.js"
 import {Command, CommandOptions} from "./types/commands.js"
-import {tnConnect, tnString} from "../../tooling/text/tn.js"
 import {InvalidFlagError} from "../../errors/kinds/config.js"
 import {Arg, CoerceFn, Param, Type, Opts, Args, Params, ValidateFn} from "./types/units.js"
+
+import * as tn from "../../tooling/text/tn.js"
+import * as fmt from "../../tooling/text/formatting.js"
 
 export function command<
 		A extends Args,
@@ -153,12 +155,15 @@ export function choice<T>(allowable: T[], {help}: {help?: string} = {}): Opts<T>
 	if (allowable.length === 0)
 		throw new ConfigError(`zero choices doesn't make sense`)
 	else if (allowable.length === 1)
-		message = `must be "${allowable[0]}"`
+		message = `can be "${allowable[0]}"`
 	else
-		message = allowable.map(c => JSON.stringify(c)).join(", ")
+		message = `choose one: ${allowable.map(c => c).join(", ")}`
 
 	return {
-		help: tnString(tnConnect("\n", [message, help])),
+		help: tn.str(tn.connect("\n", [
+			help ? fmt.normalize(help) : null,
+			message,
+		])),
 		validate: item => {
 			if (!allowable.includes(item))
 				throw new Error(`invalid choice`)
@@ -167,9 +172,40 @@ export function choice<T>(allowable: T[], {help}: {help?: string} = {}): Opts<T>
 	}
 }
 
+export function multipleChoice<T>(
+		allowable: T[],
+		{zeroAllowed = false, help}: {zeroAllowed?: boolean, help?: string} = {},
+	): Opts<T[]> {
+	let message: string
+
+	if (allowable.length === 0)
+		throw new ConfigError(`zero choices doesn't make sense`)
+	else if (allowable.length === 1)
+		message = `can be "${allowable[0]}"`
+	else
+		message = zeroAllowed
+			? `choose zero or more: ${allowable.map(c => c).join(", ")}.`
+			: `choose one or more: ${allowable.map(c => c).join(", ")}.`
+
+	return {
+		help: tn.str(tn.connect("\n", [
+			help ? fmt.normalize(help) : null,
+			message,
+		])),
+		validate: list => {
+			if (!zeroAllowed && list.length === 0)
+				throw new Error(`must choose at least one`)
+			for (const item of list)
+				if (!allowable.includes(item))
+					throw new Error(`invalid choice`)
+			return list
+		},
+	}
+}
+
 export function list<T>({name: type, coerce}: Type<T>): Type<T[]> {
 	return {
-		name: `list-${type}`,
+		name: `${type}-list`,
 		coerce: string => string
 			.split(",")
 			.map(s => s.trim())

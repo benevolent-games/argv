@@ -102,20 +102,41 @@ export function pipe(text: string, fns: ((s: string) => string)[]) {
 function breakLinesBasedOnLength(columns: number) {
 	return (line: string) => {
 		const [whitespace, content] = extractLeadingWhitespace(line)
-		const words = content.split(/\s+/)
 		const sublines: string[] = []
 		let current = whitespace
+		let word = ''
 
-		for (const word of words) {
-			const proposedLength = uncolor(current).length + uncolor(word).length + 1
+		for (const char of content) {
+			if (/\s/.test(char) || /[.,!?;:()\-]/.test(char)) {
+				if (word.length > 0) {
+					const proposedLength = uncolor(current).length + uncolor(word).length
+					if (proposedLength > columns) {
+						sublines.push(current)
+						current = whitespace + word
+					} else {
+						current += word
+					}
+					word = ''
+				}
+				const proposedLength = uncolor(current).length + uncolor(char).length
+				if (proposedLength > columns) {
+					sublines.push(current)
+					current = whitespace + char
+				} else {
+					current += char
+				}
+			} else {
+				word += char
+			}
+		}
+		if (word.length > 0) {
+
+			const proposedLength = uncolor(current).length + uncolor(word).length
 			if (proposedLength > columns) {
 				sublines.push(current)
 				current = whitespace + word
-			}
-			else {
-				current += (current.length > whitespace.length)
-					? " " + word
-					: word
+			} else {
+				current += word
 			}
 		}
 
@@ -123,6 +144,31 @@ function breakLinesBasedOnLength(columns: number) {
 		return sublines
 	}
 }
+
+// function breakLinesBasedOnLength(columns: number) {
+// 	return (line: string) => {
+// 		const [whitespace, content] = extractLeadingWhitespace(line)
+// 		const words = content.split(/[\s.,!?;:()-]+/)
+// 		const sublines: string[] = []
+// 		let current = whitespace
+
+// 		for (const word of words) {
+// 			const proposedLength = uncolor(current).length + uncolor(word).length + 1
+// 			if (proposedLength > columns) {
+// 				sublines.push(current)
+// 				current = whitespace + word
+// 			}
+// 			else {
+// 				current += (current.length > whitespace.length)
+// 					? " " + word
+// 					: word
+// 			}
+// 		}
+
+// 		sublines.push(current)
+// 		return sublines
+// 	}
+// }
 
 function extractLeadingWhitespace(s: string) {
 	const match = s.match(/^\s*/)
