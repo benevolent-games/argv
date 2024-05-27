@@ -25,10 +25,12 @@ export function helpWiz(palette: Palette<ArgvTheme>) {
 				&& tn.connect(" ", path.map(palette.command)),
 
 			// args
-			command.args
-				.map(arg => arg.name)
-				.map(n => palette.arg(`${n}`))
-				.join(" "),
+			command.args.length > 0
+				? command.args
+					.map(arg => arg.name)
+					.map(n => palette.arg(`${n}`))
+					.join(" ")
+				: null,
 
 			// params
 			summarize
