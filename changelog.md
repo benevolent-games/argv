@@ -5,6 +5,13 @@
 - 🔶 *maybe breaking change*
 - 🍏 *non-breaking addition, fix, or enhancement*
 
+### v0.3.2
+- 🔶 change exports of some undocumented formatting functions
+- 🍏 add command `extraArgs` option, now you can document extra arguments
+- 🍏 add choice helper option `zeroAllowed`
+- 🍏 add multipleChoice helper
+- 🍏 enhance word wrapping behavior, more breaking characters than just whitespace
+
 ### v0.3.1
 - 🍏 improved help pages structuring, can view command subtrees
 - 🍏 improved custom theming facilities, added `seaside` theme
