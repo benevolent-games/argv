@@ -172,7 +172,10 @@ export function choice<T>(allowable: T[], {help}: {help?: string} = {}): Opts<T>
 	}
 }
 
-export function multipleChoice<T>(allowable: T[], {help}: {help?: string} = {}): Opts<T[]> {
+export function multipleChoice<T>(
+		allowable: T[],
+		{zeroAllowed = false, help}: {zeroAllowed?: boolean, help?: string} = {},
+	): Opts<T[]> {
 	let message: string
 
 	if (allowable.length === 0)
@@ -180,7 +183,9 @@ export function multipleChoice<T>(allowable: T[], {help}: {help?: string} = {}):
 	else if (allowable.length === 1)
 		message = `can be "${allowable[0]}"`
 	else
-		message = `choose one or more of these: ${allowable.map(c => c).join(", ")}.`
+		message = zeroAllowed
+			? `choose zero or more: ${allowable.map(c => c).join(", ")}.`
+			: `choose one or more: ${allowable.map(c => c).join(", ")}.`
 
 	return {
 		help: tn.str(tn.connect("\n", [
@@ -188,6 +193,8 @@ export function multipleChoice<T>(allowable: T[], {help}: {help?: string} = {}):
 			message,
 		])),
 		validate: list => {
+			if (!zeroAllowed && list.length === 0)
+				throw new Error(`must choose at least one`)
 			for (const item of list)
 				if (!allowable.includes(item))
 					throw new Error(`invalid choice`)
