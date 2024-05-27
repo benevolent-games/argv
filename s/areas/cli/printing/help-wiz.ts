@@ -28,8 +28,12 @@ export function helpWiz(palette: Palette<ArgvTheme>) {
 			command.args.length > 0
 				? command.args
 					.map(arg => arg.name)
-					.map(n => palette.arg(`${n}`))
+					.map(n => palette.arg(n))
 					.join(" ")
+				: null,
+
+			command.extraArgs
+				? palette.arg(`...${command.extraArgs.name}`)
 				: null,
 
 			// params
@@ -46,8 +50,8 @@ export function helpWiz(palette: Palette<ArgvTheme>) {
 			&& palette.plain(fmt.normalize(command.help))
 	}
 
-	function commandArgs(args: Args) {
-		return tn.connect("\n\n", args.map(arg => tn.connect("\n", [
+	function commandArgs({args, extraArgs}: Command) {
+		const argsHelp = args.map(arg => tn.connect("\n", [
 
 			// arg header
 			tn.connect(" ", [
@@ -71,7 +75,15 @@ export function helpWiz(palette: Palette<ArgvTheme>) {
 			// arg help
 			arg.help
 				&& tn.indent(1, palette.plain(fmt.normalize(arg.help))),
-		])))
+		]))
+		const extraArgsHelp = extraArgs
+			? tn.connect("\n", [
+				palette.arg(`...${extraArgs.name},`),
+				extraArgs.help
+					&& tn.indent(1, palette.plain(fmt.normalize(extraArgs.help))),
+			])
+			: null
+		return tn.connect("\n\n", [...argsHelp, extraArgsHelp])
 	}
 
 	function commandParams(params: Params) {

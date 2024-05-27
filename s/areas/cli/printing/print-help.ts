@@ -42,7 +42,7 @@ export function printHelp({
 				])),
 			]),
 			tn.indent(1, tn.connect("\n\n", [
-				wiz.commandArgs(command.args),
+				wiz.commandArgs(command),
 				wiz.commandParams(command.params),
 			])),
 		])
@@ -57,7 +57,7 @@ export function printHelp({
 				tn.indent(1, wiz.commandHelp(command)),
 			]),
 			tn.indent(1, tn.connect("\n\n", [
-				wiz.commandArgs(command.args),
+				wiz.commandArgs(command),
 				wiz.commandParams(command.params),
 			]))
 		])
@@ -80,7 +80,7 @@ export function printHelp({
 					actuallySummarize
 						? null
 						: tn.indent(1, tn.connect("\n\n", [
-							wiz.commandArgs(cmd.command.args),
+							wiz.commandArgs(cmd.command),
 							wiz.commandParams(cmd.command.params),
 						])),
 				])))
@@ -99,7 +99,7 @@ export function printHelp({
 				actuallySummarize
 					? null
 					: tn.indent(1, tn.connect("\n\n", [
-						wiz.commandArgs(cmd.command.args),
+						wiz.commandArgs(cmd.command),
 						wiz.commandParams(cmd.command.params),
 					])),
 			]))
