@@ -1,10 +1,12 @@
 
 import {obmap} from "../../tooling/obmap.js"
-import * as tn from "../../tooling/text/tn.js"
 import {ConfigError} from "../../errors/basic.js"
 import {Command, CommandOptions} from "./types/commands.js"
 import {InvalidFlagError} from "../../errors/kinds/config.js"
 import {Arg, CoerceFn, Param, Type, Opts, Args, Params, ValidateFn} from "./types/units.js"
+
+import * as tn from "../../tooling/text/tn.js"
+import * as fmt from "../../tooling/text/formatting.js"
 
 export function command<
 		A extends Args,
@@ -155,10 +157,13 @@ export function choice<T>(allowable: T[], {help}: {help?: string} = {}): Opts<T>
 	else if (allowable.length === 1)
 		message = `can be "${allowable[0]}"`
 	else
-		message = `choose one: ${allowable.map(c => JSON.stringify(c)).join(", ")}`
+		message = `choose one: ${allowable.map(c => c).join(", ")}`
 
 	return {
-		help: tn.str(tn.connect("\n", [message, help])),
+		help: tn.str(tn.connect("\n", [
+			help ? fmt.normalize(help) : null,
+			message,
+		])),
 		validate: item => {
 			if (!allowable.includes(item))
 				throw new Error(`invalid choice`)
@@ -175,13 +180,13 @@ export function multipleChoice<T>(allowable: T[], {help}: {help?: string} = {}):
 	else if (allowable.length === 1)
 		message = `can be "${allowable[0]}"`
 	else
-		message = `
-			choose from these: ${allowable.map(c => JSON.stringify(c)).join(", ")}.
-			you should use commas to separate the values.
-		`
+		message = `choose one or more of these: ${allowable.map(c => c).join(", ")}.`
 
 	return {
-		help: tn.str(tn.connect("\n", [message, help])),
+		help: tn.str(tn.connect("\n", [
+			help ? fmt.normalize(help) : null,
+			message,
+		])),
 		validate: list => {
 			for (const item of list)
 				if (!allowable.includes(item))
