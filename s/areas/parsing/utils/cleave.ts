@@ -1,10 +1,10 @@
 
-export function cleave(argx: string[], cleaver: string) {
+export function cleave(strings: string[], cleaver: string) {
 	let cleaved = false
 	const before: string[] = []
 	const after: string[] = []
 
-	for (const string of argx) {
+	for (const string of strings) {
 		if (string === cleaver)
 			cleaved = true
 		else {

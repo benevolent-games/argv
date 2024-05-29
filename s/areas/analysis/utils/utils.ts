@@ -1,12 +1,12 @@
 
-import {parse} from "../../parsing/parse.js"
+import {commandParse} from "../../parsing/parse.js"
 import {SelectedCommand} from "../types/analysis.js"
 import {listAllCommands} from "./list-all-commands.js"
 import {Command, CommandTree} from "../types/commands.js"
 
 export function listRelevantCommands(argw: string[], commands: CommandTree) {
 	const list = listAllCommands(commands)
-	const {args} = parse(argw, {booleanParams: ["help"]})
+	const args = commandParse(argw)
 	return (args.length === 0)
 		? list
 		: list.filter(({path}) => {
@@ -46,7 +46,7 @@ export function getBooleanParams(command: Command) {
 //////////////////
 
 function isCommandMatching(argw: string[], path: string[]) {
-	const {args} = parse(argw, {booleanParams: ["help"]})
+	const args = commandParse(argw)
 	return path.every((part, index) => part === args[index])
 }
 
