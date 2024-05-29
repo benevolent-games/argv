@@ -4,13 +4,13 @@ import {ParseOptions, Parsed} from "./types.js"
 import {OpenParamError, RedundantFlagError, RedundantParamError} from "../../errors/kinds/mistakes.js"
 
 /**
- * simple incomplete command line parsing.
+ * parsing just for determining the current command
  *  - only for deriving which command might be selected
  *  - simply ignores anything with a "-" prefix
  *  - returns array of strings that don't start with "-"
  */
-export function commandParse(argx: string[]) {
-	return argx
+export function commandParse(argw: string[]) {
+	return argw
 		.map(a => a.trim())
 		.filter(a => !a.startsWith("-"))
 }
