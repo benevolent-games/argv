@@ -82,6 +82,11 @@ export default testSuite({
 			expect("4").that(result.params.get("bravo")).is("b")
 			expect("5").that(result.args[0]).is("myArg")
 		}
+		{
+			const result = parse(["--bravo=b", "--alpha"], options)
+			expect("6").that(result.params.get("alpha")).is("true")
+			expect("7").that(result.params.get("bravo")).is("b")
+		}
 	},
 
 	async "args after double-dash"() {

@@ -4,6 +4,18 @@ import {ParseOptions, Parsed} from "./types.js"
 import {OpenParamError, RedundantFlagError, RedundantParamError} from "../../errors/kinds/mistakes.js"
 
 /**
+ * simple incomplete command line parsing.
+ *  - only for deriving which command might be selected
+ *  - simply ignores anything with a "-" prefix
+ *  - returns array of strings that don't start with "-"
+ */
+export function commandParse(argx: string[]) {
+	return argx
+		.map(a => a.trim())
+		.filter(a => !a.startsWith("-"))
+}
+
+/**
  * dumb command line parsing.
  *  - accepts 'argx' which are the argv strings after the bin and script.
  *  - doesn't know about commands.

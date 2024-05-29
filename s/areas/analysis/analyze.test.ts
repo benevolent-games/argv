@@ -114,6 +114,11 @@ export default testSuite({
 					.that(test(`--delta=a -hg`).tree.params.golf)
 					.is(true)
 			},
+			async "boolean param shorthands"() {
+				expect()
+					.that(test(`--delta=a --golf`).tree.params.golf)
+					.is(true)
+			},
 		}
 	}()),
 
