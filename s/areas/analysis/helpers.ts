@@ -203,11 +203,15 @@ export function multipleChoice<T>(
 	}
 }
 
-export function list<T>({name: type, coerce}: Type<T>): Type<T[]> {
+export function list<T>(
+		{name: type, coerce}: Type<T>,
+		delimiter = ",",
+	): Type<T[]> {
+
 	return {
 		name: `${type}-list`,
 		coerce: string => string
-			.split(",")
+			.split(delimiter)
 			.map(s => s.trim())
 			.map(coerce),
 	}
