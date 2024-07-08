@@ -20,30 +20,29 @@ export function deathWithDignity(
 	if (lastWillAndTestament)
 		rubberneckers.add(lastWillAndTestament)
 
-	function death(exitCode: number) {
+	process.on("exit", exitCode => {
 		for (const notifyNextOfKin of rubberneckers)
 			notifyNextOfKin(exitCode)
-		process.exit(exitCode)
-	}
+	})
 
 	process.on("SIGINT", () => {
 		logger.log("💣 SIGINT")
-		death(0)
+		process.exit(0)
 	})
 
 	process.on("SIGTERM", () => {
 		logger.log("🗡️ SIGTERM")
-		death(0)
+		process.exit(0)
 	})
 
 	process.on("uncaughtException", error => {
 		logger.error("🚨 unhandled exception:", error)
-		death(1)
+		process.exit(1)
 	})
 
 	process.on("unhandledRejection", (reason, error) => {
 		logger.error("🚨 unhandled rejection:", reason, error)
-		death(1)
+		process.exit(1)
 	})
 
 	const onDeath: OnDeath = listener => {
