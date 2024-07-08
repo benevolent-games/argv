@@ -1,7 +1,7 @@
 
 import {Logger} from "./logger.js"
 
-export type OnDeath = (fn: DeathListener) => void
+export type OnDeath = (fn: DeathListener) => () => void
 export type DeathListener = (exitCode: number) => void
 
 /**
@@ -46,7 +46,10 @@ export function deathWithDignity(
 		death(1)
 	})
 
-	const onDeath: OnDeath = listener => rubberneckers.add(listener)
+	const onDeath: OnDeath = listener => {
+		rubberneckers.add(listener)
+		return () => rubberneckers.delete(listener)
+	}
 
 	return {onDeath}
 }
