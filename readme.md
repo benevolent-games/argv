@@ -343,7 +343,7 @@ pizza small --pepperoni="no" --slices="2"
 ## 🦚 custom themes
 - you can set the theme for your --help pages
     ```ts
-    import {themes} from
+    import {themes} from "@benev/argv"
 
     await cli(process.argv, {
 
@@ -357,7 +357,7 @@ pizza small --pepperoni="no" --slices="2"
     - if you hate fun, use `themes.noColor` to disable ansi colors
 - make your own theme like this
     ```ts
-    import {theme, color} from
+    import {theme, color} from "@benev/argv"
 
     const seaside = theme({
       plain: [color.white],
