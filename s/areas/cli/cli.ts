@@ -95,6 +95,6 @@ cli.execute = async<C extends CommandTree>(
 		argv: string[],
 		config: CliConfig<C>,
 	) => {
-	return cli(argv, config).execute()
+	return await cli(argv, config).execute()
 }
 

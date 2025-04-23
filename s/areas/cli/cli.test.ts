@@ -65,6 +65,23 @@ export default testSuite({
 		expect().that(executed).is(true)
 	},
 
+	async "command execution via sugary cli.execute"() {
+		let executed = false
+		await cli.execute(argv("aaa --bravo bbb"), {
+			name: "example",
+			commands: command({
+				args: [arg("alpha").required(string)],
+				params: {bravo: param.required(string)},
+				execute: async({args, params}) => {
+					executed = true
+					expect().that(args.alpha).is("aaa")
+					expect().that(params.bravo).is("bbb")
+				},
+			}),
+		})
+		expect().that(executed).is(true)
+	},
+
 	async "command execution, alternating"() {
 		let calledHyrax = false
 		let calledCapybara = false
