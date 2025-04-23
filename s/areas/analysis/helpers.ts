@@ -30,6 +30,12 @@ export const type = asTypes({
 		if (isNaN(number)) throw new Error(`not a number`)
 		return number
 	},
+	integer: string => {
+		const n = Number(string)
+		if (isNaN(n)) throw new Error(`not a number`)
+		if (!Number.isSafeInteger(n)) throw new Error(`not a safe integer`)
+		return n
+	},
 	boolean: (() => {
 		const pairs = [
 			["1", "0"],
@@ -48,8 +54,8 @@ export const type = asTypes({
 	})(),
 })
 
-const {string, number, boolean} = type
-export {string, number, boolean}
+const {string, number, integer, boolean} = type
+export {string, number, integer, boolean}
 
 type Ingestion<T> = {
 	coerce: CoerceFn<T>
