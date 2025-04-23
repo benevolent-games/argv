@@ -169,18 +169,6 @@ pizza small --pepperoni="no" --slices="2"
     })
     ```
 
-### `choice` helper
-- you can use the `choice` helper to set up a multiple choice string
-    ```ts
-    param.required(string, choice(["thick", "thin"]))
-    ```
-- you can add a help to it as well
-    ```ts
-    param.required(string, choice(["thick", "thin"], {
-      help: "made with organic whole-wheat flour",
-    }))
-    ```
-
 ### `list` helper
 - okay this is seriously crazy cool, check this out
     ```ts
@@ -195,6 +183,31 @@ pizza small --pepperoni="no" --slices="2"
     ```
     - now you get a `number[]` array (not strings)
     - yes, `list` preserves the type's validation
+
+### `choice` helper
+- user can choose one of the permitted values
+    ```ts
+    param.required(string, choice(["thick", "thin"]))
+    ```
+- you can add a help to it as well
+    ```ts
+    param.required(string, choice(["thick", "thin"], {
+      help: "made with organic whole-wheat flour",
+    }))
+    ```
+
+### `multipleChoice` helper
+- allows the user to choose multiple permitted choices
+    ```ts
+    param.required(string, multipleChoice(["bacon", "lettuce", "tomatoes"]))
+    ```
+- you can add help, and decide if the user is allowed to make zero choices
+    ```ts
+    param.required(string, choice(["bacon", "lettuce", "tomatoes"], {
+      help: "all available ingredients are gmo'd",
+      zeroAllowed: true, // defaults to false
+    }))
+    ```
 
 <br/>
 
@@ -228,7 +241,7 @@ pizza small --pepperoni="no" --slices="2"
     })
     ```
 
-### flat strategy
+### tree strategy
 - you get this `tree` object that reflects its shape
     ```ts
     tree.image?.params.quality // 9
@@ -253,7 +266,7 @@ pizza small --pepperoni="no" --slices="2"
       },
     })
     ```
-    - your execute function receives fully-typed `args`, `params`, and some more stuff
+    - your execute function receives the relevant fully-typed `args`, `params`, and some more stuff
 - your `execute` function can opt-into pretty-printing errors (with colors) by throwing an `ExecutionError`
     ```ts
     import {ExecutionError, command} from "@benev/argv"
@@ -314,7 +327,7 @@ pizza small --pepperoni="no" --slices="2"
     ```
 - feeling spiffy? make a whole group of custom types with this one weird tip
     ```ts
-    const date = asTypes({
+    const myTypes = asTypes({
       date: string => new Date(string),
       integer: string => Math.floor(Number(string)),
     })
