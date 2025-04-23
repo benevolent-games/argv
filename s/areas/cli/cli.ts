@@ -91,3 +91,10 @@ export function cli<C extends CommandTree>(
 	}
 }
 
+cli.execute = async<C extends CommandTree>(
+		argv: string[],
+		config: CliConfig<C>,
+	) => {
+	return cli(argv, config).execute()
+}
+
