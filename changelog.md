@@ -1,9 +1,11 @@
 
-### legend
+### argv changelog
+- 🟥 breaking change
+- 🔶 deprecation or possible breaking change
+- 🍏 harmless addition, fix, or enhancement
 
-- 🟥 *breaking change*
-- 🔶 *maybe breaking change*
-- 🍏 *non-breaking addition, fix, or enhancement*
+### v0.3.11
+- 🍏 upgrade deathWithDignity by adding `pleaseExit` async fn to returns
 
 ### v0.3.2
 - 🔶 change exports of some undocumented formatting functions

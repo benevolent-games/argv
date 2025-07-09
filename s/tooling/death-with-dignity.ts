@@ -2,7 +2,7 @@
 import {Logger} from "./logger.js"
 
 export type OnDeath = (fn: DeathListener) => () => void
-export type DeathListener = (exitCode: number) => void
+export type DeathListener = (exitCode: number) => (void | Promise<void>)
 
 /**
  * schedule your node process to die:
@@ -12,44 +12,44 @@ export type DeathListener = (exitCode: number) => void
  */
 export function deathWithDignity(
 		logger: Logger = console,
-		lastWillAndTestament?: DeathListener
+		lastWillAndTestament?: DeathListener,
 	) {
 
-	const rubberneckers = new Set<DeathListener>()
+	const listeners = new Set<DeathListener>()
 
 	if (lastWillAndTestament)
-		rubberneckers.add(lastWillAndTestament)
+		listeners.add(lastWillAndTestament)
 
-	process.on("exit", exitCode => {
-		for (const notifyNextOfKin of rubberneckers)
-			notifyNextOfKin(exitCode)
-	})
+	async function pleaseExit(exitCode: number) {
+		await Promise.all([...listeners].map(fn => fn(exitCode)))
+		process.exit(exitCode)
+	}
 
 	process.on("SIGINT", () => {
 		logger.log("💣 SIGINT")
-		process.exit(0)
+		pleaseExit(0)
 	})
 
 	process.on("SIGTERM", () => {
 		logger.log("🗡️ SIGTERM")
-		process.exit(0)
+		pleaseExit(0)
 	})
 
 	process.on("uncaughtException", error => {
 		logger.error("🚨 unhandled exception:", error)
-		process.exit(1)
+		pleaseExit(1)
 	})
 
 	process.on("unhandledRejection", (reason, error) => {
 		logger.error("🚨 unhandled rejection:", reason, error)
-		process.exit(1)
+		pleaseExit(1)
 	})
 
 	const onDeath: OnDeath = listener => {
-		rubberneckers.add(listener)
-		return () => rubberneckers.delete(listener)
+		listeners.add(listener)
+		return () => listeners.delete(listener)
 	}
 
-	return {onDeath}
+	return {onDeath, pleaseExit}
 }
 
