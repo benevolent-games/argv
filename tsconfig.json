@@ -3,8 +3,8 @@
 		"strict": true,
 		"rootDir": "s",
 		"outDir": "x",
-		"target": "es2021",
-		"lib": ["es2021"],
+		"target": "es2023",
+		"lib": ["es2023"],
 		"module": "node16",
 		"moduleResolution": "node16",
 		"experimentalDecorators": true,
@@ -20,5 +20,5 @@
 	],
 	"exclude": [
 		"s/**/_*"
-	],
+	]
 }
