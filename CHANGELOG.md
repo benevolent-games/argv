@@ -4,6 +4,9 @@
 - 🔶 deprecation or possible breaking change
 - 🍏 harmless addition, fix, or enhancement
 
+### v0.3.12
+- 🍏 update dependencies
+
 ### v0.3.11
 - 🍏 upgrade deathWithDignity by adding `pleaseExit` async fn to returns
 
