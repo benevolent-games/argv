@@ -1,6 +1,6 @@
 {
 	"name": "@benev/argv",
-	"version": "0.3.11",
+	"version": "0.3.12",
 	"description": "command line argument parser",
 	"license": "MIT",
 	"author": "Chase Moskal <chasemoskal@gmail.com>",
