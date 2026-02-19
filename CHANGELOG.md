@@ -4,6 +4,10 @@
 - 🔶 deprecation or possible breaking change
 - 🍏 harmless addition, fix, or enhancement
 
+### v0.3.13
+- 🍏 update dependencies
+- 🍏 update publishing workflows
+
 ### v0.3.12
 - 🍏 update dependencies
 
