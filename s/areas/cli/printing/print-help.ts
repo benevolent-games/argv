@@ -69,7 +69,7 @@ export function printHelp({
 		return tn.connect("\n\n", [
 			tn.connect("\n", [
 				wiz.programHeadline(programName, relevantCommands),
-				tn.indent(1, wiz.programHelp(programHelp))
+				tn.indent(1, wiz.programHelp(programHelp, readme))
 			]),
 			...relevantCommands
 				.map(cmd => tn.indent(1, tn.connect("\n\n", [
@@ -106,4 +106,3 @@ export function printHelp({
 		)
 	}
 }
-

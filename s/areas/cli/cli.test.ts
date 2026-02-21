@@ -145,5 +145,28 @@ export default testSuite({
 			.is(true)
 	},
 
-})
+	async "multi-command help includes readme on home page"() {
+		const readme = "https://example.com/readme"
+		const result = spyCli(argv("--help"), cliConfig({
+			name: "example",
+			readme,
+			commands: {
+				alpha: command({
+					args: [],
+					params: {},
+				}),
+				bravo: command({
+					args: [],
+					params: {},
+				}),
+			},
+		}))
+		expect("help output exists")
+			.that(typeof result.help)
+			.is("string")
+		expect("help output includes readme")
+			.that(result.help!.includes(readme))
+			.is(true)
+	},
 
+})
